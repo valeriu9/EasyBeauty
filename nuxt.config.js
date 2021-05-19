@@ -53,7 +53,7 @@ export default {
     loaders: {
       scss: { sourceMap: false },
     },
-  }
+  },
   target: 'static',
   router: {
     base: '/sep6-nuxt-vpasdaph2a-ew.a.run.app/'
