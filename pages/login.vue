@@ -58,21 +58,35 @@ signInButton.addEventListener('click', () => {
     return{username, usernameUp, password, passwordUp}
   },
   methods:{
-    signIn(username, password){
+    async signIn(username, password){
+try {
+       const res = await this.$fire.auth.signInWithEmailAndPassword(
+          username,
+          password
+        )
+        setTimeout(() => {
+        window.location.href = '/';
+      }, 1000);
+        console.log(res);
+      } catch (e) {
+        console.log(e);
+      }
+
       const user={ name: username};
       this.$cookies.set('movie_user',user);
       this.$store.dispatch('user/userLoggedIn', user);
-      setTimeout(() => {
-        window.location.href = '/';
-      }, 1000);
+
+
     },
-    signUp(usernameUp, passwordUp){
-      const user={ name: usernameUp};
-      this.$cookies.set('movie_user',user);
-      this.$store.dispatch('user/userLoggedIn', user);
-      setTimeout(() => {
-        window.location.href = '/';
-      }, 1000);
+    async signUp(usernameUp, passwordUp){
+      try {
+        await this.$fire.auth.createUserWithEmailAndPassword(
+          usernameUp,
+          passwordUp
+        )
+      } catch (e) {
+        console.log(e);
+      }
     }
   }
 }

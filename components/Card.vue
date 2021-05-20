@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="card">
-      <img v-if="cardObject.favorit" src="~assets/images/bookmark.svg" alt="favourit" class="bookmark">
+      <img v-if="cardObject.favorit" src="~assets/images/bookmark.svg" alt="favourit" @click="addToFavorite(cardObject.id)" class="bookmark">
       <img v-else src="~assets/images/bookmark-2.svg" alt="favourit" class="bookmark">
       <img :src="cardObject.image" alt="card image">
       <div class="card-details">
@@ -30,6 +30,9 @@ methods:{
   removeFavorite(){
     //post function here
     this.$emit('favoriteRemoved',this.cardObject);
+  },
+  addToFavorite(id){
+
   }
 }
 }

@@ -40,8 +40,32 @@ export default {
   modules: [
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
-    '@nuxtjs/style-resources'
+    '@nuxtjs/style-resources',
+    '@nuxtjs/firebase'
   ],
+  firebase:
+  {
+    config: {
+      apiKey: 'AIzaSyBIxr4MHO8Y1LG5J7i8LA0qZTZ7s74nXdk',
+      authDomain: 'sep6-project-96a6e.firebaseapp.com',
+      projectId: 'sep6-project-96a6e',
+      storageBucket: 'sep6-project-96a6e.appspot.com',
+      messagingSenderId: '79369270062',
+      appId: '1:79369270062:web:66bc0798124b06a44a00bf',
+      measurementId: 'G-R2XRMWP7YF'
+    },
+    services: {
+      auth: true,
+      firestore: true,
+      functions: true,
+      storage: true,
+      database: true,
+      messaging: true,
+      performance: true,
+      analytics: true,
+      remoteConfig: true
+    },
+  },
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {},
@@ -52,25 +76,4 @@ export default {
       scss: { sourceMap: false },
     },
   },
-  config: {
-    // REQUIRED: Official config for firebase.initializeApp(config):
-    apiKey: 'AIzaSyBIxr4MHO8Y1LG5J7i8LA0qZTZ7s74nXdk',
-    authDomain: 'sep6-project-96a6e.firebaseapp.com',
-    projectId: 'sep6-project-96a6e',
-    storageBucket: 'sep6-project-96a6e.appspot.com',
-    messagingSenderId: '79369270062',
-    appId: '1:79369270062:web:66bc0798124b06a44a00bf',
-    measurementId: 'G-R2XRMWP7YF'
-  },
-  services: {
-    auth: true,
-    firestore: true,
-    functions: true,
-    storage: true,
-    database: true,
-    messaging: true,
-    performance: true,
-    analytics: true,
-    remoteConfig: true
-  }
 }
