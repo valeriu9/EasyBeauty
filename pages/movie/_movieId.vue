@@ -2,34 +2,39 @@
   <div class="container">
     <div class="overview-wrapper">
       <div class="img-container">
-        <img :src="movie.img" alt="movie img">
+        <img :src="appendRootToImg(movie.poster_path)" alt="movie img">
       </div>
       <div class="movie-info">
         <div class="right-side">
-          <p class="title">{{movie.name}}</p>
+          <p v-if="movie.title" class="title">{{movie.title}}</p>
+          <p v-else class="title">{{movie.name}}</p>
           <div v-if="movie.vote_average" class="field-name">
             <p>Rating</p>
             <span>{{movie.vote_average}} out of {{movie.vote_count}} ratings</span>
           </div>
-          <div v-if="movie.genre" class="field-name">
+          <div v-if="movie.genres" class="field-name">
             <p>Genre:</p>
-            <span>{{movie.genre}}</span>
+            <span v-for="genre in movie.genres" :key="genre.index"> {{genre.name}}</span>
           </div>
           <div v-if="movie.status" class="field-name">
             <p>Status:</p>
             <span>{{movie.status}}</span>
           </div>
-          <div v-if="movie.releaseDate" class="field-name">
+          <div v-if="movie.release_date" class="field-name">
             <p>Release date:</p>
-            <span>{{movie.releaseDate}}</span>
+            <span>{{movie.release_date}}</span>
           </div>
           <div v-if="movie.budget" class="field-name">
             <p>Budget:</p>
             <span>{{movie.budget}}</span>
           </div>
-          <div v-if="movie.director" class="field-name">
+          <div v-if="movie.revenue" class="field-name">
+            <p>Revenue:</p>
+            <span>{{movie.revenue}}</span>
+          </div>
+          <div v-if="credits.crew" class="field-name">
             <p>Director:</p>
-            <span>{{movie.director}}</span>
+            <span v-for="(director, index) in filteredItems" :key="index">{{director.name}}<span v-if="index+1 < filteredItems.length">, </span></span>
           </div>
         </div>
 
@@ -42,8 +47,8 @@
     <div class="list-container">
       <p class="title margin-left-12">Stars:</p>
       <div class="display-flex">
-        <div v-for="actor in actors" :key="actor.index" class="actor-slot">
-          <img v-if="actor.img" :src="actor.img" class="actor-img" alt="actor img">
+        <div v-for="actor in credits.cast" :key="actor.index" class="actor-slot">
+          <img v-if="actor.profile_path" :src="`https://image.tmdb.org/t/p/original/`+actor.profile_path" class="actor-img" alt="actor img">
           <img v-else src="~/assets/images/actor-img.png" class="actor-img missing" alt="actor img">
           <span>{{actor.name}}</span>
         </div>
@@ -52,8 +57,7 @@
     <div class="list-container ">
       <p class="title margin-left-12">Production companie(s):</p>
       <div class="display-flex">
-
-        <div v-for="production in productions" :key="production.index" class="production-slot">
+        <div v-for="production in movie.production_companies" :key="production.index" class="production-slot">
           <span>{{production.name}}</span>
         </div>
       </div>
@@ -81,38 +85,57 @@
 </template>
 
 <script>
+import requests from '~/helpers/api.js'
 export default {
+  beforeMount (){
+    this.fetchMovie();
+    this.fetchCredits();
+  },
+  computed: {
+    filteredItems() {
+      return this.credits.crew.filter(item => {
+         return item.job.toLowerCase().indexOf('director') > -1
+      })
+    }
+  },
 data(){
-  const movie = {img:'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/9TvWJmXYuiq0Zf50Sc5wk3DODvW.jpg',
-  name:'Sexy Dhoban',
-  overview:'She was sexy and hot. She came to him to get some clothes done. But it turned steamy. Later he found out Sexy Dhoban was a ghost! A weird story of revengeful horny Dhoban!',
-  vote_count:300,
-  vote_average: 7.5,
-  genre:'comedy',
-  status:'Returning Series',
-  budget:200000,
-  releaseDate:'2029/10/22',
-  director:'Fredie Cumbey',
-  }
-  const actors=[
-    {name:'Mark Zukemberg', img:'https://i.pinimg.com/originals/0d/a9/38/0da938e0005e17ef19dbe2a3886ffcd9.jpg'},
-    {name:'Tim Cook', img:'https://i.pinimg.com/originals/9b/ec/89/9bec89b127f1d16a2c0eea4a2d63902a.jpg'},
-    {name:'Johy Davis', img:'https://i.pinimg.com/originals/0b/30/43/0b30437521851217009a8818c24ada70.jpg'},
-    {name:'Maria Biesu'} ]
-  const productions=[
-    {name:'Fox 2000 Pictures'},
-    {name:'Taurus Film'},
-    {name:'Linson Films'},
-    {name:'Atman Entertainment'} ]
+  const movie = {}
+  const credits={}
   const comments=[{user:'vanea', name:'good film'}, {user:'vanea', name:'nah, could be better'}, {user:'vanea', name:'the worst film ever what the fuck fuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckv fuckfuck fuckfuckfuckfuckfuckfuck fuckfuck'}]
   const message= '';
-  return{movie, actors, productions, comments, message}
+  return{movie, credits, comments, message}
 },
 methods:{
   addComment(message){
     const object = {user: this.$store.state.user.name, name:message};
     this.comments.push(object)
     this.message = ''
+  },
+  async fetchMovie(){
+    try{
+    const res = await this.$axios.get(requests.fetchMovieById(this.$route.params.movieId));
+
+    Object.assign(this.movie,res.data);
+    console.log(this.movie);
+    }
+    catch(e){
+      console.log(e);
+    }
+  },
+    async fetchCredits(){
+    try{
+    const res = await this.$axios.get(requests.fetchMovieCredits(this.$route.params.movieId));
+    Object.assign(this.credits,res.data);
+     console.log(this.credits);
+    }
+    catch(e){
+      console.log(e);
+    }
+  },
+  appendRootToImg(img){
+    if(img){
+      return `https://image.tmdb.org/t/p/original/`+img;
+    }
   }
 }
 }
@@ -178,11 +201,13 @@ span {
 }
 .display-flex {
   display: flex;
+  flex-wrap: wrap;
 }
 .actor-slot {
   width: 100px;
   margin: 20px 12px;
   img {
+    min-width: 100px;
     height: 150px;
     object-fit: cover;
   }

@@ -7,7 +7,7 @@
           <h3 class="title">Trending</h3>
           <div v-dragscroll class="scroll-parent">
             <div class="scroll-container">
-              <div v-for="movie in movieList" :key="movie.index">
+              <div v-for="movie in trendingResults" :key="movie.index">
                 <nuxt-link :to="`/movie/${movie.id}`">
                   <Card :cardObject="movie" />
                 </nuxt-link>
@@ -58,7 +58,7 @@
 </template>
 
 <script>
-import tmdbGetters from '~/helpers/api.js'
+import requests from '~/helpers/api.js'
 export default {
   mounted(){
     this.fetchMovies()
@@ -78,9 +78,10 @@ export default {
 {id:7, name:"Black list", image:"https://m.media-amazon.com/images/M/MV5BZDA1MzE3M2EtNTE4Ni00OGE4LWE1NjctYzFhMzA2NDgxMDIxXkEyXkFqcGdeQXVyODUxOTU0OTg@._V1_UY1200_CR90,0,630,1200_AL_.jpg"},
 {id:8, name:"Black list", image:"https://m.media-amazon.com/images/M/MV5BZDA1MzE3M2EtNTE4Ni00OGE4LWE1NjctYzFhMzA2NDgxMDIxXkEyXkFqcGdeQXVyODUxOTU0OTg@._V1_UY1200_CR90,0,630,1200_AL_.jpg"}
     ]
+    const trendingResults = [];
 
     const favorite =[];
-    return{genre:'', userInfo, cardObject, favorite, countryObject, actorObject, movieList}
+    return{genre:'', userInfo, cardObject, favorite, countryObject, actorObject, movieList, trendingResults}
   },
   methods:{
     filterGenre(value){
@@ -91,10 +92,11 @@ export default {
     },
     async fetchMovies () {
       try {
-        const res = await this.$axios.get(`https://api.themoviedb.org/3/trending/all/day?api_key=e1e70c3c253879e7867ac5f62731892a`);
-        console.log(res);
-        console.log(tmdbGetters.getTrending);
-
+        const res = await this.$axios.get(requests.tmdbApi.fetchTrending);
+        console.log(requests.tmdbApi.fetchTrending);
+        console.log(res.data);
+        this.trendingResults = res.data.results;
+        console.log(this.trendingResults);
         if (res.data.type === 'Error') { throw new Error(res.data); }
 
       } catch (e) {

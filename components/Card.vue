@@ -3,11 +3,12 @@
     <div class="card">
       <img v-if="cardObject.favorit" src="~assets/images/bookmark.svg" alt="favourit" @click="addToFavorite(cardObject.id)" class="bookmark">
       <img v-else src="~assets/images/bookmark-2.svg" alt="favourit" class="bookmark">
-      <img :src="cardObject.image" alt="card image">
+      <img :src="`https://image.tmdb.org/t/p/original/`+cardObject.poster_path" alt="card image" class="image">
       <div class="card-details">
       </div>
       <div class="card-text">
-        <p class="title">{{cardObject.name}} </p>
+        <p v-if="cardObject.title" class="title">{{cardObject.title}} </p>
+        <p v-else class="title">{{cardObject.name}} </p>
       </div>
     </div>
     <div v-if="enableDelete" class="delete-button" @click="removeFavorite()">Remove</div>
@@ -49,6 +50,9 @@ methods:{
   @include from($mobile) {
     width: 150px;
     min-width: 150px;
+  }
+  .image {
+    height: 283.88px;
   }
 }
 
