@@ -31,10 +31,8 @@ methods:{
   removeFavorite(){
     //post function here
     this.$emit('favoriteRemoved',this.cardObject);
-  },
-  addToFavorite(id){
-
   }
+
 }
 }
 </script>
@@ -74,6 +72,7 @@ methods:{
   height: auto;
   position: absolute;
   top: 0;
+  z-index: 20;
 }
 .card-details {
   position: absolute;

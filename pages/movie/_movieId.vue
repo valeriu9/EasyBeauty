@@ -36,6 +36,7 @@
             <p>Director:</p>
             <span v-for="(director, index) in filteredItems" :key="index">{{director.name}}<span v-if="index+1 < filteredItems.length">, </span></span>
           </div>
+          <div @click="saveFav($route.params.movieId)">save</div>
         </div>
 
         <div class="left-side">
@@ -111,6 +112,19 @@ methods:{
     this.comments.push(object)
     this.message = ''
   },
+  async saveFav(id) {
+        const ref = this.$fire.firestore.collection("test").doc("test")
+        const document = {
+          number: id
+        }
+        try {
+          await ref.set(document)
+        } catch (e) {
+          // TODO: error handling
+          console.error(e)
+        }
+        this.writeSuccessful = true
+      },
   async fetchMovie(){
     try{
     const res = await this.$axios.get(requests.fetchMovieById(this.$route.params.movieId));
