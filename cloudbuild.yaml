@@ -4,7 +4,7 @@ steps:
     args:
       - '-c'
       - |
-        docker pull gcr.io/project-name/container-name:latest || exit 0
+        docker pull gcr.io/sep6-314214/sep6:latest || exit 0
   - name: gcr.io/cloud-builders/docker
     timeout: 1200s
     args:
@@ -13,9 +13,11 @@ steps:
         '-f',
         'Dockerfile',
         '-t',
-        'gcr.io/project-name/container-name',
+        'gcr.io/sep6-314214/sep6',
         '--cache-from',
-        'gcr.io/project-name/container-name:latest',
+        'gcr.io/sep6-314214/sep6:latest',
         '.',
       ]
 timeout: 1200s
+images:
+  - gcr.io/sep6-314214/sep6
