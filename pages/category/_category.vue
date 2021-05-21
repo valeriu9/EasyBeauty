@@ -3,41 +3,97 @@
     <p class="header-text">{{categoryName}}</p>
     <div class="card-wrapper">
       <div v-for="data of cardObject" :key="data.index" class="card-place">
-        <Card :cardObject="data" />
+        <nuxt-link :to="`/movie/`+data.id">
+          <Card :cardObject="data" />
+        </nuxt-link>
       </div>
     </div>
   </div>
 </template>
 <script>
+import requests from '~/helpers/api.js'
 export default {
+  mounted(){
+    this.fetchCategory(this.$route.params.category)
+  },
   data(){
     const categoryName = this.$route.params.category;
-    const cardObject =[ {name:"Black list sdfsa dasd asd asd asd sad asdsa dasd sa", favorit: true, image:"https://m.media-amazon.com/images/M/MV5BZDA1MzE3M2EtNTE4Ni00OGE4LWE1NjctYzFhMzA2NDgxMDIxXkEyXkFqcGdeQXVyODUxOTU0OTg@._V1_UY1200_CR90,0,630,1200_AL_.jpg"},
-    {name:"Black list sdfsa dasd asd asd asd sad asdsa dasd sa", favorit: true, image:"https://m.media-amazon.com/images/M/MV5BZDA1MzE3M2EtNTE4Ni00OGE4LWE1NjctYzFhMzA2NDgxMDIxXkEyXkFqcGdeQXVyODUxOTU0OTg@._V1_UY1200_CR90,0,630,1200_AL_.jpg"},
-    {name:"Black list sdfsa dasd asd asd asd sad asdsa dasd sa", favorit: true, image:"https://m.media-amazon.com/images/M/MV5BZDA1MzE3M2EtNTE4Ni00OGE4LWE1NjctYzFhMzA2NDgxMDIxXkEyXkFqcGdeQXVyODUxOTU0OTg@._V1_UY1200_CR90,0,630,1200_AL_.jpg"},
-    {name:"Black list sdfsa dasd asd asd asd sad asdsa dasd sa", favorit: true, image:"https://m.media-amazon.com/images/M/MV5BZDA1MzE3M2EtNTE4Ni00OGE4LWE1NjctYzFhMzA2NDgxMDIxXkEyXkFqcGdeQXVyODUxOTU0OTg@._V1_UY1200_CR90,0,630,1200_AL_.jpg"},
-    {name:"Black list sdfsa dasd asd asd asd sad asdsa dasd sa", favorit: true, image:"https://m.media-amazon.com/images/M/MV5BZDA1MzE3M2EtNTE4Ni00OGE4LWE1NjctYzFhMzA2NDgxMDIxXkEyXkFqcGdeQXVyODUxOTU0OTg@._V1_UY1200_CR90,0,630,1200_AL_.jpg"},
-    {name:"Black list sdfsa dasd asd asd asd sad asdsa dasd sa", favorit: true, image:"https://m.media-amazon.com/images/M/MV5BZDA1MzE3M2EtNTE4Ni00OGE4LWE1NjctYzFhMzA2NDgxMDIxXkEyXkFqcGdeQXVyODUxOTU0OTg@._V1_UY1200_CR90,0,630,1200_AL_.jpg"},
-    {name:"Black list sdfsa dasd asd asd asd sad asdsa dasd sa", favorit: true, image:"https://m.media-amazon.com/images/M/MV5BZDA1MzE3M2EtNTE4Ni00OGE4LWE1NjctYzFhMzA2NDgxMDIxXkEyXkFqcGdeQXVyODUxOTU0OTg@._V1_UY1200_CR90,0,630,1200_AL_.jpg"},
-    {name:"Black list sdfsa dasd asd asd asd sad asdsa dasd sa", favorit: true, image:"https://m.media-amazon.com/images/M/MV5BZDA1MzE3M2EtNTE4Ni00OGE4LWE1NjctYzFhMzA2NDgxMDIxXkEyXkFqcGdeQXVyODUxOTU0OTg@._V1_UY1200_CR90,0,630,1200_AL_.jpg"},
-    {name:"Black list sdfsa dasd asd asd asd sad asdsa dasd sa", favorit: true, image:"https://m.media-amazon.com/images/M/MV5BZDA1MzE3M2EtNTE4Ni00OGE4LWE1NjctYzFhMzA2NDgxMDIxXkEyXkFqcGdeQXVyODUxOTU0OTg@._V1_UY1200_CR90,0,630,1200_AL_.jpg"},
-    {name:"Black list sdfsa dasd asd asd asd sad asdsa dasd sa", favorit: true, image:"https://m.media-amazon.com/images/M/MV5BZDA1MzE3M2EtNTE4Ni00OGE4LWE1NjctYzFhMzA2NDgxMDIxXkEyXkFqcGdeQXVyODUxOTU0OTg@._V1_UY1200_CR90,0,630,1200_AL_.jpg"},
-    {name:"Black list sdfsa dasd asd asd asd sad asdsa dasd sa", favorit: true, image:"https://m.media-amazon.com/images/M/MV5BZDA1MzE3M2EtNTE4Ni00OGE4LWE1NjctYzFhMzA2NDgxMDIxXkEyXkFqcGdeQXVyODUxOTU0OTg@._V1_UY1200_CR90,0,630,1200_AL_.jpg"},
-    {name:"Black list sdfsa dasd asd asd asd sad asdsa dasd sa", favorit: true, image:"https://m.media-amazon.com/images/M/MV5BZDA1MzE3M2EtNTE4Ni00OGE4LWE1NjctYzFhMzA2NDgxMDIxXkEyXkFqcGdeQXVyODUxOTU0OTg@._V1_UY1200_CR90,0,630,1200_AL_.jpg"},
-    {name:"Black list sdfsa dasd asd asd asd sad asdsa dasd sa", favorit: true, image:"https://m.media-amazon.com/images/M/MV5BZDA1MzE3M2EtNTE4Ni00OGE4LWE1NjctYzFhMzA2NDgxMDIxXkEyXkFqcGdeQXVyODUxOTU0OTg@._V1_UY1200_CR90,0,630,1200_AL_.jpg"},
-    {name:"Black list sdfsa dasd asd asd asd sad asdsa dasd sa", favorit: true, image:"https://m.media-amazon.com/images/M/MV5BZDA1MzE3M2EtNTE4Ni00OGE4LWE1NjctYzFhMzA2NDgxMDIxXkEyXkFqcGdeQXVyODUxOTU0OTg@._V1_UY1200_CR90,0,630,1200_AL_.jpg"},
-    {name:"Black list sdfsa dasd asd asd asd sad asdsa dasd sa", favorit: true, image:"https://m.media-amazon.com/images/M/MV5BZDA1MzE3M2EtNTE4Ni00OGE4LWE1NjctYzFhMzA2NDgxMDIxXkEyXkFqcGdeQXVyODUxOTU0OTg@._V1_UY1200_CR90,0,630,1200_AL_.jpg"},
-    {name:"Black list sdfsa dasd asd asd asd sad asdsa dasd sa", favorit: true, image:"https://m.media-amazon.com/images/M/MV5BZDA1MzE3M2EtNTE4Ni00OGE4LWE1NjctYzFhMzA2NDgxMDIxXkEyXkFqcGdeQXVyODUxOTU0OTg@._V1_UY1200_CR90,0,630,1200_AL_.jpg"},
-    {name:"Black list sdfsa dasd asd asd asd sad asdsa dasd sa", favorit: true, image:"https://m.media-amazon.com/images/M/MV5BZDA1MzE3M2EtNTE4Ni00OGE4LWE1NjctYzFhMzA2NDgxMDIxXkEyXkFqcGdeQXVyODUxOTU0OTg@._V1_UY1200_CR90,0,630,1200_AL_.jpg"},
-    {name:"Black list sdfsa dasd asd asd asd sad asdsa dasd sa", favorit: true, image:"https://m.media-amazon.com/images/M/MV5BZDA1MzE3M2EtNTE4Ni00OGE4LWE1NjctYzFhMzA2NDgxMDIxXkEyXkFqcGdeQXVyODUxOTU0OTg@._V1_UY1200_CR90,0,630,1200_AL_.jpg"},
-    {name:"Black list sdfsa dasd asd asd asd sad asdsa dasd sa", favorit: true, image:"https://m.media-amazon.com/images/M/MV5BZDA1MzE3M2EtNTE4Ni00OGE4LWE1NjctYzFhMzA2NDgxMDIxXkEyXkFqcGdeQXVyODUxOTU0OTg@._V1_UY1200_CR90,0,630,1200_AL_.jpg"},
-    {name:"Black list sdfsa dasd asd asd asd sad asdsa dasd sa", favorit: true, image:"https://m.media-amazon.com/images/M/MV5BZDA1MzE3M2EtNTE4Ni00OGE4LWE1NjctYzFhMzA2NDgxMDIxXkEyXkFqcGdeQXVyODUxOTU0OTg@._V1_UY1200_CR90,0,630,1200_AL_.jpg"},
-    {name:"Black list sdfsa dasd asd asd asd sad asdsa dasd sa", favorit: true, image:"https://m.media-amazon.com/images/M/MV5BZDA1MzE3M2EtNTE4Ni00OGE4LWE1NjctYzFhMzA2NDgxMDIxXkEyXkFqcGdeQXVyODUxOTU0OTg@._V1_UY1200_CR90,0,630,1200_AL_.jpg"},
-    {name:"Black list sdfsa dasd asd asd asd sad asdsa dasd sa", favorit: true, image:"https://m.media-amazon.com/images/M/MV5BZDA1MzE3M2EtNTE4Ni00OGE4LWE1NjctYzFhMzA2NDgxMDIxXkEyXkFqcGdeQXVyODUxOTU0OTg@._V1_UY1200_CR90,0,630,1200_AL_.jpg"},
-    {name:"Black list sdfsa dasd asd asd asd sad asdsa dasd sa", favorit: true, image:"https://m.media-amazon.com/images/M/MV5BZDA1MzE3M2EtNTE4Ni00OGE4LWE1NjctYzFhMzA2NDgxMDIxXkEyXkFqcGdeQXVyODUxOTU0OTg@._V1_UY1200_CR90,0,630,1200_AL_.jpg"},
-    {name:"Black list sdfsa dasd asd asd asd sad asdsa dasd sa", favorit: true, image:"https://m.media-amazon.com/images/M/MV5BZDA1MzE3M2EtNTE4Ni00OGE4LWE1NjctYzFhMzA2NDgxMDIxXkEyXkFqcGdeQXVyODUxOTU0OTg@._V1_UY1200_CR90,0,630,1200_AL_.jpg"},
-    {name:"Black list sdfsa dasd asd asd asd sad asdsa dasd sa", favorit: true, image:"https://m.media-amazon.com/images/M/MV5BZDA1MzE3M2EtNTE4Ni00OGE4LWE1NjctYzFhMzA2NDgxMDIxXkEyXkFqcGdeQXVyODUxOTU0OTg@._V1_UY1200_CR90,0,630,1200_AL_.jpg"}]
-    return{ cardObject, categoryName}
+
+    return{ cardObject:[], categoryName}
+  },
+  methods:{
+    async fetchCategory(category){
+      if(category === 'action'){
+   try{
+    const res = await this.$axios.get(requests.tmdbApi.fetchActionMovies);
+   this.cardObject = res.data.results;
+    }
+    catch(e){
+      console.log(e);
+    }
+      } else if( category === 'comedy'){
+   try{
+    const res = await this.$axios.get(requests.tmdbApi.fetchComedyMovies);
+   this.cardObject = res.data.results;
+    }
+    catch(e){
+      console.log(e);
+    }
+      } else if( category === 'horror'){
+   try{
+    const res = await this.$axios.get(requests.tmdbApi.fetchHorrorMovies);
+   this.cardObject = res.data.results;
+    }
+    catch(e){
+      console.log(e);
+    }
+      }else if( category === 'romance'){
+   try{
+    const res = await this.$axios.get(requests.tmdbApi.fetchRomanceMovies);
+   this.cardObject = res.data.results;
+    }
+    catch(e){
+      console.log(e);
+    }
+      }else if( category === 'documentary'){
+   try{
+    const res = await this.$axios.get(requests.tmdbApi.fetchDocumentaries);
+   this.cardObject = res.data.results;
+    }
+    catch(e){
+      console.log(e);
+    }
+      }else if( category === 'fantasy'){
+   try{
+    const res = await this.$axios.get(requests.tmdbApi.fetchFantasy);
+   this.cardObject = res.data.results;
+    }
+    catch(e){
+      console.log(e);
+    }
+      }else if( category === 'war'){
+   try{
+    const res = await this.$axios.get(requests.tmdbApi.fetchWarMovies);
+   this.cardObject = res.data.results;
+    }
+    catch(e){
+      console.log(e);
+    }
+      }else if( category === 'drama'){
+   try{
+    const res = await this.$axios.get(requests.tmdbApi.fetchDrama);
+   this.cardObject = res.data.results;
+    }
+    catch(e){
+      console.log(e);
+    }
+      }
+    },
+     appendUrl(img){
+    if(img){
+    return 'https://image.tmdb.org/t/p/original/'+img
+    }
+  },
   }
 }
 </script>

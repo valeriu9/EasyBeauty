@@ -22,6 +22,7 @@ export default {
     { src: '@/plugins/vue-dragscroll.js', ssr: false },
     { src: '@/plugins/cookies.js', ssr: false },
     { src: '~/plugins/userCookie.client.js', ssr: false },
+    { src: '~/plugins/vue-lazysizes.client.js', ssr: false }
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -76,4 +77,10 @@ export default {
       scss: { sourceMap: false },
     },
   },
+  extend (config, { isDev, isClient, loaders: { vue } }) {
+    if (isClient) {
+      vue.transformAssetUrls.img = ['data-src', 'src']
+      vue.transformAssetUrls.source = ['data-srcset', 'srcset']
+    }
+  }
 }

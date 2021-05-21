@@ -3,7 +3,7 @@
     <div class="card">
       <img v-if="cardObject.favorit" src="~assets/images/bookmark.svg" alt="favourit" @click="addToFavorite(cardObject.id)" class="bookmark">
       <img v-else src="~assets/images/bookmark-2.svg" alt="favourit" class="bookmark">
-      <img :src="`https://image.tmdb.org/t/p/original/`+cardObject.poster_path" alt="card image" class="image">
+      <img :src="`https://image.tmdb.org/t/p/original/`+cardObject.poster_path" alt="card image" class="image lazyload">
       <div class="card-details">
       </div>
       <div class="card-text">
@@ -98,6 +98,7 @@ p {
   width: 100%;
   font-size: 20px;
   font-weight: 700;
+  color: #000;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);

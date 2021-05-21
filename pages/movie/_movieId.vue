@@ -2,7 +2,7 @@
   <div class="container">
     <div class="overview-wrapper">
       <div class="img-container">
-        <img :src="appendRootToImg(movie.poster_path)" alt="movie img">
+        <img :src="image" alt="movie img">
       </div>
       <div class="movie-info">
         <div class="right-side">
@@ -88,8 +88,15 @@
 <script>
 import requests from '~/helpers/api.js'
 export default {
-  beforeMount (){
-    this.fetchMovie();
+ async mounted (){
+    try{
+    const res = await this.$axios.get(requests.fetchMovieById(this.$route.params.movieId));
+    this.image = this.appendUrl(res.data.poster_path);
+    Object.assign(this.movie,res.data);
+    }
+    catch(e){
+      console.log(e);
+    }
     this.fetchCredits();
   },
   computed: {
@@ -100,11 +107,10 @@ export default {
     }
   },
 data(){
-  const movie = {}
   const credits={}
   const comments=[{user:'vanea', name:'good film'}, {user:'vanea', name:'nah, could be better'}, {user:'vanea', name:'the worst film ever what the fuck fuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckv fuckfuck fuckfuckfuckfuckfuckfuck fuckfuck'}]
   const message= '';
-  return{movie, credits, comments, message}
+  return{ movie:{}, credits, comments, message, image:''}
 },
 methods:{
   addComment(message){
@@ -135,23 +141,17 @@ methods:{
     catch(e){
       console.log(e);
     }
-  },
-    async fetchCredits(){
-    try{
-    const res = await this.$axios.get(requests.fetchMovieCredits(this.$route.params.movieId));
-    Object.assign(this.credits,res.data);
-     console.log(this.credits);
-    }
-    catch(e){
-      console.log(e);
-    }
-  },
-  appendRootToImg(img){
+    },
+  appendUrl(img){
     if(img){
-      return `https://image.tmdb.org/t/p/original/`+img;
+    return 'https://image.tmdb.org/t/p/original/'+img
     }
+  },
+  async fetchCredits(){
+    const res = await this.$axios.get(requests.fetchMovieCredits(this.$route.params.movieId));
+    this.credits = res.data
   }
-}
+ }
 }
 </script>
 

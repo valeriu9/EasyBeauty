@@ -11,7 +11,7 @@
         <nuxt-link to="/category/drama" target="_self">Drama</nuxt-link>
       </li>
       <li>
-        <nuxt-link to="/category/roumance" target="_self">Roumance</nuxt-link>
+        <nuxt-link to="/category/roumance" target="_self">Romance</nuxt-link>
       </li>
       <li>
         <nuxt-link to="/category/action" target="_self">Action</nuxt-link>
@@ -20,7 +20,7 @@
         <nuxt-link to="/category/horror" target="_self">Horror</nuxt-link>
       </li>
       <li>
-        <nuxt-link to="/category/thriler">Thriler</nuxt-link>
+        <nuxt-link to="/category/war">War</nuxt-link>
       </li>
       <li>
         <nuxt-link to="/category/documentary">Documentary</nuxt-link>
