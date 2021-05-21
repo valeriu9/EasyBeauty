@@ -47,9 +47,9 @@ export default {
     catch(e){
       console.log(e);
     }
-      }else if( category === 'romance'){
+      }else if( category === 'mystery'){
    try{
-    const res = await this.$axios.get(requests.tmdbApi.fetchRomanceMovies);
+    const res = await this.$axios.get(requests.tmdbApi.fetchMystery);
    this.cardObject = res.data.results;
     }
     catch(e){
