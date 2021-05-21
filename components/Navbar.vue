@@ -11,7 +11,7 @@
         <nuxt-link to="/category/drama" target="_self">Drama</nuxt-link>
       </li>
       <li>
-        <nuxt-link to="/category/roumance" target="_self">Romance</nuxt-link>
+        <nuxt-link to="/category/romance" target="_self">Romance</nuxt-link>
       </li>
       <li>
         <nuxt-link to="/category/action" target="_self">Action</nuxt-link>
