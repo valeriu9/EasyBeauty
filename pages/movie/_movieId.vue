@@ -2,7 +2,8 @@
   <div class="container">
     <div class="overview-wrapper">
       <div class="img-container">
-        <img :src="image" alt="movie img">
+        <img v-if="image" :src="image" alt="movie img">
+        <img v-else src="~assets/images/no-image.png" alt="card image" class="image lazyload">
       </div>
       <div class="movie-info">
         <div class="right-side">
@@ -36,12 +37,14 @@
             <p>Director:</p>
             <span v-for="(director, index) in filteredItems" :key="index">{{director.name}}<span v-if="index+1 < filteredItems.length">, </span></span>
           </div>
-          <div @click="saveFav($route.params.movieId)">save</div>
         </div>
 
         <div class="left-side">
           <p class="title">Description:</p>
           <span class="subtext">{{movie.overview}}</span>
+          <div class="add-favorite" @click="saveFav($route.params.movieId)">
+            Add to favorite
+          </div>
         </div>
       </div>
     </div>
@@ -110,7 +113,7 @@ data(){
   const credits={}
   const comments=[{user:'vanea', name:'good film'}, {user:'vanea', name:'nah, could be better'}, {user:'vanea', name:'the worst film ever what the fuck fuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckv fuckfuck fuckfuckfuckfuckfuckfuck fuckfuck'}]
   const message= '';
-  return{ movie:{}, credits, comments, message, image:''}
+  return{ movie:{}, credits, comments, message, image:'', clicked: false}
 },
 methods:{
   addComment(message){
@@ -200,6 +203,18 @@ span {
 }
 .right-side {
   width: 50%;
+}
+.add-favorite {
+  width: calc(100% - 60px);
+  padding: 16px;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  border: 1px solid #ccc;
+  text-align: center;
+  background-color: rgb(189, 148, 12);
+  cursor: pointer;
+  margin: 20px;
 }
 .list-container {
   width: 100%;

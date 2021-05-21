@@ -114,6 +114,7 @@ export default {
 }
 .container {
   margin-top: 80px;
+  padding-bottom: 100px;
 }
 a {
   text-decoration: none;

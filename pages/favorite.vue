@@ -3,7 +3,7 @@
     <p class="header-text">Favorite movies</p>
     <div class="card-wrapper">
       <div v-for="data of cardObject" :key="data.index" class="card-place">
-        <Card :cardObject="data" :enableDelete="true" @favoriteRemoved="removeFromList" />
+        <Card :cardObject="data" :enableDelete="true" :favorit="true" @favoriteRemoved="removeFromList" />
       </div>
     </div>
   </div>

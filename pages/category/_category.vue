@@ -3,9 +3,7 @@
     <p class="header-text">{{categoryName}}</p>
     <div class="card-wrapper">
       <div v-for="data of cardObject" :key="data.index" class="card-place">
-        <nuxt-link :to="`/movie/`+data.id">
-          <Card :cardObject="data" />
-        </nuxt-link>
+        <Card :cardObject="data" />
       </div>
     </div>
   </div>
