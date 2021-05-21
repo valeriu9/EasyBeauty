@@ -93,11 +93,7 @@ export default {
     async fetchMovies () {
       try {
         const res = await this.$axios.get(requests.tmdbApi.fetchTrending);
-        console.log(requests.tmdbApi.fetchTrending);
-        console.log(res.data);
         this.trendingResults = res.data.results;
-        console.log(this.trendingResults);
-        if (res.data.type === 'Error') { throw new Error(res.data); }
 
       } catch (e) {
         console.error(e.message);

@@ -7,6 +7,7 @@
           <input type="text" v-model="usernameUp" placeholder="Username" />
           <input type="password" v-model="passwordUp" placeholder="Password" />
           <button @click="signUp(usernameUp, passwordUp)">Sign Up</button>
+          <p v-if="errorSignUp" class="danger">{{errorSignUp}}</p>
         </div>
       </div>
       <div class="form-container sign-in-container">
@@ -15,6 +16,7 @@
           <input type="text" v-model="username" placeholder="Username" />
           <input type="password" v-model="password" placeholder="Password" />
           <button @click="signIn(username, password)">Sign In</button>
+          <p v-if="errorSignIn" class="danger">{{errorSignIn}}</p>
         </div>
       </div>
       <div class="overlay-container">
@@ -55,7 +57,7 @@ signInButton.addEventListener('click', () => {
     const usernameUp ='';
     const password ='';
     const passwordUp ='';
-    return{username, usernameUp, password, passwordUp}
+    return{username, usernameUp, password, passwordUp, errorSignUp:'', errorSignIn:''}
   },
   methods:{
     async signIn(username, password){
@@ -64,28 +66,32 @@ try {
           username,
           password
         )
-        setTimeout(() => {
-        window.location.href = '/';
-      }, 1000);
-        console.log(res);
-      } catch (e) {
-        console.log(e);
-      }
-
       const user={ name: username};
       this.$cookies.set('movie_user',user);
       this.$store.dispatch('user/userLoggedIn', user);
+        setTimeout(() => {
+        window.location.href = '/';
+      }, 1000);
+      } catch (e) {
+        this.errorSignIn = e.message;
+      }
 
 
     },
     async signUp(usernameUp, passwordUp){
       try {
-        await this.$fire.auth.createUserWithEmailAndPassword(
+     const res = await this.$fire.auth.createUserWithEmailAndPassword(
           usernameUp,
           passwordUp
         )
+      const user={ name: usernameUp};
+      this.$cookies.set('movie_user',user);
+      this.$store.dispatch('user/userLoggedIn', user);
+       setTimeout(() => {
+        window.location.href = '/';
+      }, 1000);
       } catch (e) {
-        console.log(e);
+        this.errorSignUp = e.message;
       }
     }
   }
@@ -130,6 +136,10 @@ h1 {
 
 h2 {
   text-align: center;
+}
+.danger {
+  color: #ff416c;
+  font-size: 14px;
 }
 
 p {

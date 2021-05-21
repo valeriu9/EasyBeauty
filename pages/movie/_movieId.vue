@@ -139,7 +139,6 @@ methods:{
     const res = await this.$axios.get(requests.fetchMovieById(this.$route.params.movieId));
 
     Object.assign(this.movie,res.data);
-    console.log(this.movie);
     }
     catch(e){
       console.log(e);

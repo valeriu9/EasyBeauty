@@ -38,11 +38,11 @@
       </li>
       <li><input type="text" v-model="search" /></li>
       <li class="search-button-holder">
-        <nuxt-link :to="`/search-result?searchKey=`+search">
+        <a :href="`/search-result?searchKey=`+search">
           <div class="signin-out">
             <p>Search</p>
           </div>
-        </nuxt-link>
+        </a>
       </li>
       <li>
         <a v-if="loggedIn" href="/sign-out" class="signin-out">
