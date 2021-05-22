@@ -5,6 +5,7 @@
       <div v-for="data of movies" :key="data.index" class="card-place">
         <Card :cardObject="data" />
       </div>
+      <p v-if="movies.length ===0" class="no-movies">No Movies For This Search</p>
     </div>
   </div>
 </template>
@@ -23,9 +24,7 @@ export default {
     async initializeData(searchKey){
     try{
     const res = await this.$axios.get(requests.querySearch(searchKey));
-    console.log(res);
     this.movies = res.data.results;
-    console.log(this.movies);
     }
     catch(e){
       console.log(e);
@@ -55,5 +54,10 @@ export default {
 }
 .card-wrapper {
   padding-bottom: 100px;
+}
+.no-movies {
+  margin-top: 80px;
+  color: #ccc;
+  font-size: 20px;
 }
 </style>
