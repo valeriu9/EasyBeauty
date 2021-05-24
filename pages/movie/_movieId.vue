@@ -189,10 +189,10 @@ span {
   }
 }
 .left-side {
-  width: 50%;
+  width: 30%;
 }
 .right-side {
-  width: 50%;
+  width: 70%;
 }
 .add-favorite {
   width: calc(100% - 60px);
