@@ -17,7 +17,6 @@ export default {
   },
   data(){
     const categoryName = this.$route.params.category;
-    const cardObject =[{name:"Black list sdfsa dasd asd asd asd sad asdsa dasd sa", favorit: true, image:"https://m.media-amazon.com/images/M/MV5BZDA1MzE3M2EtNTE4Ni00OGE4LWE1NjctYzFhMzA2NDgxMDIxXkEyXkFqcGdeQXVyODUxOTU0OTg@._V1_UY1200_CR90,0,630,1200_AL_.jpg"}]
     return{ cardObject, categoryName, movies:[]}
   },
   methods:{

@@ -52,9 +52,11 @@
       <p class="title margin-left-12">Stars:</p>
       <div class="display-flex">
         <div v-for="actor in credits.cast" :key="actor.index" class="actor-slot">
-          <img v-if="actor.profile_path" :src="`https://image.tmdb.org/t/p/original/`+actor.profile_path" class="actor-img" alt="actor img">
-          <img v-else src="~/assets/images/actor-img.png" class="actor-img missing" alt="actor img">
-          <span>{{actor.name}}</span>
+          <nuxt-link :to="`/persons/`+actor.id">
+            <img v-if="actor.profile_path" :src="`https://image.tmdb.org/t/p/original/`+actor.profile_path" class="actor-img" alt="actor img">
+            <img v-else src="~/assets/images/actor-img.png" class="actor-img missing" alt="actor img">
+            <span>{{actor.name}}</span>
+          </nuxt-link>
         </div>
       </div>
     </div>
@@ -129,21 +131,10 @@ methods:{
         try {
           await ref.set(document)
         } catch (e) {
-          // TODO: error handling
           console.error(e)
         }
         this.writeSuccessful = true
       },
-  async fetchMovie(){
-    try{
-    const res = await this.$axios.get(requests.fetchMovieById(this.$route.params.movieId));
-
-    Object.assign(this.movie,res.data);
-    }
-    catch(e){
-      console.log(e);
-    }
-    },
   appendUrl(img){
     if(img){
     return 'https://image.tmdb.org/t/p/original/'+img

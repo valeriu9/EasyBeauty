@@ -1,18 +1,17 @@
 <template>
   <div>
-    <nuxt-link :to="`/movie/`+cardObject.id">
-      <div class="card">
-        <img v-if="favorit" src="~assets/images/bookmark-2.svg" alt="favourit" class="bookmark">
-        <img v-if="cardObject.poster_path" :src="`https://image.tmdb.org/t/p/original/`+cardObject.poster_path" alt="card image" class="image lazyload">
-        <img v-else src="~assets/images/no-image.png" alt="card image" class="image lazyload">
-        <div class="card-details">
-        </div>
-        <div class="card-text">
-          <p v-if="cardObject.title" class="title">{{cardObject.title}} </p>
-          <p v-else class="title">{{cardObject.name}} </p>
-        </div>
+    <div class="card">
+      <img v-if="favorit" src="~assets/images/bookmark-2.svg" alt="favourit" class="bookmark">
+      <img v-if="cardObject.poster_path" :src="`https://image.tmdb.org/t/p/original/`+cardObject.poster_path" alt="card image" class="image lazyload">
+      <img v-else-if="cardObject.profile_path" :src="`https://image.tmdb.org/t/p/original/`+cardObject.profile_path" alt="card image" class="image lazyload">
+      <img v-else src="~assets/images/no-image.png" alt="card image" class="image lazyload">
+      <div class="card-details">
       </div>
-    </nuxt-link>
+      <div class="card-text">
+        <p v-if="cardObject.title" class="title">{{cardObject.title}} </p>
+        <p v-else class="title">{{cardObject.name}} </p>
+      </div>
+    </div>
     <div v-if="enableDelete" class="delete-button" @click="removeFavorite()">Remove</div>
 
   </div>
@@ -58,6 +57,7 @@ methods:{
   }
   .image {
     height: 283.88px;
+    object-fit: cover;
   }
 }
 
