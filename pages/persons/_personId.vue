@@ -42,7 +42,7 @@
       </div>
     </div>
     <div class="list-container">
-      <p class="title margin-left-12">Stars:</p>
+      <p class="title margin-left-12">Known for:</p>
       <div class="display-flex">
         <div v-for="movie in movies" :key="movie.index" class="actor-slot">
           <nuxt-link :to="`/movie/`+movie.id">
