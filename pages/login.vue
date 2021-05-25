@@ -61,16 +61,16 @@ signInButton.addEventListener('click', () => {
   },
   methods:{
     async signIn(username, password){
-try {
-       const res = await this.$fire.auth.signInWithEmailAndPassword(
-          username,
+    try {
+      await this.$fire.auth.signInWithEmailAndPassword(
+        username,
           password
         )
       const user={ name: username};
       this.$cookies.set('movie_user',user);
       this.$store.dispatch('user/userLoggedIn', user);
         setTimeout(() => {
-        window.location.href = '/';
+          window.location.href = '/';
       }, 1000);
       } catch (e) {
         this.errorSignIn = e.message;
@@ -80,11 +80,11 @@ try {
     },
     async signUp(usernameUp, passwordUp){
       try {
-     const res = await this.$fire.auth.createUserWithEmailAndPassword(
+        await this.$fire.auth.createUserWithEmailAndPassword(
           usernameUp,
           passwordUp
         )
-      const user={ name: usernameUp};
+      const user= { name: usernameUp};
       this.$cookies.set('movie_user',user);
       this.$store.dispatch('user/userLoggedIn', user);
        setTimeout(() => {

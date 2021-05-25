@@ -124,12 +124,12 @@ methods:{
     this.message = ''
   },
   async saveFav(id) {
-        const ref = this.$fire.firestore.collection("test").doc("test")
-        const document = {
+        const ref = this.$fire.firestore.collection("test")
+        const value = {
           number: id
         }
         try {
-          await ref.set(document)
+          await ref.add(value)
         } catch (e) {
           console.error(e)
         }

@@ -2,30 +2,49 @@
   <div class="container">
     <p class="header-text">Favorite movies</p>
     <div class="card-wrapper">
-      <div v-for="data of cardObject" :key="data.index" class="card-place">
-        <Card :cardObject="data" :enableDelete="true" :favorit="true" @favoriteRemoved="removeFromList" />
+      <div v-for="data of movie" :key="data.index" class="card-place">
+        <Card :cardObject="data" :enableDelete="true" :favorit="true" @favoriteRemoved="removeFromDb(data.index)" />
       </div>
+      <p class="header-text" @click="removeFromDb('zRabWuDZnYF3X0WAOf1J')">Remove movie</p>
     </div>
   </div>
 </template>
 <script>
+import requests from '~/helpers/api.js'
 export default {
-  data(){
-    const categoryName = this.$route.params.category;
-    const cardObject =[ {name:"Black list ", favorit: true, image:"https://m.media-amazon.com/images/M/MV5BZDA1MzE3M2EtNTE4Ni00OGE4LWE1NjctYzFhMzA2NDgxMDIxXkEyXkFqcGdeQXVyODUxOTU0OTg@._V1_UY1200_CR90,0,630,1200_AL_.jpg"},
-    {name:"Black list 1", favorit: true, image:"https://m.media-amazon.com/images/M/MV5BZDA1MzE3M2EtNTE4Ni00OGE4LWE1NjctYzFhMzA2NDgxMDIxXkEyXkFqcGdeQXVyODUxOTU0OTg@._V1_UY1200_CR90,0,630,1200_AL_.jpg"},
-    {name:"Black list 2", favorit: true, image:"https://m.media-amazon.com/images/M/MV5BZDA1MzE3M2EtNTE4Ni00OGE4LWE1NjctYzFhMzA2NDgxMDIxXkEyXkFqcGdeQXVyODUxOTU0OTg@._V1_UY1200_CR90,0,630,1200_AL_.jpg"},
-    {name:"Black list 3", favorit: true, image:"https://m.media-amazon.com/images/M/MV5BZDA1MzE3M2EtNTE4Ni00OGE4LWE1NjctYzFhMzA2NDgxMDIxXkEyXkFqcGdeQXVyODUxOTU0OTg@._V1_UY1200_CR90,0,630,1200_AL_.jpg"},
-    {name:"Black list 4", favorit: true, image:"https://m.media-amazon.com/images/M/MV5BZDA1MzE3M2EtNTE4Ni00OGE4LWE1NjctYzFhMzA2NDgxMDIxXkEyXkFqcGdeQXVyODUxOTU0OTg@._V1_UY1200_CR90,0,630,1200_AL_.jpg"},
-    {name:"Black list 5", favorit: true, image:"https://m.media-amazon.com/images/M/MV5BZDA1MzE3M2EtNTE4Ni00OGE4LWE1NjctYzFhMzA2NDgxMDIxXkEyXkFqcGdeQXVyODUxOTU0OTg@._V1_UY1200_CR90,0,630,1200_AL_.jpg"}]
-    return{ cardObject, categoryName}
+ async mounted(){
+  this.$fire.firestore.collection("test").get().then((querySnapshot) => {
+    querySnapshot.forEach((doc) => {
+      const object = {id: doc.id, movieId: doc.data().number}
+      this.movieDbs.push(object);
+    });
+    this.getMovie();
+  })
+ },
+  data() {
+   const movie = [];
+   const movieDbs = [];
+    return { movie, movieDbs }
   },
   methods:{
-    removeFromList(object){
-      console.log(object);
-     let i = this.cardObject.indexOf(object) // find index of your object
-     console.log(i);
-      this.cardObject.splice(i, 1)
+    // removeFromList(object){
+    //   console.log(object);
+    //  let i = this.cardObject.indexOf(object) // find index of your object
+    //  console.log(i);
+    //   this.cardObject.splice(i, 1)
+    // },
+    async removeFromDb(id){
+       this.$fire.firestore.collection("test").doc(id).delete().then(() => {
+    console.log("Document successfully deleted!");
+    }).catch((error) => {
+    console.error("Error removing document: ", error);
+  });
+    },
+    getMovie(){
+     this.movieDbs.forEach( async (movie)=>{
+       const res = await this.$axios.get(requests.fetchMovieById(movie.movieId));
+       this.movie.push(res.data)
+     })
     }
   }
 }
