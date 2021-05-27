@@ -5,7 +5,7 @@
       <div v-for="data of movie" :key="data.index" class="card-place">
         <Card :cardObject="data" :enableDelete="true" :favorit="true" @favoriteRemoved="removeFromDb(data.index)" />
       </div>
-      <p class="header-text" @click="removeFromDb('zRabWuDZnYF3X0WAOf1J')">Remove movie</p>
+      <p class="header-text" @click="removeFromDb('zRabWuDZnYF3X0WAOf1Jnpm')">Remove movie</p>
     </div>
   </div>
 </template>
