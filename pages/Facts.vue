@@ -14,8 +14,8 @@ export default {
   methods:{
    async fetchData(){
         try{
-     const res = await this.$axios.get('/api/getRating');
-     console.log(res);
+     const res = await this.$axios.get('https://europe-west1-sep6-314214.cloudfunctions.net/getRating');
+     console.log(res.data.result);
    }
    catch(e){
      console.log(e);
