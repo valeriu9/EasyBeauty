@@ -3,7 +3,9 @@
     <p class="header-text">Favorite movies</p>
     <div class="card-wrapper">
       <div v-for="data of movie" :key="data.index" class="card-place">
-        <Card :cardObject="data" :enableDelete="true" :favorit="true" @favoriteRemoved="removeFromDb(data.index)" />
+        <nuxt-link :to="`/movie/`+data.id">
+          <Card :cardObject="data" :enableDelete="true" :favorit="true" @favoriteRemoved="removeFromDb(data.index)" />
+        </nuxt-link>
       </div>
       <p class="header-text" @click="removeFromDb('zRabWuDZnYF3X0WAOf1Jnpm')">Remove movie</p>
     </div>

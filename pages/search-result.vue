@@ -3,9 +3,11 @@
     <p class="header-text">Results</p>
     <div class="card-wrapper">
       <div v-for="data of movies" :key="data.index" class="card-place">
-        <Card :cardObject="data" />
+        <nuxt-link :to="`/movie/`+data.id">
+          <Card :cardObject="data" />
+        </nuxt-link>
       </div>
-      <p v-if="movies.length ===0" class="no-movies">No Movies For This Search</p>
+      <p v-if="movies.length === 0" class="no-movies">No Movies For This Search</p>
     </div>
   </div>
 </template>
@@ -16,14 +18,14 @@ export default {
     this.initializeData(this.$route.query.searchKey);
   },
   data(){
-    const categoryName = this.$route.params.category;
-    return{ cardObject, categoryName, movies:[]}
+    return{ movies:[]}
   },
   methods:{
     async initializeData(searchKey){
     try{
-    const res = await this.$axios.get(requests.querySearch(searchKey));
+      const res = await this.$axios.get(requests.querySearch(searchKey));
     this.movies = res.data.results;
+      console.log(this.movies);
     }
     catch(e){
       console.log(e);

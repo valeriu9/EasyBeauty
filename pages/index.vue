@@ -1,10 +1,9 @@
 <template>
   <div class="container">
     <div>
-      <h1 class="section-name">See top 10 by...</h1>
       <div class="see-top-10">
         <div class="scroll-wrapper">
-          <h3 class="title">Trending</h3>
+          <h3 class="title">Trending Movies</h3>
           <div v-dragscroll class="scroll-parent">
             <div class="scroll-container">
               <div v-for="movie in trendingResults" :key="movie.index">
@@ -16,19 +15,7 @@
           </div>
         </div>
         <div class="scroll-wrapper">
-          <h3 class="title">Countries</h3>
-          <div v-dragscroll class="scroll-parent">
-            <div class="scroll-container">
-              <CountryCard :cardObject="countryObject" />
-              <CountryCard :cardObject="countryObject" />
-              <CountryCard :cardObject="countryObject" />
-              <CountryCard :cardObject="countryObject" />
-              <CountryCard :cardObject="countryObject" />
-            </div>
-          </div>
-        </div>
-        <div class="scroll-wrapper">
-          <h3 class="title">Actors</h3>
+          <h3 class="title">Top Actors</h3>
           <div v-dragscroll class="scroll-parent">
             <div class="scroll-container">
               <div v-for="actor in actorResults" :key="actor.index">
@@ -36,19 +23,6 @@
                   <Card :cardObject="actor" />
                 </nuxt-link>
               </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <h1 class="section-name margin-top-30">Explore by ... time?</h1>
-      <div class="see-top-10">
-        <div class="scroll-wrapper">
-          <h3 class="title">Movie length</h3>
-          <div v-dragscroll class="scroll-parent-time">
-            <div class="scroll-container">
-              <TimeCard timeRange="> 2 H" />
-              <TimeCard timeRange="> 2,5 H" />
-              <TimeCard timeRange="> 3 H" />
             </div>
           </div>
         </div>
@@ -166,7 +140,7 @@ a {
 .scroll-parent {
   display: flex;
   flex-direction: row;
-  max-width: 400px !important;
+  max-width: 90vw !important;
   overflow: hidden;
 }
 .scroll-parent-time {
@@ -179,7 +153,7 @@ a {
 }
 .see-top-10 {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
 }
 .statistics {
   margin: 24px;
@@ -190,5 +164,10 @@ a {
   color: #fff;
   width: fit-content;
   cursor: pointer;
+}
+.title {
+  margin: 24px;
+  font-weight: 700;
+  font-size: 40px;
 }
 </style>

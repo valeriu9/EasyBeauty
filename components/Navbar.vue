@@ -33,7 +33,7 @@
       </li>
     </ul>
     <ul class="right-side">
-      <li>
+      <li v-if="loggedIn">
         <nuxt-link to="/favorite"><img src="~assets/images/star.svg" class="favorite" alt="star"></nuxt-link>
       </li>
       <li><input type="text" v-model="search" /></li>
