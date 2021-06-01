@@ -4,13 +4,6 @@ import { Line } from "vue-chartjs";
 export default {
   extends: Line,
  async mounted() {
-   try{
-     const res = await this.$axios.get('https://europe-west1-sep6-314214.cloudfunctions.net/getRating');
-     console.log(res);
-   }
-   catch(e){
-     console.log(e);
-   }
     this.renderChart(
       {
         labels: [
