@@ -43,19 +43,7 @@ export default {
     '@nuxtjs/axios',
     '@nuxtjs/style-resources',
     '@nuxtjs/firebase',
-    '@nuxtjs/proxy'
   ],
-  // axios: {
-  //   proxy: true,
-  //   prefix: '/api/'
-  // },
-
-  // proxy: {
-  //   '/api/': {
-  //     target: 'https://europe-west1-sep6-314214.cloudfunctions.net/',
-  //     pathRewrite: { '^/api/': '' }
-  //   }
-  // },
   firebase:
   {
     config: {

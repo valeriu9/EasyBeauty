@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <Linechart />
+    <Linechart v-if="getRating" :chartdata="getRating" :options="options" />
 
   </div>
 </template>
@@ -10,16 +10,43 @@
 export default {
  mounted(){
    this.fetchData();
+
+  },
+  data(){
+    const options ={
+				responsive: false,
+				scales: {
+					yAxes: [{
+						ticks: {
+							beginAtZero: true,
+							callback: (value) => {
+								return value + units[i];
+							}
+						}
+					}]
+				}
+			}
+    return{getRating:null, options}
   },
   methods:{
    async fetchData(){
         try{
      const res = await this.$axios.get('https://europe-west1-sep6-314214.cloudfunctions.net/getRating');
-     console.log(res.data.result);
+     this.transform(res.data)
+     console.log(this.getRating);
    }
    catch(e){
      console.log(e);
    }
+    },
+    transform(res){
+      let label = [];
+      let data = [];
+      for(let i = 0; i < res.length; i++){
+        label.push(res[i].year)
+        data.push(res[i].rating)
+      }
+      this.getRating = {labels: label, datasets: data}
     }
   }
 }
