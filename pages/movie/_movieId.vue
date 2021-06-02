@@ -198,7 +198,7 @@ methods:{
          this.checkFavorite(this.favorites);
       })
          }
-     }, 1000);
+     }, 2000);
      }
      catch(e){
        console.log(e);
@@ -207,20 +207,20 @@ methods:{
   checkFavorite(list){
      const user = this.$fire.auth.currentUser;
         if(user.uid){
-    if(list.length !== 0){
+          if(list.length !== 0){
       for(let i = 0; i < list.length; i++){
         if(list[i].movieId === this.movie.id.toString()){
-           this.movieExists = false;
+          this.movieExists = false;
         }
         else{
           this.movieExists = true;
         }
       }
     }
-    }
     else{
       this.movieExists = true
     }
+      }
   }
  }
 }
