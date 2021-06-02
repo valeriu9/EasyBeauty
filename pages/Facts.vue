@@ -1,6 +1,7 @@
 <template>
   <div class="container">
-    <Linechart v-if="getRating" :chartdata="getRating" :options="options" />
+    <Linechart v-if="getRating" :chartdata="getRating" />
+    <BarChart v-if="getYears" :chartdata="getYears" />
 
   </div>
 </template>
@@ -13,27 +14,19 @@ export default {
 
   },
   data(){
-    const options ={
-				responsive: false,
-				scales: {
-					yAxes: [{
-						ticks: {
-							beginAtZero: true,
-							callback: (value) => {
-								return value + units[i];
-							}
-						}
-					}]
-				}
-			}
-    return{getRating:null, options}
+    return{
+      getRating:null,
+      getYears:null
+      }
   },
   methods:{
    async fetchData(){
         try{
      const res = await this.$axios.get('https://europe-west1-sep6-314214.cloudfunctions.net/getRating');
+     const res2 = await this.$axios.get('https://europe-west1-sep6-314214.cloudfunctions.net/get_last20Years');
+
      this.transform(res.data)
-     console.log(this.getRating);
+     this.transform2(res2.data)
    }
    catch(e){
      console.log(e);
@@ -47,6 +40,15 @@ export default {
         data.push(res[i].rating)
       }
       this.getRating = {labels: label, datasets: data}
+    },
+    transform2(res2){
+      let label = [];
+      let data = [];
+      for(let i = 0; i < res2.length; i++){
+        label.push(res2[i].year)
+        data.push(res2[i].movies)
+      }
+      this.getYears = {labels: label, datasets: data}
     }
   }
 }
