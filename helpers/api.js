@@ -34,6 +34,7 @@ function fetchDocumentaries (page) { return 'https://api.themoviedb.org/3/discov
 function fetchDrama (page) { return 'https://api.themoviedb.org/3/discover/movie?api_key=' + ApiKey + '&with_genres=18&page=' + page }
 function fetchFantasy (page) { return 'https://api.themoviedb.org/3/discover/movie?api_key=' + ApiKey + '&with_genres=14&page=' + page }
 function fetchMystery (page) { return 'https://api.themoviedb.org/3/discover/movie?api_key=' + ApiKey + '&with_genres=9648&page=' + page }
+function fetchSimilar (id) { return 'https://api.themoviedb.org/3/movie/' + id + '/similar?api_key=' + ApiKey + '&language=en-US&page=1' }
 const requests = {
   tmdbApi,
   fetchMovieById,
@@ -55,6 +56,7 @@ const requests = {
   fetchDocumentaries,
   fetchDrama,
   fetchFantasy,
-  fetchMystery
+  fetchMystery,
+  fetchSimilar
 };
 export default requests;
