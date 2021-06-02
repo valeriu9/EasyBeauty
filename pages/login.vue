@@ -62,7 +62,7 @@ signInButton.addEventListener('click', () => {
   methods:{
     async signIn(username, password){
     try {
-      await this.$fire.auth.signInWithEmailAndPassword(
+    const res = await this.$fire.auth.signInWithEmailAndPassword(
         username,
           password
         )

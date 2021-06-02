@@ -3,9 +3,7 @@
     <p class="header-text">Results</p>
     <div class="card-wrapper">
       <div v-for="data of movies" :key="data.index" class="card-place">
-        <nuxt-link :to="`/movie/`+data.id">
-          <Card :cardObject="data" />
-        </nuxt-link>
+        <Card :cardObject="data" />
       </div>
       <p v-if="movies.length === 0" class="no-movies">No Movies For This Search</p>
     </div>

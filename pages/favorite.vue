@@ -3,51 +3,52 @@
     <p class="header-text">Favorite movies</p>
     <div class="card-wrapper">
       <div v-for="data of movie" :key="data.index" class="card-place">
-        <nuxt-link :to="`/movie/`+data.id">
-          <Card :cardObject="data" :enableDelete="true" :favorit="true" @favoriteRemoved="removeFromDb(data.index)" />
-        </nuxt-link>
+        <Card :cardObject="data" :enableDelete="true" :favorit="true" @favoriteRemoved="removeFromDb" />
       </div>
-      <p class="header-text" @click="removeFromDb('zRabWuDZnYF3X0WAOf1Jnpm')">Remove movie</p>
     </div>
   </div>
 </template>
 <script>
 import requests from '~/helpers/api.js'
 export default {
- async mounted(){
-  this.$fire.firestore.collection("test").get().then((querySnapshot) => {
-    querySnapshot.forEach((doc) => {
-      const object = {id: doc.id, movieId: doc.data().number}
-      this.movieDbs.push(object);
-    });
-    this.getMovie();
-  })
+  mounted(){
+   this.initializeData()
  },
   data() {
    const movie = [];
    const movieDbs = [];
-    return { movie, movieDbs }
+
+   return { movie, movieDbs }
   },
   methods:{
-    // removeFromList(object){
-    //   console.log(object);
-    //  let i = this.cardObject.indexOf(object) // find index of your object
-    //  console.log(i);
-    //   this.cardObject.splice(i, 1)
-    // },
-    async removeFromDb(id){
-       this.$fire.firestore.collection("test").doc(id).delete().then(() => {
-    console.log("Document successfully deleted!");
-    }).catch((error) => {
-    console.error("Error removing document: ", error);
-  });
+    async removeFromDb(event){
+      setTimeout(() => {
+        const user = this.$fire.auth.currentUser;
+       const name = event.title || event.name
+        this.$fire.firestore.collection("users").doc(user.uid).collection('movieList').doc(name).delete().then(() => {
+     window.location.href = '/favorite';
+     }).catch((error) => {
+     console.error("Error removing document: ", error);
+   });
+      }, 500);
     },
     getMovie(){
      this.movieDbs.forEach( async (movie)=>{
        const res = await this.$axios.get(requests.fetchMovieById(movie.movieId));
        this.movie.push(res.data)
      })
-    }
+    },
+   async initializeData(){
+     setTimeout(() => {
+        const user = this.$fire.auth.currentUser;
+       this.$fire.firestore.collection("users").doc(user.uid).collection('movieList').get().then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          this.movieDbs.push(doc.data());
+        });
+        this.getMovie();
+      })
+     }, 500);
+   }
   }
 }
 </script>

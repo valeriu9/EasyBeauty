@@ -42,7 +42,7 @@
         <div class="left-side">
           <p class="title">Description:</p>
           <span class="subtext">{{movie.overview}}</span>
-          <div class="add-favorite" @click="saveFav($route.params.movieId)">
+          <div v-if="movieExists && loggedIn" class="add-favorite" @click="saveFav($route.params.movieId)">
             Add to favorite
           </div>
         </div>
@@ -94,6 +94,7 @@
 import requests from '~/helpers/api.js'
 export default {
  async mounted (){
+   this.getFavorites();
     try{
     const res = await this.$axios.get(requests.fetchMovieById(this.$route.params.movieId));
     this.image = this.appendUrl(res.data.poster_path);
@@ -110,12 +111,17 @@ export default {
          return item.job.toLowerCase().indexOf('director') > -1
       })
     }
+    // isFavorited(){
+    //   console.log(this.favorites.movieId +'computed');
+    //   return this.favorites.includes((movieId)=>{movieId.includes(this.movie.id)})
+    // }
   },
 data(){
   const credits={}
   const comments=[{user:'vanea', name:'good film'}, {user:'vanea', name:'nah, could be better'}, {user:'vanea', name:'the worst film ever what the fuck fuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckv fuckfuck fuckfuckfuckfuckfuckfuck fuckfuck'}]
   const message= '';
-  return{ movie:{}, credits, comments, message, image:'', clicked: false}
+  const loggedIn = !!this.$store.state.user.name;
+  return{ movie:{}, credits, comments, message, image:'', clicked: false, favorites:[], movieExists: false, loggedIn}
 },
 methods:{
   addComment(message){
@@ -124,12 +130,16 @@ methods:{
     this.message = ''
   },
   async saveFav(id) {
-        const ref = this.$fire.firestore.collection("test")
+    const movieTitle = this.movie.title || this.movie.name
+    const user = this.$fire.auth.currentUser
+        const ref = this.$fire.firestore.collection('users')
+        .doc(user.uid).collection('movieList').doc(movieTitle)
         const value = {
-          number: id
+          movieId: id
         }
         try {
-          await ref.add(value)
+          await ref.set(value)
+          this.movieExists = false;
         } catch (e) {
           console.error(e)
         }
@@ -143,6 +153,42 @@ methods:{
   async fetchCredits(){
     const res = await this.$axios.get(requests.fetchMovieCredits(this.$route.params.movieId));
     this.credits = res.data
+  },
+  async getFavorites(){
+    try{
+     setTimeout(() => {
+        const user = this.$fire.auth.currentUser;
+        if(user.uid){
+       this.$fire.firestore.collection("users").doc(user.uid).collection('movieList').get().then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          this.favorites.push(doc.data());
+        });
+         this.checkFavorite(this.favorites);
+      })
+         }
+     }, 1000);
+     }
+     catch(e){
+       console.log(e);
+     }
+  },
+  checkFavorite(list){
+     const user = this.$fire.auth.currentUser;
+        if(user.uid){
+    if(list.length !== 0){
+      for(let i = 0; i < list.length; i++){
+        if(list[i].movieId === this.movie.id.toString()){
+           this.movieExists = false;
+        }
+        else{
+          this.movieExists = true;
+        }
+      }
+    }
+    }
+    else{
+      this.movieExists = true
+    }
   }
  }
 }
@@ -195,7 +241,6 @@ span {
   width: 70%;
 }
 .add-favorite {
-  width: calc(100% - 60px);
   padding: 16px;
   color: #fff;
   font-size: 16px;
@@ -205,6 +250,10 @@ span {
   background-color: rgb(189, 148, 12);
   cursor: pointer;
   margin: 20px;
+  &:disabled {
+    pointer-events: none;
+    background-color: #ccc;
+  }
 }
 .list-container {
   width: 100%;

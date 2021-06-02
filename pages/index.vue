@@ -7,9 +7,7 @@
           <div v-dragscroll class="scroll-parent">
             <div class="scroll-container">
               <div v-for="movie in trendingResults" :key="movie.index">
-                <nuxt-link :to="`/movie/${movie.id}`">
-                  <Card :cardObject="movie" />
-                </nuxt-link>
+                <Card :cardObject="movie" />
               </div>
             </div>
           </div>
@@ -19,9 +17,7 @@
           <div v-dragscroll class="scroll-parent">
             <div class="scroll-container">
               <div v-for="actor in actorResults" :key="actor.index">
-                <nuxt-link :to="`/persons/${actor.id}`">
-                  <Card :cardObject="actor" />
-                </nuxt-link>
+                <Card :cardObject="actor" type="actor" />
               </div>
             </div>
           </div>
