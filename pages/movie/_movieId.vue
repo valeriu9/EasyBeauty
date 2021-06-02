@@ -104,6 +104,7 @@ export default {
       console.log(e);
     }
     this.fetchCredits();
+    this.getComments();
   },
   computed: {
     filteredItems() {
@@ -118,7 +119,7 @@ export default {
   },
 data(){
   const credits={}
-  const comments=[{user:'vanea', name:'good film'}, {user:'vanea', name:'nah, could be better'}, {user:'vanea', name:'the worst film ever what the fuck fuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckv fuckfuck fuckfuckfuckfuckfuckfuck fuckfuck'}]
+  const comments=[]
   const message= '';
   const loggedIn = !!this.$store.state.user.name;
   return{ movie:{}, credits, comments, message, image:'', clicked: false, favorites:[], movieExists: false, loggedIn}
@@ -128,6 +129,7 @@ methods:{
     const object = {user: this.$store.state.user.name, name:message};
     this.comments.push(object)
     this.message = ''
+    this.writeComment(message)
   },
   async saveFav(id) {
     const movieTitle = this.movie.title || this.movie.name
@@ -145,6 +147,21 @@ methods:{
         }
         this.writeSuccessful = true
       },
+  async writeComment(message){
+        const ref = this.$fire.firestore.collection('comments').doc(this.movie.id.toString())
+        .collection('commentList')
+        const value = {
+          user: this.$store.state.user.name,
+          name: message
+        }
+        try {
+          await ref.add(value)
+        } catch (e) {
+          console.error(e)
+        }
+        this.writeSuccessful = true
+
+      },
   appendUrl(img){
     if(img){
     return 'https://image.tmdb.org/t/p/original/'+img
@@ -154,11 +171,26 @@ methods:{
     const res = await this.$axios.get(requests.fetchMovieCredits(this.$route.params.movieId));
     this.credits = res.data
   },
+  async getComments(){
+    try{
+     setTimeout(() => {
+       this.$fire.firestore.collection("comments").doc(this.movie.id.toString()).collection('commentList').get().then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          console.log(doc);
+          this.comments.push(doc.data());
+        });
+      })
+     }, 1000);
+     }
+     catch(e){
+       console.log(e);
+     }
+  },
   async getFavorites(){
     try{
      setTimeout(() => {
         const user = this.$fire.auth.currentUser;
-        if(user.uid){
+        if(user){
        this.$fire.firestore.collection("users").doc(user.uid).collection('movieList').get().then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
           this.favorites.push(doc.data());
