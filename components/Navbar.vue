@@ -1,177 +1,164 @@
 <template>
-  <nav class="nav-menu-wrapper">
-    <div class="nav-menu-content">
-      <div class="logo">
-        <a class="logo-clickable" href="#">
-          <svg id="logo" xmlns="http://www.w3.org/2000/svg" width="163.425" height="63.701"
-            viewBox="0 0 163.425 63.701">
-            <g id="Group_3" data-name="Group 3" transform="translate(-3856.305 1453.6)">
-              <g id="Group_2" data-name="Group 2" transform="translate(3878.191 -1426.885)">
-                <path id="Path_2" data-name="Path 2" class="cls-1"
-                  d="M3885.532-1423.346a6.886,6.886,0,0,1-6.118,4,5.819,5.819,0,0,1-5.981-5.98,7.345,7.345,0,0,1,7.176-7.372,5.53,5.53,0,0,1,5.7,5.786,4.686,4.686,0,0,1-.473,2.143h-8.679a2.459,2.459,0,0,0,2.56,1.974,2.576,2.576,0,0,0,1.836-.863Zm-8.037-3.783h5.285a2.186,2.186,0,0,0-2.282-2.085A3.367,3.367,0,0,0,3877.5-1427.13Z"
-                  transform="translate(-3873.433 1432.693)"></path>
-                <path id="Path_3" data-name="Path 3" class="cls-1"
-                  d="M3896.385-1427.881a9.083,9.083,0,0,1-.111,1.169l-1.251,7.093h-2.782l-.362-1.252a6.737,6.737,0,0,1-3.7,1.391c-2.616,0-3.951-1.558-3.951-3.339,0-2.558,1.78-4.589,8.4-4.589a1.535,1.535,0,0,0-1.529-1.947,2.089,2.089,0,0,0-1.78,1.251l-3.755-.277a5.916,5.916,0,0,1,5.73-4.312C3894.326-1432.693,3896.385-1430.8,3896.385-1427.881Zm-4.255,3.255.111-.556c-3.645,0-4.229.834-4.229,1.78a1.233,1.233,0,0,0,1.335,1.141A2.83,2.83,0,0,0,3892.13-1424.626Z"
-                  transform="translate(-3870.434 1432.693)"></path>
-                <path id="Path_4" data-name="Path 4" class="cls-1"
-                  d="M3898.38-1423.792a1.426,1.426,0,0,0,1.612,1.392c.891,0,1.5-.5,1.5-1.057,0-1.224-5.619-1.252-5.619-5.008,0-2.225,1.835-4.228,4.9-4.228,3.81,0,5.34,2.032,5.368,3.895l-3.56.279c-.057-.584-.612-1.113-1.558-1.113-.751,0-1.252.39-1.252.946,0,1.2,5.59,1.252,5.59,4.979,0,2.253-1.946,4.366-5.2,4.366-3.782,0-5.174-1.946-5.4-4.172Z"
-                  transform="translate(-3867.508 1432.693)"></path>
-                <path id="Path_5" data-name="Path 5" class="cls-1"
-                  d="M3904.945-1432.475h4.034l1.39,7.816,4.172-7.816h4.256l-7.677,13.24c-1.668,2.893-3.2,4.145-5.312,4.145a6.88,6.88,0,0,1-1.641-.279l.556-3.143h.39a2.57,2.57,0,0,0,2.56-1.725Z"
-                  transform="translate(-3864.896 1432.754)"></path>
-                <path id="Path_6" data-name="Path 6" class="cls-1"
-                  d="M3913.918-1423.392a2.334,2.334,0,0,1,2.252-2.226,1.924,1.924,0,0,1,1.891,1.947,2.333,2.333,0,0,1-2.252,2.226A1.924,1.924,0,0,1,3913.918-1423.392Z"
-                  transform="translate(-3862.187 1434.658)"></path>
-                <path id="Path_7" data-name="Path 7" class="cls-1"
-                  d="M3927.822-1432.475h2.5l1.03,7.4,3.477-7.4h3.978l-6.565,12.8h-3.2l-.974-7.093-3.477,7.093h-3.2l-2.059-12.8h3.812l.917,7.4Z"
-                  transform="translate(-3860.682 1432.754)"></path>
-                <path id="Path_8" data-name="Path 8" class="cls-1"
-                  d="M3946.229-1427.881a9.083,9.083,0,0,1-.111,1.169l-1.252,7.093h-2.782l-.361-1.252a6.732,6.732,0,0,1-3.7,1.391c-2.615,0-3.95-1.558-3.95-3.339,0-2.558,1.78-4.589,8.4-4.589a1.535,1.535,0,0,0-1.529-1.947,2.089,2.089,0,0,0-1.78,1.251l-3.755-.277a5.916,5.916,0,0,1,5.73-4.312C3944.17-1432.693,3946.229-1430.8,3946.229-1427.881Zm-4.256,3.255.111-.556c-3.644,0-4.228.834-4.228,1.78a1.233,1.233,0,0,0,1.335,1.141A2.827,2.827,0,0,0,3941.972-1424.626Z"
-                  transform="translate(-3856.589 1432.693)"></path>
-                <path id="Path_9" data-name="Path 9" class="cls-1"
-                  d="M3945.322-1432.475h4.033l1.391,7.816,4.172-7.816h4.254l-7.677,13.24c-1.668,2.893-3.2,4.145-5.313,4.145a6.885,6.885,0,0,1-1.641-.279l.557-3.143h.389a2.568,2.568,0,0,0,2.559-1.725Z"
-                  transform="translate(-3853.68 1432.754)"></path>
-                <path id="Path_10" data-name="Path 10" class="cls-1"
-                  d="M3958.889-1423.792a1.426,1.426,0,0,0,1.612,1.392c.891,0,1.5-.5,1.5-1.057,0-1.224-5.62-1.252-5.62-5.008,0-2.225,1.836-4.228,4.9-4.228,3.81,0,5.341,2.032,5.368,3.895l-3.56.279c-.056-.584-.612-1.113-1.558-1.113-.751,0-1.252.39-1.252.946,0,1.2,5.591,1.252,5.591,4.979,0,2.253-1.947,4.366-5.2,4.366-3.784,0-5.174-1.946-5.4-4.172Z"
-                  transform="translate(-3850.699 1432.693)"></path>
-              </g>
-              <path id="Path_11" data-name="Path 11" class="cls-1"
-                d="M4019.73-1389.9H3856.305v-63.7H4019.73Zm-158.324-5.1h153.223v-53.5H3861.406Z"
-                transform="translate(0)"></path>
-            </g>
-          </svg>
-        </a>
-
-      </div>
-      <div class="buttons-wrapper">
-        <div class="button">
-          <a class="active" href="#"><i class="fa fa-fw fa-home"></i> Home</a>
-        </div>
-        <div class="button">
-          <a class="active" href="#"><i class="fa fa-calendar-o"></i> Appointments</a>
-        </div>
-      </div>
-      <div class="extras">
-        <div class="user">
-          <p>Eric <i class="arrow down"></i></p>
-          <div class="dropdown-content">
-            <a href="#">Edit</a>
-            <a href="#">Log Out</a>
+  <div class="align-inline">
+    <ul class="left-side">
+      <li>
+        <nuxt-link to="/"><img src="~assets/images/Logo.svg" alt="logo" class="logo-size"></nuxt-link>
+      </li>
+      <li>
+        <nuxt-link to="/category/comedy" target="_self">Comedy</nuxt-link>
+      </li>
+      <li>
+        <nuxt-link to="/category/drama" target="_self">Drama</nuxt-link>
+      </li>
+      <li>
+        <nuxt-link to="/category/mystery" target="_self">Mystery</nuxt-link>
+      </li>
+      <li>
+        <nuxt-link to="/category/action" target="_self">Action</nuxt-link>
+      </li>
+      <li>
+        <nuxt-link to="/category/horror" target="_self">Horror</nuxt-link>
+      </li>
+      <li>
+        <nuxt-link to="/category/war">War</nuxt-link>
+      </li>
+      <li>
+        <nuxt-link to="/category/documentary">Documentary</nuxt-link>
+      </li>
+      <li>
+        <nuxt-link to="/category/fantasy">Fantasy</nuxt-link>
+      </li>
+      <li>
+        <nuxt-link :class="loggedIn? '': 'disable'" to="/recomandations">Recomandations</nuxt-link>
+      </li>
+    </ul>
+    <ul class="right-side">
+      <li v-if="loggedIn">
+        <nuxt-link to="/favorite"><img src="~assets/images/star.svg" class="favorite" alt="star"></nuxt-link>
+      </li>
+      <li><input type="text" v-model="search" /></li>
+      <li class="search-button-holder">
+        <a :href="`/search-result?searchKey=`+search">
+          <div class="signin-out">
+            <p>Search</p>
           </div>
-        </div>
-      </div>
-    </div>
-  </nav>
+        </a>
+      </li>
+      <li>
+        <a v-if="loggedIn" href="/sign-out" class="signin-out">
+          <p>Sign out</p>
+        </a>
+        <a v-else href="/login" class="signin-out">
+          <p>Sign in</p>
+        </a>
+      </li>
+      <li v-if="loggedIn">
+        <p class="name">{{user.name}}</p>
+      </li>
+    </ul>
+  </div>
 </template>
+
 <script>
-export default {}
-</script>
-<style lang="css" scoped>
-body {
-    font-family: bureau-grot,
-        sans-serif;
-}
-
-.nav-menu-wrapper {
-    width: 100%;
-    height: 70px;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 99;
-    transition: all 400ms ease-in-out;
-    background-color: blue;
-
-}
-
-.nav-menu-content {
-    display: flex;
-    height: 100%;
-    position: relative;
-    padding: 0 5vw;
-}
-
-.nav-menu-content .extras,
-.nav-menu-content .logo {
-    display: Flex;
-    flex-direction: row;
-    width: 25%;
-    margin: auto;
-    height: 100%;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.nav-menu-content .buttons-wrapper {
-    display: flex;
-    width: 230vw;
-    justify-content: flex-end;
-}
-
-.nav-menu-content .extras {
-    justify-content: flex-end;
-}
-
-.nav-menu-content>.buttons-wrapper>.button {
-    height: 100%;
-    text-align: center;
-    display: flex;
-    padding: 0 30px;
-    width: max-content;
-}
-
-.nav-menu-content>.buttons-wrapper>.button a {
-    margin: auto;
-    color: black;
-    font-weight: 400;
-    font-size: 1.2vw;
-    text-decoration: none;
-}
-
-.nav-menu-content>.logo>.logo-clickable svg {
-    fill: black;
-    transition: all 100ms ease-in-out;
-}
-
-.arrow {
-    border: solid black;
-    border-width: 0 3px 3px 0;
-    display: inline-block;
-    padding: 4px;
-}
-
-.down {
-    transform: rotate(45deg);
-    -webkit-transform: rotate(45deg);
-    margin: 0 0 3px 3px;
-}
-
-.user {
-    position: relative;
-    display: inline-block;
+export default {
+  data(){
+    const user = this.$store.state.user;
+    const loggedIn = !!this.$store.state.user.name;
+    const search = '';
+    return{user, loggedIn, search};
+  },
+  methods:{
+    emitGenre(value){
+     this.$emit("genre",value);
+    },
+    recomandations(){
+      window.open("/recomandations");
+    },
+    favorite(){
+       window.open("/favorite");
+    },
+    searchFunction(search){
+      window.location.href = `/search-result?searchKey=${search}`
+      this.search = ''
+    }
   }
+}
+</script>
+<style lang="scss" scoped>
+.disable {
+  pointer-events: none;
+  color: #111;
+}
+.search-button-holder {
+  margin-right: 30px;
+  margin-left: 4px;
+}
+.align-inline {
+  display: flex;
+  width: 100vw;
+  background-color: #333;
+  justify-content: space-between;
+}
+.logo-size {
+  width: 50px;
+  height: 60px;
+}
+.favorite {
+  width: 30px;
+  height: 30px;
+}
+.name {
+  font-size: 20px;
+  margin-left: 8px;
+  color: #fff;
+}
+.left-side {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
 
-.dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: #f9f9f9;
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-    z-index: 1;
+  display: flex;
+}
+.right-side {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  padding-right: 50px;
 }
 
-.dropdown-content a {
-    color: black;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
+li {
+  float: left;
+  align-self: center;
 }
 
-.dropdown-content a:hover {
-    background-color: #f1f1f1
+li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
 }
 
-.user:hover .dropdown-content {
-    display: block;
+li a:hover:not(.active) {
+  background-color: #111;
+}
+
+.active {
+  background-color: #4caf50;
+}
+.signin-out {
+  border: 1px solid #fff;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 36px;
+  p {
+    color: #fff;
+  }
+}
+.align-right {
+  float: right;
 }
 </style>

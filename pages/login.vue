@@ -1,151 +1,377 @@
 <template>
-  <div class="background">
-    <div class="section-wrapper" :style="{ backgroundImage: `url(${backgroundImage})` }">
-      <section class="middle-section">
-        <div class="login-wrapper">
-          <svg class="easyways-logo" xmlns="http://www.w3.org/2000/svg" height="75" viewBox="0 0 163.425 63.701">
-            <g id="Group_3" data-name="Group 3" transform="translate(-3856.305 1453.6)">
-              <g id="Group_2" data-name="Group 2" transform="translate(3878.191 -1426.885)">
-                <path id="Path_2" data-name="Path 2" class="cls-1"
-                  d="M3885.532-1423.346a6.886,6.886,0,0,1-6.118,4,5.819,5.819,0,0,1-5.981-5.98,7.345,7.345,0,0,1,7.176-7.372,5.53,5.53,0,0,1,5.7,5.786,4.686,4.686,0,0,1-.473,2.143h-8.679a2.459,2.459,0,0,0,2.56,1.974,2.576,2.576,0,0,0,1.836-.863Zm-8.037-3.783h5.285a2.186,2.186,0,0,0-2.282-2.085A3.367,3.367,0,0,0,3877.5-1427.13Z"
-                  transform="translate(-3873.433 1432.693)"></path>
-                <path id="Path_3" data-name="Path 3" class="cls-1"
-                  d="M3896.385-1427.881a9.083,9.083,0,0,1-.111,1.169l-1.251,7.093h-2.782l-.362-1.252a6.737,6.737,0,0,1-3.7,1.391c-2.616,0-3.951-1.558-3.951-3.339,0-2.558,1.78-4.589,8.4-4.589a1.535,1.535,0,0,0-1.529-1.947,2.089,2.089,0,0,0-1.78,1.251l-3.755-.277a5.916,5.916,0,0,1,5.73-4.312C3894.326-1432.693,3896.385-1430.8,3896.385-1427.881Zm-4.255,3.255.111-.556c-3.645,0-4.229.834-4.229,1.78a1.233,1.233,0,0,0,1.335,1.141A2.83,2.83,0,0,0,3892.13-1424.626Z"
-                  transform="translate(-3870.434 1432.693)"></path>
-                <path id="Path_4" data-name="Path 4" class="cls-1"
-                  d="M3898.38-1423.792a1.426,1.426,0,0,0,1.612,1.392c.891,0,1.5-.5,1.5-1.057,0-1.224-5.619-1.252-5.619-5.008,0-2.225,1.835-4.228,4.9-4.228,3.81,0,5.34,2.032,5.368,3.895l-3.56.279c-.057-.584-.612-1.113-1.558-1.113-.751,0-1.252.39-1.252.946,0,1.2,5.59,1.252,5.59,4.979,0,2.253-1.946,4.366-5.2,4.366-3.782,0-5.174-1.946-5.4-4.172Z"
-                  transform="translate(-3867.508 1432.693)"></path>
-                <path id="Path_5" data-name="Path 5" class="cls-1"
-                  d="M3904.945-1432.475h4.034l1.39,7.816,4.172-7.816h4.256l-7.677,13.24c-1.668,2.893-3.2,4.145-5.312,4.145a6.88,6.88,0,0,1-1.641-.279l.556-3.143h.39a2.57,2.57,0,0,0,2.56-1.725Z"
-                  transform="translate(-3864.896 1432.754)"></path>
-                <path id="Path_6" data-name="Path 6" class="cls-1"
-                  d="M3913.918-1423.392a2.334,2.334,0,0,1,2.252-2.226,1.924,1.924,0,0,1,1.891,1.947,2.333,2.333,0,0,1-2.252,2.226A1.924,1.924,0,0,1,3913.918-1423.392Z"
-                  transform="translate(-3862.187 1434.658)"></path>
-                <path id="Path_7" data-name="Path 7" class="cls-1"
-                  d="M3927.822-1432.475h2.5l1.03,7.4,3.477-7.4h3.978l-6.565,12.8h-3.2l-.974-7.093-3.477,7.093h-3.2l-2.059-12.8h3.812l.917,7.4Z"
-                  transform="translate(-3860.682 1432.754)"></path>
-                <path id="Path_8" data-name="Path 8" class="cls-1"
-                  d="M3946.229-1427.881a9.083,9.083,0,0,1-.111,1.169l-1.252,7.093h-2.782l-.361-1.252a6.732,6.732,0,0,1-3.7,1.391c-2.615,0-3.95-1.558-3.95-3.339,0-2.558,1.78-4.589,8.4-4.589a1.535,1.535,0,0,0-1.529-1.947,2.089,2.089,0,0,0-1.78,1.251l-3.755-.277a5.916,5.916,0,0,1,5.73-4.312C3944.17-1432.693,3946.229-1430.8,3946.229-1427.881Zm-4.256,3.255.111-.556c-3.644,0-4.228.834-4.228,1.78a1.233,1.233,0,0,0,1.335,1.141A2.827,2.827,0,0,0,3941.972-1424.626Z"
-                  transform="translate(-3856.589 1432.693)"></path>
-                <path id="Path_9" data-name="Path 9" class="cls-1"
-                  d="M3945.322-1432.475h4.033l1.391,7.816,4.172-7.816h4.254l-7.677,13.24c-1.668,2.893-3.2,4.145-5.313,4.145a6.885,6.885,0,0,1-1.641-.279l.557-3.143h.389a2.568,2.568,0,0,0,2.559-1.725Z"
-                  transform="translate(-3853.68 1432.754)"></path>
-                <path id="Path_10" data-name="Path 10" class="cls-1"
-                  d="M3958.889-1423.792a1.426,1.426,0,0,0,1.612,1.392c.891,0,1.5-.5,1.5-1.057,0-1.224-5.62-1.252-5.62-5.008,0-2.225,1.836-4.228,4.9-4.228,3.81,0,5.341,2.032,5.368,3.895l-3.56.279c-.056-.584-.612-1.113-1.558-1.113-.751,0-1.252.39-1.252.946,0,1.2,5.591,1.252,5.591,4.979,0,2.253-1.947,4.366-5.2,4.366-3.784,0-5.174-1.946-5.4-4.172Z"
-                  transform="translate(-3850.699 1432.693)"></path>
-              </g>
-              <path id="Path_11" data-name="Path 11" class="cls-1"
-                d="M4019.73-1389.9H3856.305v-63.7H4019.73Zm-158.324-5.1h153.223v-53.5H3861.406Z"
-                transform="translate(0)"></path>
-            </g>
-          </svg>
-          <input type="text" placeholder="Email">
-          <input class="password" type="text" placeholder="Password">
-          <input class="newPassword" type="text" placeholder="New Password">
-          <input class="repeatPassword" type="text" placeholder=" Repeat Password">
-          <div class="submit-button" type="button" @click="showPassword()">
-            Login
+  <div class="height-100">
+    <div class="container" id="container">
+      <div class="form-container sign-up-container">
+        <div class="form">
+          <h1>Create Account</h1>
+          <input type="text" v-model="usernameUp" placeholder="Username" />
+          <input type="password" v-model="passwordUp" placeholder="Password" />
+          <button @click="signUp(usernameUp, passwordUp)">Sign Up</button>
+          <p v-if="errorSignUp" class="danger">{{errorSignUp}}</p>
+        </div>
+      </div>
+      <div class="form-container sign-in-container">
+        <div class="form">
+          <h1>Sign in</h1>
+          <input type="text" v-model="username" placeholder="Username" />
+          <input type="password" v-model="password" placeholder="Password" />
+          <button @click="signIn(username, password)">Sign In</button>
+          <p v-if="errorSignIn" class="danger">{{errorSignIn}}</p>
+        </div>
+      </div>
+      <div class="overlay-container">
+        <div class="overlay">
+          <div class="overlay-panel overlay-left">
+            <h1>Welcome Back!</h1>
+            <p>To keep connected with us please login with your personal info</p>
+            <button class="ghost" id="signIn">Sign In</button>
+          </div>
+          <div class="overlay-panel overlay-right">
+            <h1>Hello, Friend!</h1>
+            <p>Enter your personal details and start journey with us</p>
+            <button class="ghost" id="signUp">Sign Up</button>
           </div>
         </div>
-      </section>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import backgroundImage from '~/assets/images/loginBackground.jpg';
 export default {
-  layout: 'default',
+  mounted(){
+const signUpButton = document.getElementById('signUp');
+const signInButton = document.getElementById('signIn');
+const container = document.getElementById('container');
+signUpButton.addEventListener('click', () => {
+	container.classList.add("right-panel-active");
+
+});
+
+signInButton.addEventListener('click', () => {
+	container.classList.remove("right-panel-active");
+});
+  },
   data(){
-    return {backgroundImage}
+    const username ='';
+    const usernameUp ='';
+    const password ='';
+    const passwordUp ='';
+    return{username, usernameUp, password, passwordUp, errorSignUp:'', errorSignIn:''}
   },
   methods:{
-  showPassword() {
-    document.getElementsByClassName('password')[0].classList.toggle('active');
-    document.getElementsByClassName('newPassword')[0].classList.toggle('active');
-    document.getElementsByClassName('repeatPassword')[0].classList.toggle('active');
-}
+    async signIn(username, password){
+    try {
+    const res = await this.$fire.auth.signInWithEmailAndPassword(
+        username,
+          password
+        )
+      const user={ name: username};
+      this.$cookies.set('movie_user',user);
+      this.$store.dispatch('user/userLoggedIn', user);
+        setTimeout(() => {
+          window.location.href = '/';
+      }, 1000);
+      } catch (e) {
+        this.errorSignIn = e.message;
+      }
+
+
+    },
+    async signUp(usernameUp, passwordUp){
+      try {
+        await this.$fire.auth.createUserWithEmailAndPassword(
+          usernameUp,
+          passwordUp
+        )
+      const user= { name: usernameUp};
+      this.$cookies.set('movie_user',user);
+      this.$store.dispatch('user/userLoggedIn', user);
+       setTimeout(() => {
+        window.location.href = '/';
+      }, 1000);
+      } catch (e) {
+        this.errorSignUp = e.message;
+      }
+    }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.background {
-  font-family: bureau-grot, sans-serif;
-  background-size: cover;
+.height-100 {
+  height: 100vh;
+}
+.form-container {
+  width: 600px;
+  height: 500px;
+  padding: 40px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(195, 195, 195, 0.6);
+}
+.wrapper {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
-.section-wrapper {
+body {
+  background: #f6f5f7;
   display: flex;
+  justify-content: center;
+  align-items: center;
   flex-direction: column;
+  font-family: 'Montserrat', sans-serif;
+  height: 100vh;
+  margin: -20px 0 50px;
+}
+
+h1 {
+  font-weight: bold;
+  margin: 0;
+}
+
+h2 {
+  text-align: center;
+}
+.danger {
+  color: #ff416c;
+  font-size: 14px;
+}
+
+p {
+  font-size: 14px;
+  font-weight: 100;
+  line-height: 20px;
+  letter-spacing: 0.5px;
+  margin: 20px 0 30px;
+}
+
+span {
+  font-size: 12px;
+}
+
+a {
+  color: #333;
+  font-size: 14px;
+  text-decoration: none;
+  margin: 15px 0;
+}
+
+button {
+  border-radius: 20px;
+  border: 1px solid #ff4b2b;
+  background-color: #ff4b2b;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 12px 45px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: transform 80ms ease-in;
+}
+
+button:active {
+  transform: scale(0.95);
+}
+
+button:focus {
+  outline: none;
+}
+
+button.ghost {
+  background-color: transparent;
+  border-color: #ffffff;
+}
+
+.form {
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 0 50px;
   height: 100%;
+  text-align: center;
+}
+
+input {
+  background-color: #eee;
+  border: none;
+  padding: 12px 15px;
+  margin: 8px 0;
   width: 100%;
+}
+
+.container {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+  position: relative;
+  overflow: hidden;
+  width: 768px;
+  max-width: 100%;
+  min-height: 480px;
+  margin: 0;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.form-container {
   position: absolute;
+  height: 100%;
+  transition: all 0.6s ease-in-out;
+}
+
+.sign-in-container {
+  left: 25%;
+  width: 50%;
+  z-index: 2;
+}
+
+.container.right-panel-active .sign-in-container {
+  transform: translateX(100%);
   left: 0;
   top: 0;
+}
+
+.sign-up-container {
+  left: 0;
+  width: 50%;
+  opacity: 0;
+  z-index: 1;
+}
+
+.container.right-panel-active .sign-up-container {
+  transform: translateX(100%);
+  top: 0;
+  opacity: 1;
+  z-index: 5;
+  animation: show 0.6s;
+}
+
+@keyframes show {
+  0%,
+  49.99% {
+    opacity: 0;
+    z-index: 1;
+  }
+
+  50%,
+  100% {
+    opacity: 1;
+    z-index: 5;
+  }
+}
+
+.overlay-container {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 50%;
+  height: 100%;
+  overflow: hidden;
+  transition: transform 0.6s ease-in-out;
+  z-index: 100;
+}
+
+.container.right-panel-active .overlay-container {
+  transform: translateX(-100%);
+}
+
+.overlay {
+  background: #ff416c;
+  background: -webkit-linear-gradient(to right, #ff4b2b, #ff416c);
+  background: linear-gradient(to right, #ff4b2b, #ff416c);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: 0 0;
+  color: #ffffff;
+  position: relative;
+  left: -100%;
+  height: 100%;
+  width: 200%;
+  transform: translateX(0);
+  transition: transform 0.6s ease-in-out;
+}
+
+.container.right-panel-active .overlay {
+  transform: translateX(50%);
+}
+
+.overlay-panel {
+  position: absolute;
+  display: flex;
+  align-items: center;
   justify-content: center;
-}
-
-.section-wrapper section {
-  display: flex;
-}
-
-.middle-section {
-  height: 60%;
-}
-
-/* LOGIN */
-.login-wrapper {
-  margin: auto;
-  display: flex;
   flex-direction: column;
-  padding: 40px;
-  color: white;
+  padding: 0 40px;
+  text-align: center;
+  top: 0;
+  height: 100%;
+  width: 50%;
+  transform: translateX(0);
+  transition: transform 0.6s ease-in-out;
 }
 
-.login-wrapper > .easyways-logo {
-  fill: white;
-  margin: auto auto 40px auto;
+.overlay-left {
+  transform: translateX(-20%);
 }
 
-.login-wrapper input {
-  padding: 15px;
-  border-radius: 6px;
-  margin: 5px auto 5px auto;
-  width: 250px;
+.container.right-panel-active .overlay-left {
+  transform: translateX(0);
 }
 
-.login-wrapper .password {
-  display: none;
+.overlay-right {
+  right: 0;
+  transform: translateX(0);
 }
 
-.login-wrapper .password.active {
-  display: initial;
+.container.right-panel-active .overlay-right {
+  transform: translateX(20%);
 }
 
-.login-wrapper .newPassword {
-  display: none;
+.social-container {
+  margin: 20px 0;
 }
 
-.login-wrapper .newPassword.active {
-  display: initial;
-}
-
-.login-wrapper .repeatPassword {
-  display: none;
-}
-
-.login-wrapper .repeatPassword.active {
-  display: initial;
-}
-
-.login-wrapper > .submit-button {
-  margin: 10px auto auto auto;
-  background-color: #18b576;
-  padding: 15px 40px;
-  display: flex;
+.social-container a {
+  border: 1px solid #dddddd;
+  border-radius: 50%;
+  display: inline-flex;
   justify-content: center;
-  border-radius: 6px;
-  font-weight: 400;
+  align-items: center;
+  margin: 0 5px;
+  height: 40px;
+  width: 40px;
+}
+
+footer {
+  background-color: #222;
+  color: #fff;
+  font-size: 14px;
+  bottom: 0;
+  position: fixed;
+  left: 0;
+  right: 0;
+  text-align: center;
+  z-index: 999;
+}
+
+footer p {
+  margin: 10px 0;
+}
+
+footer i {
+  color: red;
+}
+
+footer a {
+  color: #3c97bf;
+  text-decoration: none;
 }
 </style>

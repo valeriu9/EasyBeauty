@@ -1,69 +1,36 @@
 <template>
-  <div class="container-background">
-    <div class="main-container">
-
-      <div class="services-container">
-
-        <div class="product-service-container">
-          <div class="service-navbar">
-            <button class="add-item-button" type="button" onclick="addNewItem()"><i class="fas fa-plus"></i>
-              <p>Add new Item</p>
-            </button>
-            <div class="search-wrapper">
-              <input type="text" placeholder="Search.." name="search">
-              <button type="submit"><i class="fa fa-search"></i></button>
+  <div class="container">
+    <div>
+      <div class="see-top-10">
+        <div class="scroll-wrapper">
+          <h3 class="title">Trending Movies</h3>
+          <div v-dragscroll class="scroll-parent">
+            <div class="scroll-container">
+              <div v-for="movie in trendingResults" :key="movie.index">
+                <Card :cardObject="movie" />
+              </div>
             </div>
           </div>
-          <div id="Services" class="tabcontent">
-            <h3>Services</h3>
-
-          </div>
-          <div id="Products" class="tabcontent">
-            <h3>Products</h3>
+        </div>
+        <div class="scroll-wrapper">
+          <h3 class="title">Top Actors</h3>
+          <div v-dragscroll class="scroll-parent">
+            <div class="scroll-container">
+              <div v-for="actor in actorResults" :key="actor.index">
+                <Card :cardObject="actor" type="actor" />
+              </div>
+            </div>
           </div>
         </div>
-        <div class="tab">
-          <button class="tablinks" @click="openTab('Services')"> <i
-              class="fas fa-cut"></i>
-            Services</button>
-          <button class="tablinks" @click="openTab('Products')"> <i class="fas fa-spray-can"></i>
-            Products</button>
-        </div>
-
       </div>
-      <div class="checkout-container">
-        <h2>Checkout</h2>
-        <div class="cart-container">
-          <div class="cart-nav-list-container">
-            <div class="cart-nav-wrapper">
-              <p>Name</p>
-              <p>Quantity</p>
-              <p>Price</p>
-            </div>
-            <p>Product 1 <span class="price">$15</span></p>
-            <p>Product 2 <span class="price">$5</span></p>
-            <p>Product 3 <span class="price">$8</span></p>
-            <p>Product 4 <span class="price">$2</span></p>
-          </div>
-          <div class="cart-price-container">
-            <div class="price-wrapper">
-              <p>Discount (%)</p>
-              <input type="text" name="discount">
-            </div>
-            <div class="price-wrapper">
-              <p>Sub Total</p>
-              <p>100dkk</p>
-            </div>
-            <div class="price-wrapper">
-              <p>Tax</p>
-              <p>100dkk</p>
-            </div>
-            <div class="total-price-wrapper">
-              <p>Total </p>
-              <p>200dkk</p>
-
-            </div>
-          </div>
+      <h1 class="section-name margin-top-30">Do you like statistics?</h1>
+      <div class="see-top-10">
+        <div class="scroll-wrapper">
+          <h3 class="title">Check some awesome facts about movie industry</h3>
+          <img src="~assets/images/statistics.jpg" class="stat-img" alt="statistics">
+          <nuxt-link to="/facts">
+            <div class="statistics">See Statistics</div>
+          </nuxt-link>
         </div>
       </div>
     </div>
@@ -71,212 +38,132 @@
 </template>
 
 <script>
+import requests from '~/helpers/api.js'
 export default {
-  layout: 'default',
+  mounted(){
+    this.fetchMovies();
+    this.fetchActors();
+  },
+  data(){
+    const userInfo = {name:"Valeriu Marandici", preferences:[{name:"Home Alone"}, {name:"Sex,Drugs,Hoes"},{name:"Nasha Rassha"}]};
+    const cardObject = {name:"Black list", image:"https://m.media-amazon.com/images/M/MV5BZDA1MzE3M2EtNTE4Ni00OGE4LWE1NjctYzFhMzA2NDgxMDIxXkEyXkFqcGdeQXVyODUxOTU0OTg@._V1_UY1200_CR90,0,630,1200_AL_.jpg"}
+    const actorObject = {name:"Cara Delevigne", image:"https://i.pinimg.com/originals/6b/57/0d/6b570d14c5bd4d17203dcd9f80f1a81b.jpg"}
+    const countryObject = {name:"MD", image:"https://www.countryflags.com/wp-content/uploads/moldova-flag-png-large.png"}
+    const trendingResults = [];
+    const actorResults = [];
+    const favorite =[];
+    return{genre:'', userInfo, cardObject, favorite, countryObject, actorObject,  trendingResults, actorResults}
+  },
   methods:{
-   openTab( serviceName) {
-   const tabcontent = document.getElementsByClassName("tabcontent")[0];
-    for (let i = 0; i < tabcontent.length; i++) {
-        tabcontent[i].style.display = "none";
+    filterGenre(value){
+      this.genre = value;
+    },
+    addToFavorite(value){
+      this.favorite.push(value);
+    },
+    async fetchMovies () {
+      try {
+        const res = await this.$axios.get(requests.tmdbApi.fetchTrending);
+        this.trendingResults = res.data.results;
+
+      } catch (e) {
+        console.error(e.message);
+
+      }
+    },
+    async fetchActors () {
+      try {
+        const res = await this.$axios.get(requests.tmdbApi.fetchPersons);
+        this.actorResults = res.data.results;
+        console.log(this.actorResults);
+      } catch (e) {
+        console.error(e.message);
+
+      }
     }
-   const tablinks = document.getElementsByClassName("tablinks")[0];
-    for (let i = 0; i < tablinks.length; i++) {
-        tablinks[i].className = tablinks[i].className.replace(" active", "");
-    }
-    document.getElementById(serviceName).style.display = "block";
-    // evt.currentTarget.className += " active";
-}
   }
 }
 </script>
 
- <style lang="css" scoped>
- .fa {
-    color: white;
-    line-height: 1.4;
+<style lang="scss" scoped>
+.margin-top-30 {
+  margin-top: 30px;
+}
+.container {
+  margin-top: 80px;
+  padding-bottom: 100px;
+}
+a {
+  text-decoration: none;
+  color: #000;
+}
+.title {
+  font-family: 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont,
+    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  display: block;
+  font-weight: 400;
+  font-size: 24px;
+  color: #ffff;
+  letter-spacing: 1px;
+}
+.stat-img {
+  margin-top: 24px;
+}
+.section-name {
+  font-family: 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont,
+    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  display: block;
+  font-weight: 400;
+  font-size: 50px;
+  color: #ffff;
+  letter-spacing: 1px;
+  margin-bottom: 20px;
+  padding-top: 20px;
 }
 
-body {
-    font-family: Arial;
+.subtitle {
+  font-weight: 300;
+  font-size: 42px;
+  color: #526488;
+  word-spacing: 5px;
+  padding-bottom: 15px;
 }
 
-.main-container {
-    display: flex;
-    flex-direction: row;
-    height: 100%;
-    background-color: lightblue;
+.links {
+  padding-top: 15px;
 }
 
-.services-container {
-    box-shadow: 0 10px 16px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%) !important;
-    width: 70%;
-    margin: 10px;
-    display: flex;
-    flex-direction: column;
-    background-color: white;
+.scroll-parent {
+  display: flex;
+  flex-direction: row;
+  max-width: 90vw !important;
+  overflow: hidden;
 }
-
-.checkout-container {
-    box-shadow: 0 10px 16px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%) !important;
-    width: 30%;
-    display: flex;
-    flex-direction: column;
-    margin: 10px;
-    background-color: white;
+.scroll-parent-time {
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
 }
-
-.service-navbar {
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
+.scroll-container {
+  display: flex;
 }
-
-.product-service-container {
-    height: 100%;
+.see-top-10 {
+  display: flex;
+  flex-direction: column;
 }
-
-.search-wrapper button {
-    border-radius: 100%;
-    background: lightseagreen;
+.statistics {
+  margin: 24px;
+  padding: 24px;
+  border: 2px solid #ccc;
+  font-size: 20px;
+  font-weight: 600;
+  color: #fff;
+  width: fit-content;
+  cursor: pointer;
 }
-
-
-.service-navbar .search-wrapper {
-    margin: auto;
-    align-items: center;
-    display: flex;
+.title {
+  margin: 24px;
+  font-weight: 700;
+  font-size: 40px;
 }
-
-.service-navbar .add-item-button {
-    margin: auto;
-    align-items: center;
-    display: flex;
-    color: lightseagreen;
-}
-
-
-.service-navbar input:hover {
-    background-color: #ddd;
-    color: black;
-}
-
-.service-navbar input[type=text] {
-    padding: 6px;
-    font-size: 17px;
-    border: none;
-    border-radius: 50px;
-    background-color: lightgrey;
-    text-align: center;
-}
-
-.service-navbar button {
-    padding: 6px 10px;
-    font-size: 17px;
-    border: none;
-    cursor: pointer;
-}
-
-.service-navbar button p {
-    margin: 10px 20px;
-}
-
-.service-navbar button:hover {
-    background: #ccc;
-}
-
-
-/* Style the tab */
-.tab {
-    overflow: hidden;
-    border: 1px solid #ccc;
-    background-color: #f1f1f1;
-}
-
-/* Style the buttons inside the tab */
-.tab button {
-    background-color: inherit;
-    float: left;
-    border: none;
-    outline: none;
-    cursor: pointer;
-    padding: 14px 16px;
-    transition: 0.3s;
-    font-size: 17px;
-}
-
-/* Change background color of buttons on hover */
-.tab button:hover {
-    background-color: #ddd;
-}
-
-/* Create an active/current tablink class */
-.tab button.active {
-    background-color: #ccc;
-}
-
-/* Style the tab content */
-.tabcontent {
-    display: none;
-    padding: 12px;
-    border: 1px solid #ccc;
-    height: 85%;
-}
-
-.topright:hover {
-    color: red;
-}
-
-.checkout-container h2 {
-    text-align: center;
-}
-
-
-.cart-container {
-    border-radius: 3px;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-}
-
-.cart-nav-wrapper {
-    display: flex;
-    justify-content: space-around;
-    flex-direction: row;
-    border: 1px solid lightgrey;
-    background-color: #f2f2f2;
-}
-
-.cart-nav-wrapper p {
-    margin: 5px;
-}
-
-span.price {
-    float: right;
-    color: grey;
-}
-
-.cart-nav-list-container {
-    flex: 1;
-}
-
-.cart-price-container .price-wrapper {
-    text-align: center;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #f2f2f2;
-    padding: 0 15px;
-}
-
-.cart-price-container .total-price-wrapper {
-    text-align: center;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 15px;
-}
-
-.cart-price-container .price-wrapper input {
-    width: 20px;
-}
- </style>
+</style>
