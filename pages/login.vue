@@ -39,11 +39,25 @@
                 transform="translate(0)"></path>
             </g>
           </svg>
-          <input type="text" placeholder="Email">
-          <input class="password" type="text" placeholder="Password">
-          <input class="newPassword" type="text" placeholder="New Password">
-          <input class="repeatPassword" type="text" placeholder=" Repeat Password">
-          <div class="submit-button" type="button" @click="showPassword()">
+          <div v-for="(error, index) in errorList" :key="index" class="error-message">
+            <p v-if="error.active">
+              {{error.message}}
+            </p>
+          </div>
+          <input v-if="state === stateTypes.EMAIL" id="emailId" :value="email" @input="e => email = e.target.value"
+            @blur="validateEmail(email)" type="text" placeholder="Email">
+          <input v-if="state === stateTypes.PASSWORD" :value="password" @input="e => password = e.target.value"
+            @blur="validatePassword(password)" class="password" type="text" placeholder="Password">
+          <input v-if="state === stateTypes.NEWPASSWORD" :value="newPassword" @input="e => newPassword = e.target.value"
+            @blur="validatePassword(newPassword)" class="newPassword" type="text" placeholder="New Password">
+          <input v-if="state === stateTypes.NEWPASSWORD" :value="repeatNewPassword"
+            @input="e => repeatNewPassword = e.target.value" @blur="validateRepeatPassword(repeatNewPassword)"
+            class="repeatPassword" type="text" placeholder=" Repeat Password">
+          <div v-if="state === stateTypes.EMAIL" class="submit-button" type="button" @click="checkForExistingEmail()">
+            Next
+          </div>
+          <div v-if="state !== stateTypes.EMAIL" class="submit-button" type="button"
+            v-on="state === stateTypes.NEWPASSWORD ? { click: () => createPassword(newPassword, repeatNewPassword) } : {click: () =>  login(password) }">
             Login
           </div>
         </div>
@@ -53,20 +67,97 @@
 </template>
 
 <script>
-import backgroundImage from '~/assets/images/loginBackground.jpg';
-export default {
-  layout: 'default',
-  data(){
-    return {backgroundImage}
-  },
-  methods:{
-  showPassword() {
-    document.getElementsByClassName('password')[0].classList.toggle('active');
-    document.getElementsByClassName('newPassword')[0].classList.toggle('active');
-    document.getElementsByClassName('repeatPassword')[0].classList.toggle('active');
-}
+  import backgroundImage from '~/assets/images/loginBackground.jpg';
+  export default {
+    layout: 'default',
+    data() {
+      const stateTypes = {
+        EMAIL: "email",
+        PASSWORD: "password",
+        NEWPASSWORD: "newPassword"
+      };
+      const errorList = [{
+          message: 'Invalid Email',
+          active: false
+        },
+        {
+          message: 'Invalid Password',
+          active: false
+        },
+        {
+          message: `Passwords don't match`,
+          active: false
+        },
+      ];
+      return {
+        backgroundImage,
+        state: 'email',
+        stateTypes,
+        email: '',
+        password: '',
+        newPassword: '',
+        repeatNewPassword: '',
+        errorList
+      }
+    },
+    methods: {
+      async checkForExistingEmail() {
+        try {
+          if (this.validateEmail(this.email)) {
+            // await this.$axios.get();
+            this.state = this.stateTypes.NEWPASSWORD
+
+          }
+        } catch (e) {
+          console.log(e)
+        }
+      },
+      login(password) {
+        if (this.validatePassword(password) && this.email) {
+          // this.$cookies.set('movie_user',user);
+          // this.$store.dispatch('user/userLoggedIn', user);
+          console.log('logged in');
+        }
+      },
+      createPassword(newPassword, repeatedPassword) {
+        console.log('entered create');
+        console.log(this.validatePassword(newPassword) && this.validateRepeatPassword(repeatedPassword));
+        if (this.validatePassword(newPassword) && this.validateRepeatPassword(repeatedPassword)) {
+          console.log('password created');
+        }
+      },
+      validateEmail(email) {
+        if (email === '' || !this.email.match(
+            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+            )) {
+          this.errorList[0].active = true;
+          return false;
+        } else {
+          this.errorList[0].active = false;
+          return true;
+        }
+      },
+      validatePassword(password) {
+        if (/\s$/.test(password) || password === '' || password.length < 6) {
+          this.errorList[1].active = true;
+          return false;
+        } else {
+          this.errorList[1].active = false;
+          return true;
+        }
+      },
+      validateRepeatPassword(password) {
+        if (password !== this.newPassword) {
+          this.errorList[2].active = true;
+          return false;
+        } else {
+          this.errorList[2].active = false;
+          return true;
+        }
+      }
+    }
   }
-}
+
 </script>
 
 <style lang="scss" scoped>
@@ -108,35 +199,15 @@ export default {
   margin: auto auto 40px auto;
 }
 
+.login-wrapper > .error-message {
+  color: #fff;
+}
+
 .login-wrapper input {
   padding: 15px;
   border-radius: 6px;
   margin: 5px auto 5px auto;
   width: 250px;
-}
-
-.login-wrapper .password {
-  display: none;
-}
-
-.login-wrapper .password.active {
-  display: initial;
-}
-
-.login-wrapper .newPassword {
-  display: none;
-}
-
-.login-wrapper .newPassword.active {
-  display: initial;
-}
-
-.login-wrapper .repeatPassword {
-  display: none;
-}
-
-.login-wrapper .repeatPassword.active {
-  display: initial;
 }
 
 .login-wrapper > .submit-button {
@@ -147,5 +218,6 @@ export default {
   justify-content: center;
   border-radius: 6px;
   font-weight: 400;
+  cursor: pointer;
 }
 </style>
