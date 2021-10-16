@@ -51,13 +51,9 @@
           <a class="active" href="#"><i class="fa fa-calendar-o"></i> Appointments</a>
         </div>
         <div class="button">
-          <a class="active" href="#"><i class="fas fa-user-friends"></i> Employees</a>
-        </div>
-        <div class="button">
-          <a class="active" href="#"><i class="fa fa-calendar-o"></i> Edit</a>
+          <a class="active" href="#"><i class="far fa-edit"></i> Manage </a>
           <div class="dropdown-content">
-            <a href="#">Products</a>
-            <a href="#">Services</a>
+            <a class="active" href="#"><i class="fas fa-user-friends"></i> Employees</a>
           </div>
         </div>
 
@@ -147,7 +143,7 @@ body {
   position: absolute;
   background-color: #f9f9f9;
   min-width: 130px;
-  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
   z-index: 1;
   top: 50px;
 }

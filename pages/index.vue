@@ -5,17 +5,20 @@
 
       <div class="product-service-container">
         <div class="service-navbar">
-          <button class="add-item-button" type="button" onclick="addNewItem()"><i class="fas fa-plus"></i>
+          <button class="add-item-button" type="button" @click="addNewItem()"><i class="fas fa-plus"></i>
             <p>Add new Item</p>
           </button>
           <div class="search-wrapper">
-            <input type="text" placeholder="Search.." name="search">
+            <input name="search" placeholder="Search.." type="text">
             <button type="submit"><i class="fa fa-search"></i></button>
           </div>
         </div>
         <div class="items-grid-container">
           <div class="items-grid">
-            <img class="grid-item-pic" :src="image" />
+            <button class="edit-item-button" type="button" @click="editItem()"><i class="far fa-edit"></i></button>
+            <button class="delete-item-button" type="button" @click="deleteItem()"><i class="far fa-trash-alt"></i>
+            </button>
+            <img :src="image" class="grid-item-pic"/>
             <p class="grid-item-name"> Amazing Coffee</p>
             <p class="grid-item-price">20.49 DKK</p>
 
@@ -24,14 +27,13 @@
 
         <div id="Services" class="tabcontent">
           <h3>Services</h3>
-
         </div>
         <div id="Products" class="tabcontent">
           <h3>Products</h3>
         </div>
       </div>
       <div class="tab">
-        <button class="tablinks" @click="openTab('Services')" id="defaultOpen"><i
+        <button id="defaultOpen" class="tablinks" @click="openTab('Services')"><i
           class="fas fa-cut"></i>
           <p> Services</p>
         </button>
@@ -44,9 +46,11 @@
 
     </div>
     <div class="checkout-container">
-      <h2>Checkout</h2>
+
       <div class="cart-container">
+
         <div class="cart-nav-list-container">
+          <h2>Checkout</h2>
           <div class="cart-nav-wrapper">
             <p class="cart-item-name">Name</p>
             <p class="cart-item-quantity">Quantity</p>
@@ -60,12 +64,12 @@
 
             </div>
             <div class="item-quantity">
-              <div class="value-button" id="decrease" @click="decreaseValue()" value="Decrease Value">
-                <p> - </p>
+              <div id="decrease" class="value-button" value="Decrease Value" @click="decreaseValue()">
+                <i class="fas fa-minus"></i>
               </div>
               <input id="number" value="1"/>
-              <div class="value-button" id="increase" @click="increaseValue()" value="Increase Value">
-                <p> + </p>
+              <div id="increase" class="value-button" value="Increase Value" @click="increaseValue()">
+                <i class="fas fa-plus"></i>
               </div>
             </div>
             <p class="item-price">549,00 DKK</p>
@@ -75,7 +79,7 @@
         <div class="cart-price-container">
           <div class="price-wrapper">
             <p>Discount (%)</p>
-            <input type="text" name="discount">
+            <input name="discount" type="text">
           </div>
           <div class="price-wrapper">
             <p>Sub Total</p>
@@ -86,11 +90,21 @@
             <p>100dkk</p>
           </div>
           <div class="total-price-wrapper">
-            <p>Total </p>
-            <p>200dkk</p>
+            <p class="total-price">Total </p>
+            <p class="total-price-amount">200dkk</p>
 
           </div>
         </div>
+      </div>
+      <div class="checkout-buttons">
+        <button class="cancel-order" type="button" @click="addNewItem()">
+          <p> Cancel Order </p>
+        </button>
+        <button class="pay-order" type="button" @click="addNewItem()">
+          <p> Pay (100 DKK) </p>
+        </button>
+
+
       </div>
     </div>
   </div>
@@ -152,15 +166,11 @@ export default {
   line-height: 1.4;
 }
 
-body {
-  font-family: Arial;
-}
-
 .main-container {
   display: flex;
   flex-direction: row;
   height: 90%;
-  background-color: lightblue;
+  background-color: #d2f0fb;
   width: 100%;
   position: fixed;
 }
@@ -174,19 +184,18 @@ body {
 }
 
 .checkout-container {
-  box-shadow: 0 10px 16px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%) !important;
   width: 30%;
   display: flex;
   flex-direction: column;
   margin: 10px;
-  background-color: white;
-  padding: 20px 0;
 }
 
 .service-navbar {
   overflow: hidden;
   display: flex;
   justify-content: center;
+  height: 10%;
+  align-items: center;
 }
 
 .product-service-container {
@@ -194,25 +203,47 @@ body {
   background-color: white;
   box-shadow: 0 10px 16px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%) !important;
   border-radius: 5px;
-  padding: 15px;
+  padding: 0 15px;
 }
 
 .items-grid {
   display: flex;
   flex-direction: column;
-  width: 15%;
   align-items: center;
+  text-align: center;
+  width: 12%;
+  font-size: 0.8vw;
 }
+
 .grid-item-pic {
-  border: 3px solid lightgray;
+  border: 2px solid lightgray;
+  border-radius: 5px;
 }
+
 .grid-item-name {
   font-weight: 600;
   margin: 12px;
 }
+
 .grid-item-price {
   color: lightseagreen;
   font-weight: 600;
+}
+
+.edit-item-button {
+  position: fixed;
+  align-self: start;
+  display: flex;
+  margin: 5px;
+  font-size: 0.8vw;
+}
+
+.delete-item-button {
+  position: fixed;
+  align-self: end;
+  display: flex;
+  margin: 5px;
+  font-size: 0.8vw;
 }
 
 .search-wrapper button {
@@ -226,7 +257,7 @@ body {
   margin-left: auto;
   align-items: center;
   display: flex;
-  width: 30%;
+  width: 40%;
 }
 
 .service-navbar .add-item-button {
@@ -250,8 +281,8 @@ body {
   border-radius: 50px;
   background-color: lightgrey;
   text-align: center;
-  width: 80%;
-  height: 40px;
+  width: 20vw;
+  height: 35px;
   color: gray;
 }
 
@@ -266,14 +297,12 @@ body {
   margin: 10px 20px;
 }
 
-.service-navbar button:hover {
-  background: #ccc;
-}
-
 .cart-item {
   display: flex;
   justify-content: center;
-  height: 5vw;
+  height: 50px;
+  font-size: 0.8vw;
+  border-bottom: lightgray solid thin;
 }
 
 .item-name {
@@ -301,23 +330,28 @@ body {
   align-items: center;
   justify-content: center;
   width: 25%;
-  color: gray;
+  color: lightseagreen;
+  font-size: 0.8vw;
 }
+
 
 .value-button {
   width: 25px;
   text-align: center;
-  box-shadow: 2px 2px 7px 0px rgba(0, 0, 0, 0.3);
-
-  border: 4px solid green;
 }
 
-#decrease {
+#decrease i {
+  border: 3px solid lightseagreen;
   border-radius: 100%;
+  box-shadow: 2px 2px 7px 0 rgba(0, 0, 0, 0.3);
+  padding: 2px;
 }
 
-#increase {
+#increase > i {
+  border: 3px solid lightseagreen;
   border-radius: 100%;
+  box-shadow: 2px 2px 7px 0 rgba(0, 0, 0, 0.3);
+  padding: 2px;
 }
 
 .value-button:hover {
@@ -330,6 +364,7 @@ input#number {
   width: 20px;
   background-color: transparent;
   color: gray;
+  font-size: 0.8vw;
 }
 
 input[type="number"]::-webkit-inner-spin-button,
@@ -341,9 +376,10 @@ input[type="number"]::-webkit-outer-spin-button {
 
 /* Style the tab */
 .tab {
-  height: 100px;
-  text-align: center;
-  margin: 20px 0;
+  height: 145px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 /* Style the buttons inside the tab */
@@ -351,9 +387,9 @@ input[type="number"]::-webkit-outer-spin-button {
   cursor: pointer;
   padding: 14px 16px;
   transition: 0.3s;
-  font-size: 17px;
+  font-size: 1vw;
   background-color: white;
-  margin: 0px 15px;
+  margin: 0 15px;
   border: none;
   color: gray;
   border-radius: 10px;
@@ -379,26 +415,29 @@ input[type="number"]::-webkit-outer-spin-button {
   height: 85%;
 }
 
-.topright:hover {
-  color: red;
-}
-
 .checkout-container h2 {
   text-align: center;
+  font-size: 1.5vw;
+  margin: 12px 0;
 }
-
 
 .cart-container {
   display: flex;
   flex-direction: column;
   height: 100%;
+  background-color: white;
+  box-shadow: 0 10px 16px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%) !important;
+  border-radius: 5px;
 }
 
 .cart-nav-wrapper {
   display: flex;
   text-align: center;
-  border: 1px solid lightgrey;
   background-color: #f2f2f2;
+  font-size: 0.8vw;
+  color: darkgray;
+  font-weight: 600;
+  height: 30px;
 }
 
 .cart-nav-wrapper p {
@@ -417,22 +456,24 @@ input[type="number"]::-webkit-outer-spin-button {
   width: 30%;
 }
 
-span.price {
-  float: right;
-  color: grey;
-}
-
 .cart-nav-list-container {
   flex: 1;
 }
 
+.cart-price-container {
+  height: 30%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
 .cart-price-container .price-wrapper {
-  text-align: center;
   display: flex;
   justify-content: space-between;
-  align-items: center;
   background-color: #f2f2f2;
-  padding: 0 15px;
+  padding: 15px;
+  height: 50px;
+  color: gray;
 }
 
 .cart-price-container .total-price-wrapper {
@@ -441,9 +482,49 @@ span.price {
   justify-content: space-between;
   align-items: center;
   padding: 0 15px;
+  margin: auto 0;
 }
 
 .cart-price-container .price-wrapper input {
   width: 20px;
 }
+
+.checkout-buttons {
+  background-color: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 145px;
+  text-align: center;
+}
+
+.cancel-order {
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+  background-color: rgba(255, 255, 255, 0.5);
+  margin: 0 15px;
+  color: darkred;
+  border-radius: 10px;
+  box-shadow: 0 10px 16px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%) !important;
+  border: darkred solid medium;
+  font-size: 16px;
+  width: 10vw;
+
+}
+
+.pay-order {
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+  font-size: 17px;
+  background-color: lightseagreen;
+  margin: 0 15px;
+  border: none;
+  color: white;
+  border-radius: 10px;
+  box-shadow: 0 10px 16px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%) !important;
+  width: 14vw;
+}
+
 </style>
