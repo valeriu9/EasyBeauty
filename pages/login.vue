@@ -40,19 +40,19 @@
             </g>
           </svg>
           <div v-for="(error, index) in errorList" :key="index" class="error-message">
-            <p v-if="error.active">
+            <p v-if="error.active" class="error-color">
               {{error.message}}
             </p>
           </div>
           <input v-if="state === stateTypes.EMAIL" id="emailId" :value="email" @input="e => email = e.target.value"
             @blur="validateEmail(email)" type="text" placeholder="Email">
-          <input v-if="state === stateTypes.PASSWORD" :value="password" @input="e => password = e.target.value"
-            @blur="validatePassword(password)" class="password" type="text" placeholder="Password">
+          <input v-if="state === stateTypes.PASSWORD" type="password" :value="password" @input="e => password = e.target.value"
+            @blur="validatePassword(password)" class="password" placeholder="Password">
           <input v-if="state === stateTypes.NEWPASSWORD" :value="newPassword" @input="e => newPassword = e.target.value"
-            @blur="validatePassword(newPassword)" class="newPassword" type="text" placeholder="New Password">
+            @blur="validatePassword(newPassword)" class="newPassword" type="password" placeholder="New Password">
           <input v-if="state === stateTypes.NEWPASSWORD" :value="repeatNewPassword"
             @input="e => repeatNewPassword = e.target.value" @blur="validateRepeatPassword(repeatNewPassword)"
-            class="repeatPassword" type="text" placeholder=" Repeat Password">
+            class="repeatPassword" type="password" placeholder=" Repeat Password">
           <div v-if="state === stateTypes.EMAIL" class="submit-button" type="button" @click="checkForExistingEmail()">
             Next
           </div>
@@ -67,6 +67,8 @@
 </template>
 
 <script>
+  import crypto from 'crypto-js';
+  import {setCookieUnparsed, getCookieDataUnparsed, getCookieData, setCookie} from '~/helpers/cookies.js'
   import backgroundImage from '~/assets/images/loginBackground.jpg';
   export default {
     layout: 'default',
@@ -77,15 +79,27 @@
         NEWPASSWORD: "newPassword"
       };
       const errorList = [{
-          message: 'Invalid Email',
+          message: '*Invalid Email',
           active: false
         },
         {
-          message: 'Invalid Password',
+          message: '*Invalid Password',
           active: false
         },
         {
-          message: `Passwords don't match`,
+          message: `*Passwords don't match`,
+          active: false
+        },
+        {
+          message: `*Password is incorrect for this account`,
+          active: false
+        },
+        {
+          message: `*User already logged in`,
+          active: false
+        },
+          {
+          message: `This email doesn't have an account`,
           active: false
         },
       ];
@@ -97,36 +111,61 @@
         password: '',
         newPassword: '',
         repeatNewPassword: '',
+        id:0,
         errorList
       }
     },
     methods: {
       async checkForExistingEmail() {
+        this.errorList[5].active = false;
         try {
           if (this.validateEmail(this.email)) {
-            // await this.$axios.get();
-            this.state = this.stateTypes.NEWPASSWORD
+          const res = await this.$axios.get(`https://localhost:5001/api/Login/check-email?email=`+this.email);
+           if(res.data.error){
+             this.errorList[5].active = true;
+              return
+           }
+            this.state = res.data.hasLogin ? this.stateTypes.PASSWORD : this.stateTypes.NEWPASSWORD
 
           }
         } catch (e) {
           console.log(e)
         }
       },
-      login(password) {
-        if (this.validatePassword(password) && this.email) {
-          // this.$cookies.set('movie_user',user);
-          // this.$store.dispatch('user/userLoggedIn', user);
-          console.log('logged in');
+    async login(password) {
+      this.errorList[3].active = false;
+          try {
+          if (this.validatePassword(password) && this.email) {
+          const res = await this.$axios.get(`https://localhost:5001/api/Login/login?id=`+this.id+`&password=`+this.password+`&email=`+this.email);
+            if(res.data === 'Not authenticated'){
+              this.errorList[3].active = true;
+            }
+            else{
+             const decodeCookie = JSON.parse(crypto.enc.Base64.parse(res.data.cookie).toString(crypto.enc.Utf8));
+             const user = {email: this.email, name: decodeCookie.FullName, id: decodeCookie.Id, token: decodeCookie.Token, role: decodeCookie.Role}
+             setCookie('easybeauty_user', user);
+             this.$store.dispatch('user/userLoggedIn', user);
+             this.$router.push('/')
+            }
+          }
+        } catch (e) {
+          console.log(e)
         }
+
       },
-      createPassword(newPassword, repeatedPassword) {
-        console.log('entered create');
-        console.log(this.validatePassword(newPassword) && this.validateRepeatPassword(repeatedPassword));
+     async createPassword(newPassword, repeatedPassword) {
+       try{
         if (this.validatePassword(newPassword) && this.validateRepeatPassword(repeatedPassword)) {
-          console.log('password created');
+          await this.$axios.put(`https://localhost:5001/api/Login/create-password?id=`+this.id+`&password=`+newPassword);
+          this.state = this.stateTypes.PASSWORD
         }
+       }
+     catch(e){
+       console.log(e);
+     }
       },
       validateEmail(email) {
+        this.errorList[0].active = false;
         if (email === '' || !this.email.match(
             /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
             )) {
@@ -138,6 +177,7 @@
         }
       },
       validatePassword(password) {
+        this.errorList[1].active = false;
         if (/\s$/.test(password) || password === '' || password.length < 6) {
           this.errorList[1].active = true;
           return false;
@@ -147,6 +187,7 @@
         }
       },
       validateRepeatPassword(password) {
+        this.errorList[2].active = false;
         if (password !== this.newPassword) {
           this.errorList[2].active = true;
           return false;
@@ -219,5 +260,8 @@
   border-radius: 6px;
   font-weight: 400;
   cursor: pointer;
+}
+.error-color {
+  color: crimson;
 }
 </style>

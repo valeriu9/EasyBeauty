@@ -1,10 +1,12 @@
 export default ({ app }) => {
   app.router.beforeEach((to, from, next) => {
-    const userData = $cookies.get('movie_user');
-
-    if (userData) {
-      app.store.dispatch('user/userLoggedIn', userData);
-    }
+    checkCookie(app.store);
     next();
   });
 };
+
+function checkCookie (store) {
+  if ($cookies.get('easybeauty_user') !== null) {
+    store.dispatch('user/userLoggedIn', $cookies.get('easybeauty_user'));
+  }
+}
