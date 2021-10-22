@@ -1,106 +1,104 @@
 <template>
-  <div class="main-container">
+  <div class='main-container'>
 
-    <div class="services-container">
+    <div class='services-container'>
 
-      <div class="product-service-container">
-        <div class="service-navbar">
-          <button class="add-item-button" type="button" @click="addNewItem()"><i class="fas fa-plus"></i>
+      <div class='product-service-container'>
+        <div class='service-navbar'>
+          <button class='add-item-button' type='button' @click='addNewItem()'><i class='fas fa-plus'></i>
             <p>Add new Item</p>
           </button>
-          <div class="search-wrapper">
-            <input name="search" placeholder="Search.." type="text">
-            <button type="submit"><i class="fa fa-search"></i></button>
+          <div class='search-wrapper'>
+            <input name='search' placeholder='Search..' type='text'>
+            <button type='submit'><i class='fa fa-search'></i></button>
           </div>
         </div>
-        <div class="items-grid-container">
-          <div v-for="index in 20" :key="index" class="items-grid">
-            <button class="edit-item-button" type="button" @click="editItem()"><i class="far fa-edit"></i></button>
-            <button class="delete-item-button" type="button" @click="deleteItem()"><i class="far fa-trash-alt"></i>
+        <div class='items-grid-container'>
+          <div v-for='index in 20' :key='index' class='items-grid'>
+            <button class='edit-item-button' type='button' @click='editItem()'><i class='far fa-edit'></i></button>
+            <button class='delete-item-button' type='button' @click='deleteItem()'><i class='far fa-trash-alt'></i>
             </button>
-            <img src="~/assets/images/coffee.jpg" class="grid-item-pic" />
-            <p class="grid-item-name"> Amazing Coffee</p>
-            <p class="grid-item-price">20.49 DKK</p>
+            <img src='~/assets/images/coffee.jpg' class='grid-item-pic' />
+            <p class='grid-item-name'> Amazing Coffee</p>
+            <p class='grid-item-price'>20.49 DKK</p>
 
           </div>
         </div>
 
-        <div id="Services" class="tabcontent">
+        <div id='Services' class='tabcontent'>
           <h3>Services</h3>
         </div>
-        <div id="Products" class="tabcontent">
+        <div id='Products' class='tabcontent'>
           <h3>Products</h3>
         </div>
       </div>
-      <div class="tab">
-        <button id="defaultOpen" class="tablinks" @click="openTab('Services')"><i
-            class="fas fa-cut"></i>
+      <div class='tab'>
+        <button id='defaultOpen' class='tablinks' @click="openTab('Services')"><i
+          class='fas fa-cut'></i>
           <p> Services</p>
         </button>
-        <button class="tablinks" @click="openTab('Products')"><i class="fas fa-spray-can"></i>
+        <button class='tablinks' @click="openTab('Products')"><i class='fas fa-spray-can'></i>
           <p>
             Products
           </p>
         </button>
       </div>
-
     </div>
-    <div class="checkout-container">
+    <div class='checkout-container'>
 
-      <div class="cart-container">
-
-        <div class="cart-nav-list-container">
+      <div class='cart-container'>
+        <div class='cart-item-nav'>
           <h2>Checkout</h2>
-          <div class="cart-nav-wrapper">
-            <p class="cart-item-name">Name</p>
-            <p class="cart-item-quantity">Quantity</p>
-            <p class="cart-item-price">Price</p>
-          </div>
-
-          <div v-for="index in 20" :key="index" class="cart-item">
-            <div class="item-name">
-              <i class="far fa-trash-alt"></i>
-              <p>Moroccan Oil Moisture Repair Shampoo - 1000 ml</p>
-
-            </div>
-            <div class="item-quantity">
-              <div id="decrease" class="value-button" value="Decrease Value" @click="decreaseValue()">
-                <i class="fas fa-minus"></i>
-              </div>
-              <input id="number" value="1" />
-              <div id="increase" class="value-button" value="Increase Value" @click="increaseValue()">
-                <i class="fas fa-plus"></i>
-              </div>
-            </div>
-            <p class="item-price">549,00 DKK</p>
-
+          <div class='cart-nav-wrapper'>
+            <p class='cart-item-name'>Name</p>
+            <p class='cart-item-quantity'>Quantity</p>
+            <p class='cart-item-price'>Price</p>
           </div>
         </div>
-        <div class="cart-price-container">
-          <div class="price-wrapper">
-            <p>Discount (%)</p>
-            <input name="discount" type="text">
+        <div class='item-list'>
+          <div v-for='index in 20' :key='index' class='cart-item'>
+            <div class='item-name'>
+              <i class='far fa-trash-alt'></i>
+              <p>Moroccan Oil Moisture Repair Shampoo - 1000 ml</p>
+            </div>
+            <div class='item-quantity'>
+              <div id='decrease' class='value-button' value='Decrease Value' @click='decreaseValue()'>
+                <i class='fas fa-minus'></i>
+              </div>
+              <input id='number' value='1' />
+              <div id='increase' class='value-button' value='Increase Value' @click='increaseValue()'>
+                <i class='fas fa-plus'></i>
+              </div>
+            </div>
+            <p class='item-price'>549,00 DKK</p>
           </div>
-          <div class="price-wrapper">
+        </div>
+        <div class='cart-price-container'>
+          <div class='price-wrapper'>
+            <p>Discount (%)</p>
+            <input name='discount' type='text'>
+          </div>
+          <div class='price-wrapper'>
             <p>Sub Total</p>
             <p>100dkk</p>
           </div>
-          <div class="price-wrapper">
+          <div class='price-wrapper'>
             <p>Tax</p>
             <p>100dkk</p>
           </div>
-          <div class="total-price-wrapper">
-            <p class="total-price">Total </p>
-            <p class="total-price-amount">200dkk</p>
+          <div class='total-price-wrapper'>
+            <p class='total-price'>Total </p>
+            <p class='total-price-amount'>200dkk</p>
 
           </div>
         </div>
+
       </div>
-      <div class="checkout-buttons">
-        <button class="cancel-order" type="button" @click="addNewItem()">
+      <div class='checkout-buttons'>
+        <button class='cancel-order' type='button' @click='addNewItem()'>
           <p> Cancel Order </p>
         </button>
-        <button class="pay-order" type="button" @click="addNewItem()">
+        <button class='pay-order' type='button' @click='addNewItem()'>
           <p> Pay (100 DKK) </p>
         </button>
 
@@ -123,36 +121,36 @@ export default {
   layout: 'default',
   methods: {
     openTab(evt, serviceName) {
-      const tabcontent = document.getElementsByClassName("tabcontent")[0];
+      const tabcontent = document.getElementsByClassName('tabcontent')[0]
       for (let i = 0; i < tabcontent.length; i++) {
-        tabcontent[i].style.display = "none";
+        tabcontent[i].style.display = 'none'
       }
-      const tablinks = document.getElementsByClassName("tablinks")[0];
+      const tablinks = document.getElementsByClassName('tablinks')[0]
       for (let i = 0; i < tablinks.length; i++) {
-        tablinks[i].className = tablinks[i].className.replace(" active", "");
+        tablinks[i].className = tablinks[i].className.replace(' active', '')
       }
-      document.getElementById(serviceName).style.display = "block";
-      evt.currentTarget.className += " active";
+      document.getElementById(serviceName).style.display = 'block'
+      evt.currentTarget.className += ' active'
     },
     increaseValue() {
-      var value = parseInt(document.getElementById('number').value, 10);
-      value = isNaN(value) ? 0 : value;
-      value++;
-      document.getElementById('number').value = value;
+      var value = parseInt(document.getElementById('number').value, 10)
+      value = isNaN(value) ? 0 : value
+      value++
+      document.getElementById('number').value = value
     },
 
     decreaseValue() {
-      var value = parseInt(document.getElementById('number').value, 10);
-      value = isNaN(value) ? 0 : value;
-      value < 1 ? value = 1 : '';
-      value--;
-      document.getElementById('number').value = value;
+      var value = parseInt(document.getElementById('number').value, 10)
+      value = isNaN(value) ? 0 : value
+      value < 1 ? value = 1 : ''
+      value--
+      document.getElementById('number').value = value
     }
   }
 }
 </script>
 
-<style lang="css" scoped>
+<style lang='css' scoped>
 .fa {
   color: white;
   line-height: 1.4;
@@ -161,7 +159,7 @@ export default {
 .main-container {
   display: flex;
   flex-direction: row;
-  height: calc(100vh - 80px);
+  height: calc(100% - 80px);
   background-color: #d2f0fb;
   width: 100%;
   position: fixed;
@@ -197,9 +195,12 @@ export default {
   border-radius: 5px;
   padding: 0 15px;
 }
-.items-grid-container{
+
+.items-grid-container {
   height: 69vh;
   overflow-y: scroll;
+  display: grid;
+  grid-template-columns: auto auto auto auto auto;
 }
 
 .items-grid {
@@ -207,7 +208,7 @@ export default {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  width: 12%;
+  width: 85%;
   font-size: 0.8vw;
 }
 
@@ -420,10 +421,15 @@ input[type="number"]::-webkit-outer-spin-button {
 .cart-container {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  height: 89%;
   background-color: white;
   box-shadow: 0 10px 16px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%) !important;
   border-radius: 5px;
+}
+
+.item-list {
+  height: 35vw;
+  overflow-y: scroll;
 }
 
 .cart-nav-wrapper {
@@ -434,6 +440,7 @@ input[type="number"]::-webkit-outer-spin-button {
   color: darkgray;
   font-weight: 600;
   height: 30px;
+  align-items: center;
 }
 
 .cart-nav-wrapper p {
@@ -450,10 +457,6 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .cart-item-price {
   width: 30%;
-}
-
-.cart-nav-list-container {
-  flex: 1;
 }
 
 .cart-price-container {
