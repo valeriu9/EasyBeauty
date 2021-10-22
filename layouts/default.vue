@@ -1,8 +1,9 @@
 <template>
   <div>
     <client-only>
-      <Navbar />
       <editEmployee />
+      <Navbar />
+
       <nuxt />
     </client-only>
   </div>
