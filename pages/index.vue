@@ -20,6 +20,7 @@
             </button>
             <img src='~/assets/images/coffee.jpg' class='grid-item-pic' />
             <p class='grid-item-name'> Amazing Coffee</p>
+            <p class='grid-item-description'> The best coffee coming from mother russian with a slight taste of vodka and sweat</p>
             <p class='grid-item-price'>20.49 DKK</p>
 
           </div>
@@ -208,8 +209,8 @@ export default {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  width: 85%;
   font-size: 0.8vw;
+  margin: 10px;
 }
 
 .grid-item-pic {
@@ -219,12 +220,15 @@ export default {
 
 .grid-item-name {
   font-weight: 600;
-  margin: 12px;
+  margin: 10px;
+}
+.grid-item-description {
 }
 
 .grid-item-price {
   color: lightseagreen;
   font-weight: 600;
+  margin: 4px;
 }
 
 .edit-item-button {
