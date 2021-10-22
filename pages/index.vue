@@ -14,11 +14,11 @@
           </div>
         </div>
         <div class="items-grid-container">
-          <div class="items-grid">
+          <div v-for="index in 20" :key="index" class="items-grid">
             <button class="edit-item-button" type="button" @click="editItem()"><i class="far fa-edit"></i></button>
             <button class="delete-item-button" type="button" @click="deleteItem()"><i class="far fa-trash-alt"></i>
             </button>
-            <img :src="image" class="grid-item-pic"/>
+            <img src="~/assets/images/coffee.jpg" class="grid-item-pic" />
             <p class="grid-item-name"> Amazing Coffee</p>
             <p class="grid-item-price">20.49 DKK</p>
 
@@ -34,7 +34,7 @@
       </div>
       <div class="tab">
         <button id="defaultOpen" class="tablinks" @click="openTab('Services')"><i
-          class="fas fa-cut"></i>
+            class="fas fa-cut"></i>
           <p> Services</p>
         </button>
         <button class="tablinks" @click="openTab('Products')"><i class="fas fa-spray-can"></i>
@@ -57,7 +57,7 @@
             <p class="cart-item-price">Price</p>
           </div>
 
-          <div class="cart-item">
+          <div v-for="index in 20" :key="index" class="cart-item">
             <div class="item-name">
               <i class="far fa-trash-alt"></i>
               <p>Moroccan Oil Moisture Repair Shampoo - 1000 ml</p>
@@ -67,7 +67,7 @@
               <div id="decrease" class="value-button" value="Decrease Value" @click="decreaseValue()">
                 <i class="fas fa-minus"></i>
               </div>
-              <input id="number" value="1"/>
+              <input id="number" value="1" />
               <div id="increase" class="value-button" value="Increase Value" @click="increaseValue()">
                 <i class="fas fa-plus"></i>
               </div>
@@ -104,7 +104,6 @@
           <p> Pay (100 DKK) </p>
         </button>
 
-
       </div>
     </div>
   </div>
@@ -112,15 +111,8 @@
 
 <script>
 
-import image from "~/assets/images/coffee.jpg"
-
 export default {
 
-  data: function () {
-    return {
-      image: image
-    }
-  },
 
   mounted() {
     let fontScript = document.createElement('script')
@@ -169,7 +161,7 @@ export default {
 .main-container {
   display: flex;
   flex-direction: row;
-  height: 90%;
+  height: calc(100vh - 80px);
   background-color: #d2f0fb;
   width: 100%;
   position: fixed;
@@ -204,6 +196,10 @@ export default {
   box-shadow: 0 10px 16px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%) !important;
   border-radius: 5px;
   padding: 0 15px;
+}
+.items-grid-container{
+  height: 69vh;
+  overflow-y: scroll;
 }
 
 .items-grid {

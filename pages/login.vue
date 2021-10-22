@@ -68,10 +68,15 @@
 
 <script>
   import crypto from 'crypto-js';
-  import {setCookieUnparsed, getCookieDataUnparsed, getCookieData, setCookie} from '~/helpers/cookies.js'
+  import {setCookie} from '~/helpers/cookies.js'
   import backgroundImage from '~/assets/images/loginBackground.jpg';
   export default {
     layout: 'default',
+    beforeMount(){
+    if(this.$store.state.user.id){
+      this.$router.push('/');
+    }
+    },
     data() {
       const stateTypes = {
         EMAIL: "email",
@@ -156,8 +161,14 @@
      async createPassword(newPassword, repeatedPassword) {
        try{
         if (this.validatePassword(newPassword) && this.validateRepeatPassword(repeatedPassword)) {
-          await this.$axios.put(`https://localhost:5001/api/Login/create-password?id=`+this.id+`&password=`+newPassword);
+          const res = await this.$axios.put(`https://localhost:5001/api/Login/create-password?email=`+this.email+`&password=`+newPassword+`&repeatedPassword=`+repeatedPassword);
+          console.log(res);
+          if(res.data.success){
           this.state = this.stateTypes.PASSWORD
+          }
+          else if(res.data.error){
+            this.errorList[1].active = true;
+          }
         }
        }
      catch(e){
