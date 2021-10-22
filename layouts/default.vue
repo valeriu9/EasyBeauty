@@ -2,6 +2,7 @@
   <div>
     <client-only>
       <Navbar />
+      <editEmployee />
       <nuxt />
     </client-only>
   </div>
@@ -9,10 +10,12 @@
 
 <script>
 import Navbar from '~/components/Navbar';
+import editEmployee from '~/components/editEmployee';
 
 export default {
   components: {
-    Navbar
+    Navbar,
+    editEmployee
   }
 };
 </script>

@@ -211,6 +211,7 @@ export default {
   text-align: center;
   font-size: 0.8vw;
   margin: 10px;
+  position: relative;
 }
 
 .grid-item-pic {
@@ -232,7 +233,7 @@ export default {
 }
 
 .edit-item-button {
-  position: fixed;
+  position: absolute;
   align-self: start;
   display: flex;
   margin: 5px;
@@ -240,7 +241,7 @@ export default {
 }
 
 .delete-item-button {
-  position: fixed;
+  position: absolute;
   align-self: end;
   display: flex;
   margin: 5px;
