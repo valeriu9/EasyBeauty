@@ -531,4 +531,27 @@ input[type="number"]::-webkit-outer-spin-button {
   width: 14vw;
 }
 
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+  border-radius: 10%;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
 </style>

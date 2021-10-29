@@ -1,7 +1,8 @@
 <template>
   <div>
     <client-only>
-      <editEmployee />
+<!--   <editEmployee />-->
+      <addEmployee />
       <Navbar />
 
       <nuxt />
@@ -12,11 +13,13 @@
 <script>
 import Navbar from '~/components/Navbar';
 import editEmployee from '~/components/editEmployee';
+import addEmployee from '~/components/addEmployee';
 
 export default {
   components: {
     Navbar,
-    editEmployee
+ //   editEmployee,
+    addEmployee
   }
 };
 </script>
