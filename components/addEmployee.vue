@@ -71,12 +71,6 @@ export default {
   justify-content: center;
 }
 
-.add-employee {
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  height: 100%;
-}
 .employee-details{
   margin: 12px 40px;
 }
