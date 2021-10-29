@@ -1,6 +1,7 @@
 <template>
-  <div class='normal-window'>
-    <div class='employee-popup-window'>
+  <div class="container">
+    <div class='normal-window' :class="showModal ? 'is-active' : ''" @click="overlayClick" />
+    <div class='employee-popup-window' :class="showModal ? 'is-active' : ''">
       <div class='edit-employee-navbar'>
         <button class='add-employee-button' type='button' @click='addNewEmployee()'><i class='fas fa-plus'></i>
           <p>Add employee</p>
@@ -51,23 +52,65 @@ export default {
     document.head.appendChild(fontScript)
   },
 
-  layout: 'default'
+  layout: 'default',
+  props: {
+    enableOverlayClick: {
+      type: Boolean,
+      default: true
+    }
+  },
+  data () {
+    return { showModal: false };
+  },
+  beforeDestroy () {
+    this.close();
+  },
+  methods: {
+    open () {
+      this.showModal = true;
+      const x = window.scrollX;
+      const y = window.scrollY;
+      window.onscroll = function () { window.scrollTo(x, y); };
+      this.$emit('opened');
+    },
+    closeButtonClicked () {
+      this.$emit('close-button-clicked');
+      this.close();
+    },
+    close () {
+      this.showModal = false;
+      window.onscroll = function () {};
+      this.$emit('closed');
+    },
+    overlayClick () {
+      console.log('overlayclijc');
+      if (this.enableOverlayClick) {
+        this.close();
+      }
+    }
+  }
 }
 </script>
 
 
-<style lang='css' scoped>
-
+<style lang='scss' scoped>
 .normal-window {
-  width: 100%;
-  height: 100%;
-  position: absolute;
+  z-index: 100;
+  position: fixed;
   border: 2px solid red;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   background: rgba(0, 0, 0, 0.5);
-  z-index: 99;
+  opacity: 0;
+  width: 100%;
+  height: 110%;
+  top: 0;
+  left: 0;
+  transition: 0s;
+  pointer-events: none;
+  &.is-active {
+    opacity: 0.97;
+    pointer-events: all;
+    transition: 0.5s;
+  }
 }
 
 .edit-employee-navbar {
@@ -79,12 +122,39 @@ export default {
 }
 
 .employee-popup-window {
-  height: 60%;
+  z-index: 200;
+  position: fixed;
+  border-radius: 12px;
+  pointer-events: none;
   background-color: white;
   box-shadow: 0 10px 16px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%) !important;
   border-radius: 5px;
   padding: 15px;
   width: 60%;
+  overflow: auto;
+  height: 60%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: 0s;
+  // remove weird scrolling on apple devices
+  touch-action: none;
+  -ms-touch-action: none;
+
+  opacity: 0;
+  &.is-active {
+    opacity: 1;
+    pointer-events: all;
+    bottom: -10px;
+    transition: 0.5s;
+  }
+
+  // Hide scrollbar
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 .employee-list-container {
@@ -150,7 +220,7 @@ export default {
   color: black;
 }
 
-.edit-employee-navbar input[type=text] {
+.edit-employee-navbar input[type='text'] {
   padding: 5px;
   font-size: 14px;
   border: none;
@@ -161,7 +231,6 @@ export default {
   height: 30px;
   color: gray;
 }
-
 
 .edit-employee-navbar .search-wrapper {
   margin-left: auto;
@@ -181,5 +250,4 @@ export default {
 .add-employee-button p {
   margin: 0 10px;
 }
-
 </style>

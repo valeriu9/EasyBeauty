@@ -4,7 +4,6 @@
 <!--   <editEmployee />-->
       <addEmployee />
       <Navbar />
-
       <nuxt />
     </client-only>
   </div>
