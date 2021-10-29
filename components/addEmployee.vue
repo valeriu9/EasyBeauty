@@ -3,21 +3,24 @@
     <div class='employee-popup-window'>
 
       <div class='user-input-wrp'>
-        <input type="text" class="inputText" required/>
-        <p class="floating-label">First Name</p>
-        <br/>
-        <input type="text" class="inputText" required/>
-        <p class="floating-label">Last Name</p>
-        <br/>
-        <input type="text" class="inputText" required/>
-        <p class="floating-label">Email Address</p>
-        <br/>
-        <input type="text" class="inputText" required/>
-        <p class="floating-label">Phone Number</p>
+        <div class="employee-details">
+          <input type="text" class="inputText" required/>
+          <p class="floating-label">First Name</p>
+          <br/>
+          <input type="text" class="inputText" required/>
+          <p class="floating-label">Last Name</p>
+          <br/>
+          <input type="text" class="inputText" required/>
+          <p class="floating-label">Email Address</p>
+          <br/>
+          <input type="text" class="inputText" required/>
+          <p class="floating-label">Phone Number</p>
+        </div>
 
-        <select class="employee-details" name='employee role'>
-          <option value='volvo'>Employee</option>
-          <option value='saab'>Manager</option>
+
+        <select class="employee-role" name='employee role'>
+          <option value='employee'>Employee</option>
+          <option value='manager'>Manager</option>
         </select>
         <div class="button-container">
           <button class="save-button">Save</button>
@@ -64,6 +67,8 @@ export default {
   border-radius: 5px;
   padding: 15px;
   width: 30%;
+  display: flex;
+  justify-content: center;
 }
 
 .add-employee {
@@ -73,6 +78,9 @@ export default {
   height: 100%;
 }
 .employee-details{
+  margin: 12px 40px;
+}
+.employee-role{
   margin: 12px 40px;
 }
 
@@ -87,7 +95,10 @@ export default {
 
 .user-input-wrp {
   position: relative;
-  width: 50%;
+  width: 90%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
 }
 .user-input-wrp .inputText{
   width: 100%;
@@ -97,22 +108,27 @@ export default {
   box-shadow: none !important;
 }
 .user-input-wrp .inputText:focus{
-  border-color: blue;
   border-width: medium medium 2px;
 }
+
 .user-input-wrp .floating-label {
-  position: absolute;
+  position: relative;
   pointer-events: none;
-  top: 18px;
   left: 10px;
   transition: 0.2s ease all;
+  top: -20px;
+  color: lightgray;
 }
-.user-input-wrp input:focus ~ .floating-label,
-.user-input-wrp input:not(:focus):valid ~ .floating-label{
-  top: 0px;
+.user-input-wrp input:focus + .floating-label,
+.user-input-wrp input:not(:focus):valid + .floating-label{
+  top: -35px;
   left: 10px;
   font-size: 13px;
   opacity: 1;
+  color: #6a6a6a;
+}
+{
+
 }
 
 </style>

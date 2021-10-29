@@ -47,10 +47,10 @@
         </div>
         <div class='buttons-wrapper'>
           <div class='button'>
-            <a class='active' href='#'><i class='fa fa-fw fa-home'></i> Home</a>
+            <div class='active' href='#'><i class='fa fa-fw fa-home'></i> Home</div>
           </div>
           <div class='button'>
-            <a class='active' href='#'><i class='fa fa-calendar-o'></i> Appointments</a>
+            <div class='active' href='#'><i class='fa fa-calendar-o'></i> Appointments</div>
           </div>
           <div class='button'>
             <div class='active' @click="openEmployeeModal()"><i class='fas fa-user-friends'></i> Employees</div>
@@ -106,6 +106,11 @@ body {
   font-family: bureau-grot, sans-serif;
 }
 
+.container{
+  max-width: 100% !important;
+
+}
+
 .cursor-pointer {
   cursor: pointer;
 }
@@ -129,11 +134,11 @@ body {
 .nav-menu-content .logo {
   display: Flex;
   flex-direction: row;
-  width: 25%;
+  width: 15%;
   margin: auto;
   height: 100%;
-  justify-content: space-between;
   align-items: center;
+  justify-content: center;
 }
 
 .nav-menu-content .extras i {
@@ -142,31 +147,21 @@ body {
 
 .nav-menu-content .buttons-wrapper {
   display: flex;
-  width: 230vw;
-  justify-content: flex-end;
+  width: 60%;
+  justify-content: center;
 }
 
 .nav-menu-content .extras {
-  justify-content: flex-end;
+  justify-content: center;
   font-size: 1.2vw;
-  width: 100%;
+  width: 20%;
 
   p {
     margin-right: 20px;
   }
 }
 
-.nav-menu-content > .buttons-wrapper > .button {
-  height: 100%;
-  text-align: center;
-  display: flex;
-  padding: 0 30px;
-  width: max-content;
-  align-self: baseline;
-  cursor: pointer;
-}
-
-.nav-menu-content > .buttons-wrapper > .button a {
+.nav-menu-content > .buttons-wrapper > .button >.active {
   margin: auto;
   font-weight: 400;
   font-size: 1.2vw;
@@ -174,12 +169,28 @@ body {
   color: white;
 }
 
-.nav-menu-content > .logo > .logo-clickable svg {
-  fill: white;
-  transition: all 100ms ease-in-out;
-}
+  .nav-menu-content > .buttons-wrapper > .button {
+    height: 100%;
+    text-align: center;
+    display: flex;
+    padding: 0 30px;
+    width: max-content;
+    align-self: baseline;
+    cursor: pointer;
+    margin: auto;
+    font-weight: 400;
+    font-size: 1.2vw;
+    text-decoration: none;
+    color: white;
+  }
 
-.button:hover .dropdown-content {
-  display: block;
-}
+  .nav-menu-content > .logo > .logo-clickable svg {
+    fill: white;
+    transition: all 100ms ease-in-out;
+  }
+
+  .button:hover .dropdown-content {
+    display: block;
+  }
+
 </style>

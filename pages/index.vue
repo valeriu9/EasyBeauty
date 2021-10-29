@@ -9,19 +9,24 @@
             <p>Add new Item</p>
           </button>
           <div class='search-wrapper'>
-            <input name='search' :value="searchText" @input="e => searchText = e.target.value" placeholder='Search..' type='text'>
-            <button type='submit' @click="search()"><i class='fa fa-search'></i></button>
+            <input name='search' :value='searchText' @input='e => searchText = e.target.value' placeholder='Search..'
+                   type='text'>
+            <button type='submit' @click='search()'><i class='fa fa-search'></i></button>
           </div>
         </div>
         <div class='items-grid-container'>
-          <div v-for='(product, index) in filteredList' :key='index' @click="addToSaleList(product)" class='items-grid'>
-            <button class='edit-item-button' type='button' @click='editItem()'><i class='far fa-edit'></i></button>
-            <button class='delete-item-button' type='button' @click='deleteItem()'><i class='far fa-trash-alt'></i>
-            </button>
-            <img :src='product.image' class='grid-item-pic' />
-            <p class='grid-item-name'>{{product.name}}</p>
-            <p class='grid-item-description'>{{product.description}}</p>
-            <p class='grid-item-price'>{{product.price}}DKK</p>
+          <div v-for='(product, index) in filteredList' :key='index' @click='addToSaleList(product)' class='items-grid'>
+
+            <div class='image-container'>
+              <button class='edit-item-button' type='button' @click='editItem()'><i class='far fa-edit'></i></button>
+              <button class='delete-item-button' type='button' @click='deleteItem()'><i class='far fa-trash-alt'></i>
+              </button>
+              <img :src='product.image' class='grid-item-pic' />
+
+            </div>
+            <p class='grid-item-name'>{{ product.name }}</p>
+            <p class='grid-item-description'>{{ product.description }}</p>
+            <p class='grid-item-price'>{{ product.price }}DKK</p>
 
           </div>
         </div>
@@ -35,7 +40,7 @@
       </div>
       <div class='tab'>
         <button id='defaultOpen' class='tablinks' @click="switchTab('services')"><i
-            class='fas fa-cut'></i>
+          class='fas fa-cut'></i>
           <p> Services</p>
         </button>
         <button class='tablinks' @click="switchTab('products')"><i class='fas fa-spray-can'></i>
@@ -59,8 +64,8 @@
         <div class='item-list'>
           <div v-for='(item, index) in saleList' :key='index' class='cart-item'>
             <div class='item-name'>
-              <i class='far fa-trash-alt' @click="removeItemFromSaleList(index)"></i>
-              <p>{{item.name}}</p>
+              <i class='far fa-trash-alt' @click='removeItemFromSaleList(index)'></i>
+              <p>{{ item.name }}</p>
             </div>
             <div class='item-quantity'>
               <div id='decrease' class='value-button' value='Decrease Value' @click='decreaseValue(index)'>
@@ -71,13 +76,13 @@
                 <i class='fas fa-plus'></i>
               </div>
             </div>
-            <p class='item-price'>{{item.price}} DKK</p>
+            <p class='item-price'>{{ item.price }} DKK</p>
           </div>
         </div>
         <div class='cart-price-container'>
           <div class='price-wrapper'>
             <p>Discount (%)</p>
-            <input name='discount' :value="discount" type='text'>
+            <input name='discount' :value='discount' type='text'>
           </div>
           <div class='price-wrapper'>
             <p>Sub Total</p>
@@ -116,85 +121,274 @@ export default {
     fontScript.setAttribute('src', 'https://kit.fontawesome.com/52311f6e31.js')
     document.head.appendChild(fontScript)
   },
-  computed:{
-    totalBeforeTax(){
-      const result = 0;
+  computed: {
+    totalBeforeTax() {
+      let result = 0
       this.saleList.forEach(element => {
         result += element.price
-      });
+      })
     }
   },
-  data(){
+  data() {
     const productList = [
-      {name: 'Shampoo 100 ml', quantity: 1, price:200, description: 'very good shampoo', image : 'https://www.pricerunner.dk/product/1200x630/1749228051/Head-Shoulders-Classic-Clean-Shampoo-500ml.jpg'},
-      {name: 'Shampoo 200 ml', quantity: 1, price:300, description: 'very good shampoo 2', image : 'https://www.plaineproducts.com/wp-content/uploads/shampoo-unscented-nopump-2-980x1176.jpg'},
-      {name: 'Shampoo 300 ml', quantity: 1, price:400, description: 'very good shampoo 3', image : 'https://www.dove.com/content/dam/unilever/dove/canada/pack_shot/055086607414.01a-36885116-png.png'},
-      {name: 'Shampoo 400 ml', quantity: 1, price:500, description: 'very good shampoo 4', image : 'https://www.costco.co.uk/medias/sys_master/images/he1/h5a/34867981549598.jpg'},
-      {name: 'Shampoo 500 ml', quantity: 1, price:600, description: 'very good shampoo 5', image : 'https://www.aveeno.com/sites/aveeno_us_2/files/styles/jjbos_adaptive_images_generic-desktop/public/product-images/67543-kefir-shampoo-12oz.jpg'},
-      {name: 'Shampoo 500 ml', quantity: 1, price:600, description: 'very good shampoo 5', image : 'https://www.aveeno.com/sites/aveeno_us_2/files/styles/jjbos_adaptive_images_generic-desktop/public/product-images/67543-kefir-shampoo-12oz.jpg'}
-    ];
+      {
+        name: 'Shampoo 200 ml',
+        quantity: 1,
+        price: 300,
+        description: 'very good shampoo 2',
+        image: 'https://www.plaineproducts.com/wp-content/uploads/shampoo-unscented-nopump-2-980x1176.jpg'
+      },
+      {
+        name: 'Shampoo 300 ml',
+        quantity: 1,
+        price: 400,
+        description: 'very good shampoo 3',
+        image: 'https://www.dove.com/content/dam/unilever/dove/canada/pack_shot/055086607414.01a-36885116-png.png'
+      },
+      {
+        name: 'Shampoo 400 ml',
+        quantity: 1,
+        price: 500,
+        description: 'very good shampoo 4',
+        image: 'https://www.costco.co.uk/medias/sys_master/images/he1/h5a/34867981549598.jpg'
+      },
+      {
+        name: 'Shampoo 500 ml',
+        quantity: 1,
+        price: 600,
+        description: 'very good shampoo 5',
+        image: 'https://www.aveeno.com/sites/aveeno_us_2/files/styles/jjbos_adaptive_images_generic-desktop/public/product-images/67543-kefir-shampoo-12oz.jpg'
+      },
+      {
+        name: 'Shampoo 500 ml',
+        quantity: 1,
+        price: 600,
+        description: 'very good shampoo 5',
+        image: 'https://www.aveeno.com/sites/aveeno_us_2/files/styles/jjbos_adaptive_images_generic-desktop/public/product-images/67543-kefir-shampoo-12oz.jpg'
+      },
+      {
+        name: 'Shampoo 500 ml',
+        quantity: 1,
+        price: 600,
+        description: 'very good shampoo 5',
+        image: 'https://www.aveeno.com/sites/aveeno_us_2/files/styles/jjbos_adaptive_images_generic-desktop/public/product-images/67543-kefir-shampoo-12oz.jpg'
+      },
+      {
+        name: 'Shampoo 500 ml',
+        quantity: 1,
+        price: 600,
+        description: 'very good shampoo 5',
+        image: 'https://www.aveeno.com/sites/aveeno_us_2/files/styles/jjbos_adaptive_images_generic-desktop/public/product-images/67543-kefir-shampoo-12oz.jpg'
+      },
+      {
+        name: 'Shampoo 500 ml',
+        quantity: 1,
+        price: 600,
+        description: 'very good shampoo 5',
+        image: 'https://www.aveeno.com/sites/aveeno_us_2/files/styles/jjbos_adaptive_images_generic-desktop/public/product-images/67543-kefir-shampoo-12oz.jpg'
+      },
+      {
+        name: 'Shampoo 500 ml',
+        quantity: 1,
+        price: 600,
+        description: 'very good shampoo 5',
+        image: 'https://www.aveeno.com/sites/aveeno_us_2/files/styles/jjbos_adaptive_images_generic-desktop/public/product-images/67543-kefir-shampoo-12oz.jpg'
+      },
+      {
+        name: 'Shampoo 500 ml',
+        quantity: 1,
+        price: 600,
+        description: 'very good shampoo 5',
+        image: 'https://www.aveeno.com/sites/aveeno_us_2/files/styles/jjbos_adaptive_images_generic-desktop/public/product-images/67543-kefir-shampoo-12oz.jpg'
+      },
+      {
+        name: 'Shampoo 500 ml',
+        quantity: 1,
+        price: 600,
+        description: 'very good shampoo 5',
+        image: 'https://www.aveeno.com/sites/aveeno_us_2/files/styles/jjbos_adaptive_images_generic-desktop/public/product-images/67543-kefir-shampoo-12oz.jpg'
+      },
+      {
+        name: 'Shampoo 500 ml',
+        quantity: 1,
+        price: 600,
+        description: 'very good shampoo 5',
+        image: 'https://www.aveeno.com/sites/aveeno_us_2/files/styles/jjbos_adaptive_images_generic-desktop/public/product-images/67543-kefir-shampoo-12oz.jpg'
+      },
+      {
+        name: 'Shampoo 500 ml',
+        quantity: 1,
+        price: 600,
+        description: 'very good shampoo 5',
+        image: 'https://www.aveeno.com/sites/aveeno_us_2/files/styles/jjbos_adaptive_images_generic-desktop/public/product-images/67543-kefir-shampoo-12oz.jpg'
+      },
+      {
+        name: 'Shampoo 500 ml',
+        quantity: 1,
+        price: 600,
+        description: 'very good shampoo 5',
+        image: 'https://www.aveeno.com/sites/aveeno_us_2/files/styles/jjbos_adaptive_images_generic-desktop/public/product-images/67543-kefir-shampoo-12oz.jpg'
+      },
+      {
+        name: 'Shampoo 500 ml',
+        quantity: 1,
+        price: 600,
+        description: 'very good shampoo 5',
+        image: 'https://www.aveeno.com/sites/aveeno_us_2/files/styles/jjbos_adaptive_images_generic-desktop/public/product-images/67543-kefir-shampoo-12oz.jpg'
+      },
+      {
+        name: 'Shampoo 500 ml',
+        quantity: 1,
+        price: 600,
+        description: 'very good shampoo 5',
+        image: 'https://www.aveeno.com/sites/aveeno_us_2/files/styles/jjbos_adaptive_images_generic-desktop/public/product-images/67543-kefir-shampoo-12oz.jpg'
+      },
+      {
+        name: 'Shampoo 500 ml',
+        quantity: 1,
+        price: 600,
+        description: 'very good shampoo 5',
+        image: 'https://www.aveeno.com/sites/aveeno_us_2/files/styles/jjbos_adaptive_images_generic-desktop/public/product-images/67543-kefir-shampoo-12oz.jpg'
+      },
+      {
+        name: 'Shampoo 500 ml',
+        quantity: 1,
+        price: 600,
+        description: 'very good shampoo 5',
+        image: 'https://www.aveeno.com/sites/aveeno_us_2/files/styles/jjbos_adaptive_images_generic-desktop/public/product-images/67543-kefir-shampoo-12oz.jpg'
+      },
+      {
+        name: 'Shampoo 500 ml',
+        quantity: 1,
+        price: 600,
+        description: 'very good shampoo 5',
+        image: 'https://www.aveeno.com/sites/aveeno_us_2/files/styles/jjbos_adaptive_images_generic-desktop/public/product-images/67543-kefir-shampoo-12oz.jpg'
+      },
+      {
+        name: 'Shampoo 500 ml',
+        quantity: 1,
+        price: 600,
+        description: 'very good shampoo 5',
+        image: 'https://www.aveeno.com/sites/aveeno_us_2/files/styles/jjbos_adaptive_images_generic-desktop/public/product-images/67543-kefir-shampoo-12oz.jpg'
+      },
+      {
+        name: 'Shampoo 500 ml',
+        quantity: 1,
+        price: 600,
+        description: 'very good shampoo 5',
+        image: 'https://www.aveeno.com/sites/aveeno_us_2/files/styles/jjbos_adaptive_images_generic-desktop/public/product-images/67543-kefir-shampoo-12oz.jpg'
+      }
+    ]
     const serviceList = [
-      {name:'Men haircut',quantity: 1,  price: 150, description: 'good haircut', duration: 100, image: 'https://content.latest-hairstyles.com/wp-content/uploads/crew-cut-for-men-500x333.jpg'},
-      {name:'Women haircut', quantity: 1, price: 120, description: 'bad haircut', duration: 100, image: 'https://upload.wikimedia.org/wikipedia/commons/2/21/Short_Mohawk.jpg'},
-      {name:'Bi haircut', quantity: 1, price: 190, description: 'disaster haircut', duration: 100, image: 'https://images.squarespace-cdn.com/content/v1/54faf78ce4b04da0abdfbde8/1582586946018-F0YNS10YTQIEVV3K0XAB/Mohawk-Bob-00.jpg'},
-      {name:'Lisbi haircut', quantity: 1, price: 160, description: 'curly haircut', duration: 100, image: 'https://content.latest-hairstyles.com/wp-content/uploads/crew-cut-for-men-500x333.jpg'},
-      {name:'Gey haircut', quantity: 1, price: 250, description: 'fade haircut', duration: 100, image: 'https://media.allure.com/photos/601c13ffedaf93560a6d5a2a/1:1/w_2558,h_2558,c_limit/kaia-gerber-swoop-bob.jpg'},
-      {name:'Question haircut', quantity: 1, price: 450, description: 'bold haircut', duration: 100, image: 'https://content.latest-hairstyles.com/wp-content/uploads/crew-cut-for-men-500x333.jpg'},
-      {name:'NonBi haircut', quantity: 1, price: 550, description: 'Nicky Minaj haircut', duration: 100, image: 'https://guardian.ng/wp-content/uploads/2020/11/Different-hairstyles-for-your-baby-girls.-Photo-Pinterest-640x360.jpg'}
-    ];
-    const filteredList = productList;
-    return{productList, serviceList, searchText: '', activeTab:'products', filteredList, saleList: [], discount: 0}
+      {
+        name: 'Men haircut',
+        quantity: 1,
+        price: 150,
+        description: 'good haircut',
+        duration: 100,
+        image: 'https://content.latest-hairstyles.com/wp-content/uploads/crew-cut-for-men-500x333.jpg'
+      },
+      {
+        name: 'Women haircut',
+        quantity: 1,
+        price: 120,
+        description: 'bad haircut',
+        duration: 100,
+        image: 'https://upload.wikimedia.org/wikipedia/commons/2/21/Short_Mohawk.jpg'
+      },
+      {
+        name: 'Bi haircut',
+        quantity: 1,
+        price: 190,
+        description: 'disaster haircut',
+        duration: 100,
+        image: 'https://images.squarespace-cdn.com/content/v1/54faf78ce4b04da0abdfbde8/1582586946018-F0YNS10YTQIEVV3K0XAB/Mohawk-Bob-00.jpg'
+      },
+      {
+        name: 'Lisbi haircut',
+        quantity: 1,
+        price: 160,
+        description: 'curly haircut',
+        duration: 100,
+        image: 'https://content.latest-hairstyles.com/wp-content/uploads/crew-cut-for-men-500x333.jpg'
+      },
+      {
+        name: 'Gey haircut',
+        quantity: 1,
+        price: 250,
+        description: 'fade haircut',
+        duration: 100,
+        image: 'https://media.allure.com/photos/601c13ffedaf93560a6d5a2a/1:1/w_2558,h_2558,c_limit/kaia-gerber-swoop-bob.jpg'
+      },
+      {
+        name: 'Question haircut',
+        quantity: 1,
+        price: 450,
+        description: 'bold haircut',
+        duration: 100,
+        image: 'https://content.latest-hairstyles.com/wp-content/uploads/crew-cut-for-men-500x333.jpg'
+      },
+      {
+        name: 'NonBi haircut',
+        quantity: 1,
+        price: 550,
+        description: 'Nicky Minaj haircut',
+        duration: 100,
+        image: 'https://guardian.ng/wp-content/uploads/2020/11/Different-hairstyles-for-your-baby-girls.-Photo-Pinterest-640x360.jpg'
+      }
+    ]
+    const filteredList = productList
+    return { productList, serviceList, searchText: '', activeTab: 'products', filteredList, saleList: [], discount: 0 }
   },
   layout: 'default',
   methods: {
     switchTab(name) {
-      if(name === 'services'){
-        this.filteredList = this.serviceList;
-        this.activeTab = 'services';
+      if (name === 'services') {
+        this.filteredList = this.serviceList
+        this.activeTab = 'services'
       }
-      if(name === 'products'){
-        this.filteredList = this.productList;
-        this.activeTab = 'products';
+      if (name === 'products') {
+        this.filteredList = this.productList
+        this.activeTab = 'products'
       }
     },
     increaseValue(index) {
-      const temp = JSON.parse(JSON.stringify(this.saleList));
-      temp[index].price = temp[index].price + this.saleList[index].price;
-      temp[index].quantity ++ ;
-      this.saleList = [];
-      this.saleList = temp;
+      const temp = JSON.parse(JSON.stringify(this.saleList))
+      temp[index].price = temp[index].price + this.saleList[index].price
+      temp[index].quantity++
+      this.saleList = []
+      this.saleList = temp
     },
     decreaseValue(index) {
-      if(this.saleList[index].quantity !== 1){
-      const temp = JSON.parse(JSON.stringify(this.saleList));
-      if(temp[index].quantity !== 2){
-          console.log((temp[index].price / (temp[index].quantity+1)) + 'if');
-        temp[index].price = temp[index].price - (temp[index].price / temp[index].quantity);
+      if (this.saleList[index].quantity !== 1) {
+        const temp = JSON.parse(JSON.stringify(this.saleList))
+        if (temp[index].quantity !== 2) {
+          console.log((temp[index].price / (temp[index].quantity + 1)) + 'if')
+          temp[index].price = temp[index].price - (temp[index].price / temp[index].quantity)
+        } else {
+          console.log(temp[index].price / (temp[index].quantity + 1) + 'in else')
+          temp[index].price = temp[index].price / temp[index].quantity
         }
-        else{
-          console.log(temp[index].price / (temp[index].quantity+1) + 'in else');
-          temp[index].price = temp[index].price / temp[index].quantity;
-        }
-      temp[index].quantity --;
-      this.saleList = [];
-      this.saleList = temp;
+        temp[index].quantity--
+        this.saleList = []
+        this.saleList = temp
       }
     },
-    search(){
-      if(this.activeTab === 'products'){
-        this.filteredList = this.productList.filter(item => item.name.toLowerCase().includes(this.searchText.toLowerCase()));
+    search() {
+      if (this.activeTab === 'products') {
+        this.filteredList = this.productList.filter(item => item.name.toLowerCase().includes(this.searchText.toLowerCase()))
       }
-         if(this.activeTab === 'services'){
-        this.filteredList = this.serviceList.filter(item => item.name.toLowerCase().includes(this.searchText.toLowerCase()));
+      if (this.activeTab === 'services') {
+        this.filteredList = this.serviceList.filter(item => item.name.toLowerCase().includes(this.searchText.toLowerCase()))
       }
     },
-    addToSaleList(item){
-      item.quantity = 1;
-      this.saleList.push(item);
+    addToSaleList(item) {
+      item.quantity = 1
+      this.saleList.push(item)
     },
-    removeItemFromSaleList(index){
-      console.log(index);
-      this.saleList.splice(index, 1);
+    removeItemFromSaleList(index) {
+      console.log(index)
+      this.saleList.splice(index, 1)
     }
   }
 }
@@ -239,7 +433,7 @@ export default {
 }
 
 .product-service-container {
-  height: 100%;
+  height: 89%;
   background-color: white;
   box-shadow: 0 10px 16px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%) !important;
   border-radius: 5px;
@@ -247,7 +441,7 @@ export default {
 }
 
 .items-grid-container {
-  height: 69vh;
+  height: 90%;
   overflow-y: scroll;
   display: grid;
   grid-template-columns: auto auto auto auto auto;
@@ -266,12 +460,20 @@ export default {
 .grid-item-pic {
   border: 2px solid lightgray;
   border-radius: 5px;
+  padding: 5px;
+  height: 120px;
+  width: auto;
+}
+
+.image-container {
+  position: relative;
 }
 
 .grid-item-name {
   font-weight: 600;
   margin: 10px;
 }
+
 .grid-item-description {
 }
 
@@ -283,7 +485,7 @@ export default {
 
 .edit-item-button {
   position: absolute;
-  align-self: start;
+  left: 0;
   display: flex;
   margin: 5px;
   font-size: 0.8vw;
@@ -291,7 +493,7 @@ export default {
 
 .delete-item-button {
   position: absolute;
-  align-self: end;
+  right: 0;
   display: flex;
   margin: 5px;
   font-size: 0.8vw;
