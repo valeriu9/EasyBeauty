@@ -10,7 +10,7 @@
           </button>
           <div class='search-wrapper'>
             <input name='search' :value='searchText' @input='e => searchText = e.target.value' placeholder='Search..'
-                   type='text'>
+              type='text'>
             <button type='submit' @click='search()'><i class='fa fa-search'></i></button>
           </div>
         </div>
@@ -21,7 +21,7 @@
               <button class='edit-item-button' type='button' @click='editItem()'><i class='far fa-edit'></i></button>
               <button class='delete-item-button' type='button' @click='deleteItem()'><i class='far fa-trash-alt'></i>
               </button>
-              <img :src='product.image' class='grid-item-pic' />
+              <img :src="'data:image/jpeg;base64,'+ product.image" class='grid-item-pic' />
 
             </div>
             <p class='grid-item-name'>{{ product.name }}</p>
@@ -40,7 +40,7 @@
       </div>
       <div class='tab'>
         <button id='defaultOpen' class='tablinks' @click="switchTab('services')"><i
-          class='fas fa-cut'></i>
+            class='fas fa-cut'></i>
           <p> Services</p>
         </button>
         <button class='tablinks' @click="switchTab('products')"><i class='fas fa-spray-can'></i>
@@ -82,32 +82,33 @@
         <div class='cart-price-container'>
           <div class='price-wrapper'>
             <p>Discount (%)</p>
-            <input name='discount' :value='discount' type='text'>
+            <input
+              name='discount'
+              :value="discount"
+              @input="e => discount = e.target.value"
+              type='number'>
           </div>
           <div class='price-wrapper'>
-            <p>Sub Total</p>
-            <p>100dkk</p>
+            <p>Total without taxes</p>
+            <p>{{totalBeforeTax}}dkk</p>
           </div>
           <div class='price-wrapper'>
             <p>Tax</p>
-            <p>100dkk</p>
+            <p>{{taxes}}dkk</p>
           </div>
           <div class='total-price-wrapper'>
             <p class='total-price'>Total </p>
-            <p class='total-price-amount'>200dkk</p>
-
+            <p class='total-price-amount'>{{total}}dkk</p>
           </div>
         </div>
-
       </div>
       <div class='checkout-buttons'>
-        <button class='cancel-order' type='button' @click='addNewItem()'>
+        <button class='cancel-order' type='button' @click='resetSalesList()'>
           <p> Cancel Order </p>
         </button>
-        <button class='pay-order' type='button' @click='addNewItem()'>
-          <p> Pay (100 DKK) </p>
+        <button class='pay-order' type='button' @click='pay()'>
+          <p> Pay ({{total}} DKK) </p>
         </button>
-
       </div>
     </div>
   </div>
@@ -120,6 +121,7 @@ export default {
     let fontScript = document.createElement('script')
     fontScript.setAttribute('src', 'https://kit.fontawesome.com/52311f6e31.js')
     document.head.appendChild(fontScript)
+    this.fetchData();
   },
   computed: {
     totalBeforeTax() {
@@ -127,218 +129,30 @@ export default {
       this.saleList.forEach(element => {
         result += element.price
       })
+     result = result * 0.75
+      return result
+    },
+    taxes(){
+        let result = 0
+      this.saleList.forEach(element => {
+        result += element.price
+      })
+     result = result * 0.25
+      return result
+    },
+    total(){
+      if(this.discount === 0 || this.discount === ""){
+      return this.totalBeforeTax + this.taxes;
+    }
+    else{
+      return (this.totalBeforeTax + this.taxes) * (1-(this.discount / 100))
+    }
+
     }
   },
+
   data() {
-    const productList = [
-      {
-        name: 'Shampoo 200 ml',
-        quantity: 1,
-        price: 300,
-        description: 'very good shampoo 2',
-        image: 'https://www.plaineproducts.com/wp-content/uploads/shampoo-unscented-nopump-2-980x1176.jpg'
-      },
-      {
-        name: 'Shampoo 300 ml',
-        quantity: 1,
-        price: 400,
-        description: 'very good shampoo 3',
-        image: 'https://www.dove.com/content/dam/unilever/dove/canada/pack_shot/055086607414.01a-36885116-png.png'
-      },
-      {
-        name: 'Shampoo 400 ml',
-        quantity: 1,
-        price: 500,
-        description: 'very good shampoo 4',
-        image: 'https://www.costco.co.uk/medias/sys_master/images/he1/h5a/34867981549598.jpg'
-      },
-      {
-        name: 'Shampoo 500 ml',
-        quantity: 1,
-        price: 600,
-        description: 'very good shampoo 5',
-        image: 'https://www.aveeno.com/sites/aveeno_us_2/files/styles/jjbos_adaptive_images_generic-desktop/public/product-images/67543-kefir-shampoo-12oz.jpg'
-      },
-      {
-        name: 'Shampoo 500 ml',
-        quantity: 1,
-        price: 600,
-        description: 'very good shampoo 5',
-        image: 'https://www.aveeno.com/sites/aveeno_us_2/files/styles/jjbos_adaptive_images_generic-desktop/public/product-images/67543-kefir-shampoo-12oz.jpg'
-      },
-      {
-        name: 'Shampoo 500 ml',
-        quantity: 1,
-        price: 600,
-        description: 'very good shampoo 5',
-        image: 'https://www.aveeno.com/sites/aveeno_us_2/files/styles/jjbos_adaptive_images_generic-desktop/public/product-images/67543-kefir-shampoo-12oz.jpg'
-      },
-      {
-        name: 'Shampoo 500 ml',
-        quantity: 1,
-        price: 600,
-        description: 'very good shampoo 5',
-        image: 'https://www.aveeno.com/sites/aveeno_us_2/files/styles/jjbos_adaptive_images_generic-desktop/public/product-images/67543-kefir-shampoo-12oz.jpg'
-      },
-      {
-        name: 'Shampoo 500 ml',
-        quantity: 1,
-        price: 600,
-        description: 'very good shampoo 5',
-        image: 'https://www.aveeno.com/sites/aveeno_us_2/files/styles/jjbos_adaptive_images_generic-desktop/public/product-images/67543-kefir-shampoo-12oz.jpg'
-      },
-      {
-        name: 'Shampoo 500 ml',
-        quantity: 1,
-        price: 600,
-        description: 'very good shampoo 5',
-        image: 'https://www.aveeno.com/sites/aveeno_us_2/files/styles/jjbos_adaptive_images_generic-desktop/public/product-images/67543-kefir-shampoo-12oz.jpg'
-      },
-      {
-        name: 'Shampoo 500 ml',
-        quantity: 1,
-        price: 600,
-        description: 'very good shampoo 5',
-        image: 'https://www.aveeno.com/sites/aveeno_us_2/files/styles/jjbos_adaptive_images_generic-desktop/public/product-images/67543-kefir-shampoo-12oz.jpg'
-      },
-      {
-        name: 'Shampoo 500 ml',
-        quantity: 1,
-        price: 600,
-        description: 'very good shampoo 5',
-        image: 'https://www.aveeno.com/sites/aveeno_us_2/files/styles/jjbos_adaptive_images_generic-desktop/public/product-images/67543-kefir-shampoo-12oz.jpg'
-      },
-      {
-        name: 'Shampoo 500 ml',
-        quantity: 1,
-        price: 600,
-        description: 'very good shampoo 5',
-        image: 'https://www.aveeno.com/sites/aveeno_us_2/files/styles/jjbos_adaptive_images_generic-desktop/public/product-images/67543-kefir-shampoo-12oz.jpg'
-      },
-      {
-        name: 'Shampoo 500 ml',
-        quantity: 1,
-        price: 600,
-        description: 'very good shampoo 5',
-        image: 'https://www.aveeno.com/sites/aveeno_us_2/files/styles/jjbos_adaptive_images_generic-desktop/public/product-images/67543-kefir-shampoo-12oz.jpg'
-      },
-      {
-        name: 'Shampoo 500 ml',
-        quantity: 1,
-        price: 600,
-        description: 'very good shampoo 5',
-        image: 'https://www.aveeno.com/sites/aveeno_us_2/files/styles/jjbos_adaptive_images_generic-desktop/public/product-images/67543-kefir-shampoo-12oz.jpg'
-      },
-      {
-        name: 'Shampoo 500 ml',
-        quantity: 1,
-        price: 600,
-        description: 'very good shampoo 5',
-        image: 'https://www.aveeno.com/sites/aveeno_us_2/files/styles/jjbos_adaptive_images_generic-desktop/public/product-images/67543-kefir-shampoo-12oz.jpg'
-      },
-      {
-        name: 'Shampoo 500 ml',
-        quantity: 1,
-        price: 600,
-        description: 'very good shampoo 5',
-        image: 'https://www.aveeno.com/sites/aveeno_us_2/files/styles/jjbos_adaptive_images_generic-desktop/public/product-images/67543-kefir-shampoo-12oz.jpg'
-      },
-      {
-        name: 'Shampoo 500 ml',
-        quantity: 1,
-        price: 600,
-        description: 'very good shampoo 5',
-        image: 'https://www.aveeno.com/sites/aveeno_us_2/files/styles/jjbos_adaptive_images_generic-desktop/public/product-images/67543-kefir-shampoo-12oz.jpg'
-      },
-      {
-        name: 'Shampoo 500 ml',
-        quantity: 1,
-        price: 600,
-        description: 'very good shampoo 5',
-        image: 'https://www.aveeno.com/sites/aveeno_us_2/files/styles/jjbos_adaptive_images_generic-desktop/public/product-images/67543-kefir-shampoo-12oz.jpg'
-      },
-      {
-        name: 'Shampoo 500 ml',
-        quantity: 1,
-        price: 600,
-        description: 'very good shampoo 5',
-        image: 'https://www.aveeno.com/sites/aveeno_us_2/files/styles/jjbos_adaptive_images_generic-desktop/public/product-images/67543-kefir-shampoo-12oz.jpg'
-      },
-      {
-        name: 'Shampoo 500 ml',
-        quantity: 1,
-        price: 600,
-        description: 'very good shampoo 5',
-        image: 'https://www.aveeno.com/sites/aveeno_us_2/files/styles/jjbos_adaptive_images_generic-desktop/public/product-images/67543-kefir-shampoo-12oz.jpg'
-      },
-      {
-        name: 'Shampoo 500 ml',
-        quantity: 1,
-        price: 600,
-        description: 'very good shampoo 5',
-        image: 'https://www.aveeno.com/sites/aveeno_us_2/files/styles/jjbos_adaptive_images_generic-desktop/public/product-images/67543-kefir-shampoo-12oz.jpg'
-      }
-    ]
-    const serviceList = [
-      {
-        name: 'Men haircut',
-        quantity: 1,
-        price: 150,
-        description: 'good haircut',
-        duration: 100,
-        image: 'https://content.latest-hairstyles.com/wp-content/uploads/crew-cut-for-men-500x333.jpg'
-      },
-      {
-        name: 'Women haircut',
-        quantity: 1,
-        price: 120,
-        description: 'bad haircut',
-        duration: 100,
-        image: 'https://upload.wikimedia.org/wikipedia/commons/2/21/Short_Mohawk.jpg'
-      },
-      {
-        name: 'Bi haircut',
-        quantity: 1,
-        price: 190,
-        description: 'disaster haircut',
-        duration: 100,
-        image: 'https://images.squarespace-cdn.com/content/v1/54faf78ce4b04da0abdfbde8/1582586946018-F0YNS10YTQIEVV3K0XAB/Mohawk-Bob-00.jpg'
-      },
-      {
-        name: 'Lisbi haircut',
-        quantity: 1,
-        price: 160,
-        description: 'curly haircut',
-        duration: 100,
-        image: 'https://content.latest-hairstyles.com/wp-content/uploads/crew-cut-for-men-500x333.jpg'
-      },
-      {
-        name: 'Gey haircut',
-        quantity: 1,
-        price: 250,
-        description: 'fade haircut',
-        duration: 100,
-        image: 'https://media.allure.com/photos/601c13ffedaf93560a6d5a2a/1:1/w_2558,h_2558,c_limit/kaia-gerber-swoop-bob.jpg'
-      },
-      {
-        name: 'Question haircut',
-        quantity: 1,
-        price: 450,
-        description: 'bold haircut',
-        duration: 100,
-        image: 'https://content.latest-hairstyles.com/wp-content/uploads/crew-cut-for-men-500x333.jpg'
-      },
-      {
-        name: 'NonBi haircut',
-        quantity: 1,
-        price: 550,
-        description: 'Nicky Minaj haircut',
-        duration: 100,
-        image: 'https://guardian.ng/wp-content/uploads/2020/11/Different-hairstyles-for-your-baby-girls.-Photo-Pinterest-640x360.jpg'
-      }
-    ]
-    const filteredList = productList
-    return { productList, serviceList, searchText: '', activeTab: 'products', filteredList, saleList: [], discount: 0 }
+    return { productList: [], serviceList: [], searchText: '', activeTab: 'products', filteredList: [], saleList: [], discount: 0 }
   },
   layout: 'default',
   methods: {
@@ -353,8 +167,10 @@ export default {
       }
     },
     increaseValue(index) {
+
       const temp = JSON.parse(JSON.stringify(this.saleList))
-      temp[index].price = temp[index].price + this.saleList[index].price
+     temp[index].price = temp[index].price + this.saleList[index].initialPrice
+      console.log(temp[index].price + "and "+ this.saleList[index].initialPrice);
       temp[index].quantity++
       this.saleList = []
       this.saleList = temp
@@ -362,13 +178,7 @@ export default {
     decreaseValue(index) {
       if (this.saleList[index].quantity !== 1) {
         const temp = JSON.parse(JSON.stringify(this.saleList))
-        if (temp[index].quantity !== 2) {
-          console.log((temp[index].price / (temp[index].quantity + 1)) + 'if')
-          temp[index].price = temp[index].price - (temp[index].price / temp[index].quantity)
-        } else {
-          console.log(temp[index].price / (temp[index].quantity + 1) + 'in else')
-          temp[index].price = temp[index].price / temp[index].quantity
-        }
+        temp[index].price = temp[index].price - this.saleList[index].initialPrice
         temp[index].quantity--
         this.saleList = []
         this.saleList = temp
@@ -384,12 +194,46 @@ export default {
     },
     addToSaleList(item) {
       item.quantity = 1
+      item.initialPrice = item.price
       this.saleList.push(item)
     },
     removeItemFromSaleList(index) {
       console.log(index)
       this.saleList.splice(index, 1)
+    },
+    async pay(){
+      try{
+     const res = await this.$axios.post('https://api.easyways.dk/EasyBeauty/RequestPurchase', {APIToken:"6MasjMRa63QHSjWcZM4hCmdukT3SZD2bwnqPYhxUFXKvkSuMtw",Amount:"200"})
+    console.log(res);
+    } catch(e){
+      console.log(e);
     }
+    },
+    resetSalesList(){
+      this.saleList = [];
+    },
+    async fetchData(){
+      try{
+        const products = await this.$axios.get(`http://easybeauty.somee.com/v1/api/Product`);
+        // products.data.forEach(data =>{
+        //   data.image = 'data:image/jpeg;base64,' + btoa(
+        //     new Uint8Array(data.image)
+        //     .reduce((data, byte) => data + String.fromCharCode(byte), '')
+        // );
+        // });
+           console.log(products.data);
+
+        this.productList = products.data;
+        this.filteredList = this.productList;
+        const services = await this.$axios.get(`http://easybeauty.somee.com/v1/api/Service`);
+        this.serviceList = services.data;
+    } catch(e){
+      console.log(e);
+    }
+  },
+  convertFromBlob(){
+
+  }
   }
 }
 </script>

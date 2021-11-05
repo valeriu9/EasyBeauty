@@ -84,7 +84,7 @@ export default {
   methods: {
     async logout() {
       try {
-        await this.$axios.delete(`https://localhost:5001/api/Login/logout?id=` + this.userInfo.id + `&token=` + this.userInfo.token)
+        await this.$axios.delete(`http://easybeauty.somee.com/v1/api/Login/logout?id=` + this.userInfo.id + `&token=` + this.userInfo.token)
         this.$cookies.remove('easybeauty_user')
         this.$store.dispatch('user/userLoggedOut')
         window.location.href = '/'
@@ -106,9 +106,8 @@ body {
   font-family: bureau-grot, sans-serif;
 }
 
-.container{
+.container {
   max-width: 100% !important;
-
 }
 
 .cursor-pointer {
@@ -161,7 +160,7 @@ body {
   }
 }
 
-.nav-menu-content > .buttons-wrapper > .button >.active {
+.nav-menu-content > .buttons-wrapper > .button > .active {
   margin: auto;
   font-weight: 400;
   font-size: 1.2vw;
@@ -169,28 +168,27 @@ body {
   color: white;
 }
 
-  .nav-menu-content > .buttons-wrapper > .button {
-    height: 100%;
-    text-align: center;
-    display: flex;
-    padding: 0 30px;
-    width: max-content;
-    align-self: baseline;
-    cursor: pointer;
-    margin: auto;
-    font-weight: 400;
-    font-size: 1.2vw;
-    text-decoration: none;
-    color: white;
-  }
+.nav-menu-content > .buttons-wrapper > .button {
+  height: 100%;
+  text-align: center;
+  display: flex;
+  padding: 0 30px;
+  width: max-content;
+  align-self: baseline;
+  cursor: pointer;
+  margin: auto;
+  font-weight: 400;
+  font-size: 1.2vw;
+  text-decoration: none;
+  color: white;
+}
 
-  .nav-menu-content > .logo > .logo-clickable svg {
-    fill: white;
-    transition: all 100ms ease-in-out;
-  }
+.nav-menu-content > .logo > .logo-clickable svg {
+  fill: white;
+  transition: all 100ms ease-in-out;
+}
 
-  .button:hover .dropdown-content {
-    display: block;
-  }
-
+.button:hover .dropdown-content {
+  display: block;
+}
 </style>

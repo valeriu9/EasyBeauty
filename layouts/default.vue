@@ -1,14 +1,14 @@
 <template>
   <div>
     <client-only>
-<!--   <editEmployee />-->
-      <!--    <addEmployee /> -->
-          <addProduct />
-          <Navbar />
-          <nuxt />
-        </client-only>
-      </div>
-    </template>
+      <editEmployee />
+      <!-- <addEmployee /> -->
+      <!-- <addProduct /> -->
+      <Navbar />
+      <nuxt />
+    </client-only>
+  </div>
+</template>
 
     <script>
     import Navbar from '~/components/Navbar';
@@ -19,8 +19,8 @@
     export default {
       components: {
         Navbar,
-     //   editEmployee,
-     //   addEmployee,
+       editEmployee,
+       addEmployee,
         addProduct
       }
     };
