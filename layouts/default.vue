@@ -1,9 +1,9 @@
 <template>
   <div>
     <client-only>
-<!--   <editEmployee />-->
+   <EditEmployee />
       <!--    <addEmployee /> -->
-          <addProduct />
+          <AddProduct />
           <Navbar />
           <nuxt />
         </client-only>
@@ -12,16 +12,16 @@
 
     <script>
     import Navbar from '~/components/Navbar';
-    import editEmployee from '~/components/editEmployee';
+    import EditEmployee from '@/components/EditEmployee';
     import addEmployee from '~/components/addEmployee';
-    import addProduct from '~/components/addProduct';
+    import AddProduct from '@/components/AddProduct';
 
     export default {
       components: {
         Navbar,
-     //   editEmployee,
+        EditEmployee,
      //   addEmployee,
-        addProduct
+         AddProduct
       }
     };
     </script>

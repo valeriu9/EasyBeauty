@@ -68,7 +68,7 @@
 </template>
 
 <script>
-import EditEmployee from '~/components/EditEmployee';
+import EditEmployee from '@/components/EditEmployee';
 export default {
 
   components:{

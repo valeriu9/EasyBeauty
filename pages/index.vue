@@ -1,11 +1,11 @@
 <template>
   <div class='main-container'>
-
+    <addProduct ref="addProductPopup" :enableOverlayClick="true" />
     <div class='services-container'>
 
       <div class='product-service-container'>
         <div class='service-navbar'>
-          <button class='add-item-button' type='button' @click='addNewItem()'><i class='fas fa-plus'></i>
+          <button class='add-item-button' type='button' @click="openAddProductModal()"><i class='fas fa-plus'></i>
             <p>Add new Item</p>
           </button>
           <div class='search-wrapper'>
@@ -342,6 +342,14 @@ export default {
   },
   layout: 'default',
   methods: {
+
+    openAddProductModal(){
+      this.$refs.addProductPopup.open();
+    },
+    closeAddProductModal(){
+      this.$refs.addProductPopup.close();
+    },
+
     switchTab(name) {
       if (name === 'services') {
         this.filteredList = this.serviceList
@@ -462,7 +470,8 @@ export default {
   border-radius: 5px;
   padding: 5px;
   height: 120px;
-  width: auto;
+  width: 120px;
+  object-fit: cover;
 }
 
 .image-container {
@@ -716,7 +725,7 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .cart-price-container {
-  height: 30%;
+  height: 25vw;
   display: flex;
   justify-content: center;
   flex-direction: column;
