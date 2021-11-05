@@ -1,6 +1,7 @@
 <template>
   <div class="container">
     <EditEmployee ref="employeePopup" :enableOverlayClick="true" />
+    <ListOfAppointments ref="appointmentPopup" :enableOverlayClick="true" />
     <nav class='nav-menu-wrapper'>
       <div class='nav-menu-content'>
         <div class='logo'>
@@ -50,7 +51,7 @@
             <div class='active' href='#'><i class='fa fa-fw fa-home'></i> Home</div>
           </div>
           <div class='button'>
-            <div class='active' href='#'><i class='fa fa-calendar-o'></i> Appointments</div>
+            <div class='active' @click="openAppointmentsModal()"><i class='fa fa-calendar-o'></i> Appointments</div>
           </div>
           <div class='button'>
             <div class='active' @click="openEmployeeModal()"><i class='fas fa-user-friends'></i> Employees</div>
@@ -97,6 +98,12 @@ export default {
     },
     closeEmployeeModal(){
       this.$refs.employeePopup.close();
+    },
+    openAppointmentsModal(){
+      this.$refs.appointmentPopup.open();
+    },
+    closeAppointmentsModal(){
+      this.$refs.appointmentPopup.close();
     }
   }
 }

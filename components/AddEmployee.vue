@@ -94,6 +94,7 @@ export default {
 
 .employee-role {
   margin: 10px 40px;
+  cursor: pointer;
 }
 
 .button-container {
@@ -104,6 +105,7 @@ export default {
 
 .button-container button {
   padding: 5px;
+  cursor: pointer;
 }
 
 .user-input-wrp {

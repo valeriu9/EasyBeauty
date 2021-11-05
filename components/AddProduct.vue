@@ -116,6 +116,7 @@ export default {
 
 .product-service-type {
   margin: 12px 40px;
+  cursor: pointer;
 }
 
 .image-upload {
@@ -142,11 +143,13 @@ export default {
   position: fixed;
   bottom: 20px;
   right: 20px;
+
 }
 
 .button-container button {
   padding: 5px;
   margin: 0 15px;
+  cursor: pointer;
 }
 
 .user-input-wrapper {

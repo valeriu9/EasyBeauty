@@ -108,25 +108,6 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-.normal-window {
-  z-index: 100;
-  position: fixed;
-  border: 2px solid red;
-  background: rgba(0, 0, 0, 0.5);
-  opacity: 0;
-  width: 100%;
-  height: 110%;
-  top: 0;
-  left: 0;
-  transition: 0s;
-  pointer-events: none;
-
-  &.is-active {
-    opacity: 1;
-    pointer-events: all;
-    transition: 0.5s;
-  }
-}
 
 .edit-employee-navbar {
   overflow: hidden;
@@ -134,43 +115,6 @@ export default {
   justify-content: center;
   height: 15%;
   align-items: center;
-}
-
-.employee-popup-window {
-  z-index: 200;
-  position: fixed;
-  pointer-events: none;
-  background-color: white;
-  box-shadow: 0 10px 16px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%) !important;
-  border-radius: 5px;
-  padding: 15px;
-  width: 60%;
-  overflow: auto;
-  height: 60%;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  transition: 0s;
-  // remove weird scrolling on apple devices
-  touch-action: none;
-  -ms-touch-action: none;
-
-  opacity: 0;
-
-  &.is-active {
-    opacity: 1;
-    pointer-events: all;
-    bottom: -10px;
-    transition: 0.5s;
-  }
-
-  // Hide scrollbar
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-
-  &::-webkit-scrollbar {
-    display: none;
-  }
 }
 
 .employee-list-container {
@@ -210,6 +154,7 @@ export default {
   display: flex;
   margin: 5px;
   font-size: 14px;
+  cursor: pointer;
 }
 
 .delete-employee {
@@ -218,6 +163,7 @@ export default {
   display: flex;
   margin: 5px;
   font-size: 14px;
+  cursor: pointer;
 }
 
 .search-wrapper button {
@@ -262,6 +208,7 @@ export default {
   background-color: transparent;
   border: none;
   font-size: 15px;
+  cursor: pointer;
 }
 
 .add-employee-button p {
