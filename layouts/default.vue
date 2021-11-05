@@ -2,7 +2,7 @@
   <div>
     <client-only>
       <EditEmployee />
-      <addEmployee />
+      <AddEmployee />
       <AddProduct />
       <Navbar />
       <nuxt />
