@@ -1,9 +1,9 @@
 <template>
   <div>
-    <div class='normal-window' :class="showModal ? 'is-active' : ''" @click='overlayClick'/>
-      <div class='popup-window' :class="showModal ? 'is-active' : ''">
-        <slot v-if='showModal' name='body'></slot>
-      </div>
+    <div class='normal-window' :class="showModal ? 'is-active' : ''" @click='overlayClick' />
+    <div class='popup-window' :class="showModal ? 'is-active' : ''">
+      <slot v-if='showModal' name='body'></slot>
+    </div>
   </div>
 </template>
 
@@ -66,7 +66,6 @@ export default {
 .normal-window {
   z-index: 100;
   position: fixed;
-  border: 2px solid red;
   background: rgba(0, 0, 0, 0.5);
   opacity: 0;
   width: 100%;

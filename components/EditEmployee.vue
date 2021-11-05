@@ -1,8 +1,9 @@
 <template>
   <popupTemplate ref='popupOpen'>
     <template #body>
+      <AddEmployee ref='AddEmployeePopup' :enableOverlayClick='true' />
       <div class='edit-employee-navbar'>
-        <button class='add-employee-button' type='button' @click='addNewEmployee()'><i class='fas fa-plus'></i>
+        <button class='add-employee-button' type='button' @click='openAddEmployeeModal()'><i class='fas fa-plus'></i>
           <p>Add employee</p>
         </button>
         <div class='search-wrapper'>
@@ -12,8 +13,9 @@
       </div>
       <div class='employee-list-container'>
         <div class='existing-employee'>
-          <button class='edit-employee' type='button' @click='editItem()'><i class='far fa-edit'></i></button>
-          <button class='delete-employee' type='button' @click='deleteItem()'><i class='far fa-trash-alt'></i>
+          <button class='edit-employee' type='button' @click='openAddEmployeeModal()'><i class='far fa-edit'></i>
+          </button>
+          <button class='delete-employee' type='button' @click='removeEmployee(index)'><i class='far fa-trash-alt'></i>
           </button>
           <div class='employee-details'>
             <p class='employee-name'>Bider nummer 1</p>
@@ -38,17 +40,18 @@
       </div>
     </template>
   </popupTemplate>
-
 </template>
 
 <script>
 
 import popupTemplate from '@/components/popupTemplate'
+import AddEmployee from '@/components/AddEmployee'
 
 export default {
 
   components: {
-    popupTemplate
+    popupTemplate,
+    AddEmployee
   },
 
   mounted() {
@@ -74,6 +77,12 @@ export default {
     open() {
       this.$refs.popupOpen.open()
     },
+    openAddEmployeeModal() {
+      this.$refs.AddEmployeePopup.open()
+    },
+    closeAddEmployeeModal() {
+      this.$refs.AddEmployeePopup.close()
+    },
     closeButtonClicked() {
       this.$emit('close-button-clicked')
       this.close()
@@ -89,11 +98,14 @@ export default {
       if (this.enableOverlayClick) {
         this.close()
       }
+    },
+    removeEmployee(index) {
+      console.log(index)
+      this.saleList.splice(index, 1)
     }
   }
 }
 </script>
-
 
 <style lang='scss' scoped>
 .normal-window {
