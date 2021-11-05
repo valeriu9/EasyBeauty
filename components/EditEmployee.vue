@@ -1,9 +1,9 @@
 <template>
-  <div class="container">
-    <div class='normal-window' :class="showModal ? 'is-active' : ''" @click="overlayClick" />
-    <div class='employee-popup-window' :class="showModal ? 'is-active' : ''">
+  <popupTemplate ref='popupOpen'>
+    <template #body>
+      <AddEmployee ref='AddEmployeePopup' :enableOverlayClick='true' />
       <div class='edit-employee-navbar'>
-        <button class='add-employee-button' type='button' @click='addNewEmployee()'><i class='fas fa-plus'></i>
+        <button class='add-employee-button' type='button' @click='openAddEmployeeModal()'><i class='fas fa-plus'></i>
           <p>Add employee</p>
         </button>
         <div class='search-wrapper'>
@@ -13,8 +13,9 @@
       </div>
       <div class='employee-list-container'>
         <div class='existing-employee'>
-          <button class='edit-employee' type='button' @click='editItem()'><i class='far fa-edit'></i></button>
-          <button class='delete-employee' type='button' @click='deleteItem()'><i class='far fa-trash-alt'></i>
+          <button class='edit-employee' type='button' @click='openAddEmployeeModal()'><i class='far fa-edit'></i>
+          </button>
+          <button class='delete-employee' type='button' @click='removeEmployee(index)'><i class='far fa-trash-alt'></i>
           </button>
           <div class='employee-details'>
             <p class='employee-name'>Bider nummer 1</p>
@@ -37,14 +38,21 @@
         </div>
 
       </div>
-    </div>
-  </div>
+    </template>
+  </popupTemplate>
 </template>
 
 <script>
 
+import popupTemplate from '@/components/popupTemplate'
+import AddEmployee from '@/components/AddEmployee'
+
 export default {
 
+  components: {
+    popupTemplate,
+    AddEmployee
+  },
 
   mounted() {
     let fontScript = document.createElement('script')
@@ -59,39 +67,45 @@ export default {
       default: true
     }
   },
-  data () {
-    return { showModal: false };
+  data() {
+    return { showModal: false }
   },
-  beforeDestroy () {
-    this.close();
+  beforeDestroy() {
+    this.close()
   },
   methods: {
-    open () {
-      this.showModal = true;
-      const x = window.scrollX;
-      const y = window.scrollY;
-      window.onscroll = function () { window.scrollTo(x, y); };
-      this.$emit('opened');
+    open() {
+      this.$refs.popupOpen.open()
     },
-    closeButtonClicked () {
-      this.$emit('close-button-clicked');
-      this.close();
+    openAddEmployeeModal() {
+      this.$refs.AddEmployeePopup.open()
     },
-    close () {
-      this.showModal = false;
-      window.onscroll = function () {};
-      this.$emit('closed');
+    closeAddEmployeeModal() {
+      this.$refs.AddEmployeePopup.close()
     },
-    overlayClick () {
-      console.log('overlayclijc');
-      if (this.enableOverlayClick) {
-        this.close();
+    closeButtonClicked() {
+      this.$emit('close-button-clicked')
+      this.close()
+    },
+    close() {
+      this.showModal = false
+      window.onscroll = function() {
       }
+      this.$emit('closed')
+    },
+    overlayClick() {
+      console.log('overlayclijc')
+      if (this.enableOverlayClick) {
+        this.close()
+      }
+    },
+    removeEmployee(index) {
+      console.log(index)
+      this.saleList.splice(index, 1)
     }
   }
 }
 </script>
-
 
 <style lang='scss' scoped>
 .normal-window {
@@ -106,8 +120,9 @@ export default {
   left: 0;
   transition: 0s;
   pointer-events: none;
+
   &.is-active {
-    opacity: 0.97;
+    opacity: 1;
     pointer-events: all;
     transition: 0.5s;
   }
@@ -124,7 +139,6 @@ export default {
 .employee-popup-window {
   z-index: 200;
   position: fixed;
-  border-radius: 12px;
   pointer-events: none;
   background-color: white;
   box-shadow: 0 10px 16px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%) !important;
@@ -142,6 +156,7 @@ export default {
   -ms-touch-action: none;
 
   opacity: 0;
+
   &.is-active {
     opacity: 1;
     pointer-events: all;
@@ -152,6 +167,7 @@ export default {
   // Hide scrollbar
   -ms-overflow-style: none;
   scrollbar-width: none;
+
   &::-webkit-scrollbar {
     display: none;
   }
@@ -247,6 +263,7 @@ export default {
   border: none;
   font-size: 15px;
 }
+
 .add-employee-button p {
   margin: 0 10px;
 }

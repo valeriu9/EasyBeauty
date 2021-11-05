@@ -1,11 +1,11 @@
 <template>
   <div class='main-container'>
-
+    <addProduct ref='addProductPopup' :enableOverlayClick='true' />
     <div class='services-container'>
 
       <div class='product-service-container'>
         <div class='service-navbar'>
-          <button class='add-item-button' type='button' @click='addNewItem()'><i class='fas fa-plus'></i>
+          <button class='add-item-button' type='button' @click='openAddProductModal()'><i class='fas fa-plus'></i>
             <p>Add new Item</p>
           </button>
           <div class='search-wrapper'>
@@ -18,7 +18,8 @@
           <div v-for='(product, index) in filteredList' :key='index' @click='addToSaleList(product)' class='items-grid'>
 
             <div class='image-container'>
-              <button class='edit-item-button' type='button' @click='editItem()'><i class='far fa-edit'></i></button>
+              <button class='edit-item-button' type='button' @click='openAddProductModal()'><i class='far fa-edit'></i>
+              </button>
               <button class='delete-item-button' type='button' @click='deleteItem()'><i class='far fa-trash-alt'></i>
               </button>
               <img :src="'data:image/jpeg;base64,'+ product.image" class='grid-item-pic' />
@@ -156,6 +157,14 @@ export default {
   },
   layout: 'default',
   methods: {
+
+    openAddProductModal() {
+      this.$refs.addProductPopup.open()
+    },
+    closeAddProductModal() {
+      this.$refs.addProductPopup.close()
+    },
+
     switchTab(name) {
       if (name === 'services') {
         this.filteredList = this.serviceList
@@ -306,7 +315,8 @@ export default {
   border-radius: 5px;
   padding: 5px;
   height: 120px;
-  width: auto;
+  width: 120px;
+  object-fit: cover;
 }
 
 .image-container {
@@ -316,9 +326,6 @@ export default {
 .grid-item-name {
   font-weight: 600;
   margin: 10px;
-}
-
-.grid-item-description {
 }
 
 .grid-item-price {
@@ -431,7 +438,6 @@ export default {
   font-size: 0.8vw;
 }
 
-
 .value-button {
   width: 25px;
   text-align: center;
@@ -482,14 +488,14 @@ input[type="number"]::-webkit-outer-spin-button {
 /* Style the buttons inside the tab */
 .tab button {
   cursor: pointer;
-  padding: 14px 16px;
+  padding: 8px 14px;
   transition: 0.3s;
   font-size: 1vw;
   background-color: white;
   margin: 0 15px;
-  border: none;
   color: gray;
   border-radius: 10px;
+  border: transparent solid thick;
   box-shadow: 0 10px 16px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%) !important;
 }
 
@@ -560,7 +566,7 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .cart-price-container {
-  height: 30%;
+  height: 25vw;
   display: flex;
   justify-content: center;
   flex-direction: column;
