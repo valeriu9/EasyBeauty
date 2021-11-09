@@ -212,8 +212,8 @@ export default {
     },
     async pay(){
       try{
-     const res = await this.$axios.post('https://api.easyways.dk/EasyBeauty/RequestPurchase', {APIToken:"6MasjMRa63QHSjWcZM4hCmdukT3SZD2bwnqPYhxUFXKvkSuMtw",Amount:"200"})
-    console.log(res);
+     const res = await this.$axios.post('http://easybeauty.somee.com/v1/api/Payment',{"amount":23132})
+    console.log(res.data);
     } catch(e){
       console.log(e);
     }
