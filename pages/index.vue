@@ -286,7 +286,7 @@ export default {
 }
 
 .product-service-container {
-  height: 89%;
+  height: 100%;
   background-color: white;
   box-shadow: 0 10px 16px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%) !important;
   border-radius: 5px;
@@ -527,14 +527,14 @@ input[type="number"]::-webkit-outer-spin-button {
 .cart-container {
   display: flex;
   flex-direction: column;
-  height: 89%;
+  height: 100%;
   background-color: white;
   box-shadow: 0 10px 16px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%) !important;
   border-radius: 5px;
 }
 
 .item-list {
-  height: 35vw;
+  height: 50%;
   overflow-y: scroll;
 }
 
@@ -566,7 +566,7 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .cart-price-container {
-  height: 25vw;
+  height: 40%;
   display: flex;
   justify-content: center;
   flex-direction: column;

@@ -120,19 +120,22 @@ export default {
 }
 
 .image-upload {
-  left: 0;
   width: 45%;
   position: fixed;
-  height: 80%;
+  height: 90%;
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
 .image-preview {
-  height: 50%;
+  height: 55%;
   justify-content: center;
   display: flex;
+  background-image: url("assets/images/image-upload.png");
+  background-position: center;
+  background-size: 50%;
+  background-repeat: no-repeat;
 }
 
 .image-preview img {
@@ -164,6 +167,7 @@ export default {
   border: none;
   border-bottom: 1px solid #777;
   box-shadow: none !important;
+  margin-top: 20px;
 }
 
 .user-input-wrapper .inputText:focus {
