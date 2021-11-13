@@ -11,7 +11,6 @@
 
 export default {
 
-
   mounted() {
     let fontScript = document.createElement('script')
     fontScript.setAttribute('src', 'https://kit.fontawesome.com/52311f6e31.js')

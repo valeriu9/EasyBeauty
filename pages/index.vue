@@ -1,9 +1,9 @@
 <template>
   <div class='main-container'>
     <BaseLoader ref="loader" />
-    <AddProduct ref='addProductPopup' :itemToEdit="itemToEdit" :enableOverlayClick='true' @loadServices="loadServices" @loadProducts="loadProducts" @openLoader="openLoader" @closeLoader="closeLoader" />
+    <AddProduct ref='addProductPopup' :itemToEdit="itemToEdit" :enableOverlayClick='true' @loadServices="loadServices"
+      @loadProducts="loadProducts" @openLoader="openLoader" @closeLoader="closeLoader" />
     <div class='services-container'>
-
       <div class='product-service-container'>
         <div class='service-navbar'>
           <button class='add-item-button' type='button' @click='openAddProductModal()'><i class='fas fa-plus'></i>
@@ -19,9 +19,11 @@
           <div v-for='(item, index) in filteredList' :key='index' class='items-grid'>
 
             <div class='image-container'>
-              <button class='edit-item-button' type='button' @click='openAddProductModal(item)'><i class='far fa-edit'></i>
+              <button class='edit-item-button' type='button' @click='openAddProductModal(item)'><i
+                  class='far fa-edit'></i>
               </button>
-              <button class='delete-item-button' type='button' @click='deleteItem(item, index)'><i class='far fa-trash-alt'></i>
+              <button class='delete-item-button' type='button' @click='deleteItem(item, index)'><i
+                  class='far fa-trash-alt'></i>
               </button>
               <img :src="item.image" class='grid-item-pic' @click='addToSaleList(item)' />
             </div>
@@ -29,10 +31,8 @@
             <p class='grid-item-description'>{{ item.description }}</p>
             <p v-if="item.duration" class='grid-item-description'>Duration: {{ item.duration }} min</p>
             <p class='grid-item-price'>{{ item.price }}DKK</p>
-
           </div>
         </div>
-
         <div id='Services' class='tabcontent'>
           <h3>Services</h3>
         </div>
@@ -41,8 +41,7 @@
         </div>
       </div>
       <div class='tab'>
-        <button id='defaultOpen' class='tablinks' @click="switchTab('services')"><i
-            class='fas fa-cut'></i>
+        <button id='defaultOpen' class='tablinks' @click="switchTab('services')"><i class='fas fa-cut'></i>
           <p> Services</p>
         </button>
         <button class='tablinks' @click="switchTab('products')"><i class='fas fa-spray-can'></i>
@@ -53,7 +52,6 @@
       </div>
     </div>
     <div class='checkout-container'>
-
       <div class='cart-container'>
         <div class='cart-item-nav'>
           <h2>Checkout</h2>
@@ -84,11 +82,7 @@
         <div class='cart-price-container'>
           <div class='price-wrapper'>
             <p>Discount (%)</p>
-            <input
-              name='discount'
-              :value="discount"
-              @input="e => discount = e.target.value"
-              type='number'>
+            <input name='discount' :value="discount" @input="e => discount = e.target.value" type='number'>
           </div>
           <div class='price-wrapper'>
             <p>Total without taxes</p>
@@ -118,8 +112,9 @@
 
 <script>
 import BaseLoader from '@/components/BaseLoader'
+
 export default {
-  components:{
+  components: {
     BaseLoader
   },
   mounted() {
@@ -134,45 +129,52 @@ export default {
       this.saleList.forEach(element => {
         result += element.price
       })
-     result = result * 0.75
+      result = result * 0.75
       return result
     },
-    taxes(){
-        let result = 0
+    taxes() {
+      let result = 0
       this.saleList.forEach(element => {
         result += element.price
       })
-     result = result * 0.25
+      result = result * 0.25
       return result
     },
-    total(){
-      if(this.discount === 0 || this.discount === ""){
-      return this.totalBeforeTax + this.taxes;
-    }
-    else{
-      return (this.totalBeforeTax + this.taxes) * (1-(this.discount / 100))
-    }
+    total() {
+      if (this.discount === 0 || this.discount === "") {
+        return this.totalBeforeTax + this.taxes;
+      } else {
+        return (this.totalBeforeTax + this.taxes) * (1 - (this.discount / 100))
+      }
 
     }
   },
-
   data() {
-    return { productList: [], serviceList: [], searchText: '', activeTab: 'products', filteredList: [], saleList: [], discount: 0, itemToEdit:{} }
+    return {
+      productList: [],
+      serviceList: [],
+      searchText: '',
+      activeTab: 'products',
+      filteredList: [],
+      saleList: [],
+      discount: 0,
+      itemToEdit: {}
+    }
   },
   layout: 'default',
   methods: {
-    openLoader(){
+    openLoader() {
       this.$refs.loader.open();
     },
-    closeLoader(){
+    closeLoader() {
       this.$refs.loader.close();
     },
     openAddProductModal(item = {}) {
       this.itemToEdit = {}
       this.$refs.addProductPopup.open()
-      if(Object.keys(item).length !== 0){
-      item.type = this.activeTab;
-      this.itemToEdit = item;
+      if (Object.keys(item).length !== 0) {
+        item.type = this.activeTab;
+        this.itemToEdit = item;
       }
     },
     closeAddProductModal() {
@@ -192,8 +194,8 @@ export default {
     increaseValue(index) {
 
       const temp = JSON.parse(JSON.stringify(this.saleList))
-     temp[index].price = temp[index].price + this.saleList[index].initialPrice
-      console.log(temp[index].price + "and "+ this.saleList[index].initialPrice);
+      temp[index].price = temp[index].price + this.saleList[index].initialPrice
+      console.log(temp[index].price + "and " + this.saleList[index].initialPrice);
       temp[index].quantity++
       this.saleList = []
       this.saleList = temp
@@ -223,26 +225,27 @@ export default {
     removeItemFromSaleList(index) {
       this.saleList.splice(index, 1)
     },
-    async pay(){
-      try{
-        if(this.total === 0) return
-     const res = await this.$axios.post('http://easybeauty.somee.com/v1/api/Payment',{"amount":this.total})
-    if(res.data.error){
-      window.alert(res.data.error)
-    }
-    else{
-      this.saleList = [];
-      window.alert(res.data.succes)
-    }
-    } catch(e){
-      console.log(e);
-    }
+    async pay() {
+      try {
+        if (this.total === 0) return
+        const res = await this.$axios.post('http://easybeauty.somee.com/v1/api/Payment', {
+          "amount": this.total
+        })
+        if (res.data.error) {
+          window.alert(res.data.error)
+        } else {
+          this.saleList = [];
+          window.alert(res.data.succes)
+        }
+      } catch (e) {
+        console.log(e);
+      }
     },
-    resetSalesList(){
+    resetSalesList() {
       this.saleList = [];
     },
-    async fetchData(){
-      try{
+    async fetchData() {
+      try {
         this.openLoader();
         const products = await this.$axios.get(`http://easybeauty.somee.com/v1/api/Product`);
         this.productList = products.data;
@@ -250,48 +253,48 @@ export default {
         const services = await this.$axios.get(`http://easybeauty.somee.com/v1/api/Service`);
         this.serviceList = services.data;
         this.closeLoader();
-    } catch(e){
-      console.log(e);
-    }
-  },
-      async loadProducts(){
-      try{
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    async loadProducts() {
+      try {
         this.filteredList = []
         const products = await this.$axios.get(`http://easybeauty.somee.com/v1/api/Product`);
         this.productList = products.data;
         this.filteredList = this.productList;
         this.closeLoader();
-    } catch(e){
-      console.log(e);
-    }
-  },
-      async loadServices(){
-        try{
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    async loadServices() {
+      try {
         this.filteredList = []
         const services = await this.$axios.get(`http://easybeauty.somee.com/v1/api/Service`);
         this.serviceList = services.data;
         this.filteredList = this.serviceList;
         this.closeLoader();
-    } catch(e){
-      console.log(e);
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    async deleteItem(item, index) {
+      try {
+        if (this.activeTab === 'services') {
+          await this.$axios.delete(`http://easybeauty.somee.com/v1/api/Service/${item.id}`);
+          this.serviceList.splice(index, 1);
+          this.filteredList = this.serviceList
+        }
+        if (this.activeTab === 'products') {
+          await this.$axios.delete(`http://easybeauty.somee.com/v1/api/Product/${item.id}`);
+          this.productList.splice(index, 1);
+          this.filteredList = this.productList
+        }
+      } catch (e) {
+        console.log(e);
+      }
     }
-  },
-  async deleteItem(item, index){
-   try{
-     if(this.activeTab === 'services'){
-       await this.$axios.delete(`http://easybeauty.somee.com/v1/api/Service/${item.id}`);
-       this.serviceList.splice(index, 1);
-         this.filteredList = this.serviceList
-       }
-       if(this.activeTab === 'products'){
-         await this.$axios.delete(`http://easybeauty.somee.com/v1/api/Product/${item.id}`);
-         this.productList.splice(index, 1);
-         this.filteredList = this.productList
-       }
-    } catch(e){
-      console.log(e);
-    }
-  }
   }
 }
 </script>

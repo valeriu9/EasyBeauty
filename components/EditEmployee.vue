@@ -1,63 +1,47 @@
 <template>
   <PopupTemplate ref='popupOpen'>
     <template #body>
-      <AddEmployee ref='AddEmployeePopup' :enableOverlayClick='true' />
+      <AddEmployee ref='AddEmployeePopup' :enableOverlayClick='true' @loadEmployees="loadEmployees()" :employeeToEdit="employeeToEdit" />
       <div class='edit-employee-navbar'>
         <button class='add-employee-button' type='button' @click='openAddEmployeeModal()'><i class='fas fa-plus'></i>
           <p>Add employee</p>
         </button>
         <div class='search-wrapper'>
-          <input name='search' placeholder='Search..' type='text'>
-          <button type='submit'><i class='fa fa-search'></i></button>
+          <input name='search' :value='searchText' @input='e => searchText = e.target.value' placeholder='Search..'
+            type='text'>
+          <button type='submit' @click='search()'><i class='fa fa-search'></i></button>
         </div>
       </div>
       <div class='employee-list-container'>
-        <div class='existing-employee'>
-          <button class='edit-employee' type='button' @click='openAddEmployeeModal()'><i class='far fa-edit'></i>
+        <div v-for="(employee, index) in filteredList" :key="employee.index" class='existing-employee'>
+          <button class='edit-employee' type='button' @click='openAddEmployeeModal(employee)'><i class='far fa-edit'></i>
           </button>
-          <button class='delete-employee' type='button' @click='removeEmployee(index)'><i class='far fa-trash-alt'></i>
-          </button>
-          <div class='employee-details'>
-            <p class='employee-name'>Bider nummer 1</p>
-            <p class='employee-email'> Bider@kontakt.ru </p>
-            <p class='employee-phone'> 43 12 56 78 </p>
-            <p class='employee-role'> Employee </p>
-          </div>
-
-        </div>
-        <div class='existing-employee'>
-          <button class='edit-employee' type='button' @click='editItem()'><i class='far fa-edit'></i></button>
-          <button class='delete-employee' type='button' @click='deleteItem()'><i class='far fa-trash-alt'></i>
+          <button class='delete-employee' type='button' @click='removeEmployee(index, employee.id)'><i class='far fa-trash-alt'></i>
           </button>
           <div class='employee-details'>
-            <p class='employee-name'>Bider nummer 1</p>
-            <p class='employee-email'> Bider@kontakt.ru </p>
-            <p class='employee-phone'> 43 12 56 78 </p>
-            <p class='employee-role'> Employee </p>
+            <p class='employee-name'>{{employee.fullName}}</p>
+            <p class='employee-email'> {{employee.email}} </p>
+            <p class='employee-phone'> {{employee.phoneNr}} </p>
+            <p class='employee-role'> {{employee.role}} </p>
           </div>
         </div>
-
       </div>
     </template>
   </PopupTemplate>
 </template>
 
 <script>
-
-import PopupTemplate from '@/components/PopupTemplate'
-import AddEmployee from '@/components/AddEmployee'
-
 export default {
-
   components: {
-    PopupTemplate,
-    AddEmployee
+    AddEmployee: () => import('~/components/AddEmployee'),
+    PopupTemplate: () => import('~/components/PopupTemplate')
   },
 
   mounted() {
     let fontScript = document.createElement('script')
     fontScript.setAttribute('src', 'https://kit.fontawesome.com/52311f6e31.js')
     document.head.appendChild(fontScript)
+    this.loadEmployees();
   },
 
   layout: 'default',
@@ -68,7 +52,13 @@ export default {
     }
   },
   data() {
-    return { showModal: false }
+    return {
+      showModal: false,
+      searchText: '',
+      filteredList: [],
+      employeeList: [],
+      employeeToEdit: {}
+    }
   },
   beforeDestroy() {
     this.close()
@@ -77,8 +67,12 @@ export default {
     open() {
       this.$refs.popupOpen.open()
     },
-    openAddEmployeeModal() {
+    openAddEmployeeModal(employee = {}) {
+      this.employeeToEdit = {}
       this.$refs.AddEmployeePopup.open()
+      if (Object.keys(employee).length !== 0) {
+        this.employeeToEdit = employee;
+      }
     },
     closeAddEmployeeModal() {
       this.$refs.AddEmployeePopup.close()
@@ -89,9 +83,19 @@ export default {
     },
     close() {
       this.showModal = false
-      window.onscroll = function() {
-      }
+      window.onscroll = function () {}
       this.$emit('closed')
+    },
+    async loadEmployees() {
+      try {
+        this.filteredList = [];
+        this.employeeList = [];
+        const employees = await this.$axios.get(`http://easybeauty.somee.com/v1/api/Employee`);
+        this.employeeList = employees.data;
+        this.filteredList = this.employeeList;
+      } catch (e) {
+        console.log(e);
+      }
     },
     overlayClick() {
       console.log('overlayclijc')
@@ -99,9 +103,17 @@ export default {
         this.close()
       }
     },
-    removeEmployee(index) {
-      console.log(index)
-      this.saleList.splice(index, 1)
+    async removeEmployee(index, id) {
+      try {
+        await this.$axios.delete(`http://easybeauty.somee.com/v1/api/Employee/${id}`);
+        this.employeeList.splice(index, 1);
+        this.filteredList = this.employeeList;
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    search() {
+      this.filteredList = this.employeeList.filter(employee => employee.fullName.toLowerCase().includes(this.searchText.toLowerCase()))
     }
   }
 }

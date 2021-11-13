@@ -17,7 +17,7 @@
           <input type='text' class='inputText' v-model="description" required />
           <p class='floating-label'>Product Description</p>
           <br />
-          <input type='text' class='inputText' v-model="price" required />
+          <input type='number' class='inputText' v-model="price" required />
           <p class='floating-label'>Price</p>
           <br />
           <select class='product-service-type' v-model="type" name='product-service-type'>
@@ -40,35 +40,32 @@
 </template>
 
 <script>
-
-import PopupTemplate from '@/components/PopupTemplate'
-
 export default {
   name: 'imageUpload',
 
   mounted() {
-      let fontScript = document.createElement('script')
-      fontScript.setAttribute('src', 'https://kit.fontawesome.com/52311f6e31.js')
-      document.head.appendChild(fontScript)
-    },
-    components: {
-      PopupTemplate
-    },
+    let fontScript = document.createElement('script')
+    fontScript.setAttribute('src', 'https://kit.fontawesome.com/52311f6e31.js')
+    document.head.appendChild(fontScript)
+  },
+  components: {
+    PopupTemplate: () => import('~/components/PopupTemplate')
+  },
 
-    layout: 'default',
-    props: {
-      enableOverlayClick: {
-        type: Boolean,
-        default: true
-      },
-      itemToEdit:{
-        type: Object,
-        default: ()=>{}
-      }
+  layout: 'default',
+  props: {
+    enableOverlayClick: {
+      type: Boolean,
+      default: true
     },
-    watch:{
-      itemToEdit(){
-        if(this.itemToEdit.name){
+    itemToEdit: {
+      type: Object,
+      default: () => {}
+    }
+  },
+  watch: {
+    itemToEdit() {
+      if (this.itemToEdit.name) {
         this.name = this.itemToEdit.name;
         this.type = this.itemToEdit.type;
         this.description = this.itemToEdit.description;
@@ -76,112 +73,124 @@ export default {
         this.image = this.itemToEdit.image;
         this.duration = this.itemToEdit.duration;
         this.id = this.itemToEdit.id;
-        }
-      }
-    },
-    data() {
-      return {
-        showModal: false,
-        image: '',
-        name:'',
-        image:'',
-        description:'',
-        price:0,
-        type:'products',
-        duration: 0,
-        id:0
-      }
-    },
-    beforeDestroy() {
-      this.close()
-    },
-    methods: {
-      open() {
-        this.$refs.popupOpen.open()
-      },
-      closeButtonClicked() {
-        this.$emit('close-button-clicked')
-        this.close()
-      },
-      close() {
-      this.$refs.popupOpen.close()
-      },
-      overlayClick() {
-        if (this.enableOverlayClick) {
-          this.close()
-        }
-      },
-    async saveProduct(){
-      if(this.type === 'services' && (this.name === '', this.price === 0, this.image === '', this.duration === 0)){
-        window.alert("Complete all the fields before saving")
-        return
-      } else if(this.type === 'products' && (this.name === '', this.price === 0, this.image === '')){
-        window.alert("Complete all the fields before saving")
-        return
-      }
-      if (!this.itemToEdit.name){
-        const imgbbUploader = require("imgbb-uploader");
-      const options = {
-        apiKey: '44be07cc6bc3fb0585b6e9f1b2cce6b6',
-        base64string: this.image.replace("data:", "").replace(/^.+,/, "")
-      }
-        imgbbUploader(options)
-        .then((response) => {
-          this.image = response.medium.url
-          try{
-            if(this.type === 'products'){
-              this.$emit('openLoader');
-              this.$axios.post(`http://easybeauty.somee.com/v1/api/Product`,{name : this.name, description: this.description, price: this.price, image: this.image});
-              this.$refs.popupOpen.close()
-            setTimeout(() => {
-              this.$emit('loadProducts');
-             }, 1000);
-            } else {
-              this.$axios.post(`http://easybeauty.somee.com/v1/api/Service`,{name : this.name, description: this.description, price: this.price, duration: this.duration, image: this.image});
-              setTimeout(() => {
-                this.$emit('loadServices');
-              }, 1000);
-            }
-          } catch(e){
-            console.log(e);
-        this.$emit('closeLoader');
-          }
-      }).catch((error) => console.error(error),
-        this.$emit('closeLoader')
-      );
-      }
-      else {
-        try{
-          if(this.type === 'products'){
-            this.$emit('openLoader');
-            this.$axios.put(`http://easybeauty.somee.com/v1/api/Product/${this.itemToEdit.id}`,{name : this.name, description: this.description, price: this.price, image: this.image});
-               this.$refs.popupOpen.close()
-             setTimeout(() => {
-               this.$emit('loadProducts');
-             }, 1000);
-            } else {
-              this.$axios.put(`http://easybeauty.somee.com/v1/api/Service/${this.itemToEdit.id}`,{name : this.name, description: this.description, price: this.price, duration: this.duration, image: this.image});
-              setTimeout(() => {
-                this.$emit('loadServices');
-              }, 1000);
-            }
-          } catch(e){
-            console.log(e);
-            this.$emit('closeLoader');
-          }
-      }
-      },
-      onChange(e) {
-        var file = e.target.files[0];
-        var reader = new FileReader();
-        reader.readAsDataURL(file);
-        setTimeout(() => {
-          this.image = reader.result
-        }, 1000);
       }
     }
-
+  },
+  data() {
+    return {
+      showModal: false,
+      image: '',
+      name: '',
+      image: '',
+      description: '',
+      price: null,
+      type: 'products',
+      duration: null,
+      id: 0
+    }
+  },
+  beforeDestroy() {
+    this.close()
+  },
+  methods: {
+    open() {
+      this.$refs.popupOpen.open()
+    },
+    close() {
+      this.$refs.popupOpen.close()
+    },
+    async saveProduct() {
+      if (this.type === 'services' && (this.name === '', this.price === 0, this.image === '', this.duration === 0)) {
+        window.alert("Complete all the fields before saving")
+        return
+      } else if (this.type === 'products' && (this.name === '', this.price === 0, this.image === '')) {
+        window.alert("Complete all the fields before saving")
+        return
+      }
+      if (!this.itemToEdit.name) {
+        const imgbbUploader = require("imgbb-uploader");
+        const options = {
+          apiKey: '44be07cc6bc3fb0585b6e9f1b2cce6b6',
+          base64string: this.image.replace("data:", "").replace(/^.+,/, "")
+        }
+        imgbbUploader(options)
+          .then((response) => {
+            this.image = response.medium.url
+            try {
+              if (this.type === 'products') {
+                this.$emit('openLoader');
+                this.$axios.post(`http://easybeauty.somee.com/v1/api/Product`, {
+                  name: this.name,
+                  description: this.description,
+                  price: this.price,
+                  image: this.image
+                });
+                this.$refs.popupOpen.close()
+                setTimeout(() => {
+                  this.$emit('loadProducts');
+                }, 1000);
+              } else {
+                this.$axios.post(`http://easybeauty.somee.com/v1/api/Service`, {
+                  name: this.name,
+                  description: this.description,
+                  price: this.price,
+                  duration: this.duration,
+                  image: this.image
+                });
+                setTimeout(() => {
+                  this.$emit('loadServices');
+                }, 1000);
+              }
+            } catch (e) {
+              console.log(e);
+              this.$emit('closeLoader');
+            }
+          }).catch((error) => console.error(error),
+            this.$emit('closeLoader')
+          );
+      } else {
+        try {
+          if (this.type === 'products') {
+            this.$emit('openLoader');
+            this.$axios.put(`http://easybeauty.somee.com/v1/api/Product/${this.itemToEdit.id}`, {
+              name: this.name,
+              description: this.description,
+              price: this.price,
+              image: this.image
+            });
+            this.$refs.popupOpen.close()
+            setTimeout(() => {
+              this.$emit('loadProducts');
+            }, 1000);
+          } else {
+            this.$axios.put(`http://easybeauty.somee.com/v1/api/Service/${this.itemToEdit.id}`, {
+              name: this.name,
+              description: this.description,
+              price: this.price,
+              duration: this.duration,
+              image: this.image
+            });
+            setTimeout(() => {
+              this.$emit('loadServices');
+            }, 1000);
+          }
+        } catch (e) {
+          console.log(e);
+          this.$emit('closeLoader');
+        }
+      }
+    },
+    onChange(e) {
+      var file = e.target.files[0];
+      var reader = new FileReader();
+      reader.readAsDataURL(file);
+      setTimeout(() => {
+        this.image = reader.result
+      }, 1000);
+    }
   }
+
+}
 </script>
 
 <style lang='scss' scoped>

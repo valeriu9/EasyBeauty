@@ -69,11 +69,10 @@
 </template>
 
 <script>
-import EditEmployee from '@/components/EditEmployee';
 export default {
 
   components:{
-    EditEmployee
+     EditEmployee: () => import('~/components/EditEmployee'),
   },
   beforeMount() {
     this.userInfo = this.$store.state.user

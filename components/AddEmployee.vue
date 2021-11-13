@@ -3,23 +3,20 @@
     <template #body>
       <div class='user-input-wrp'>
         <div class='employee-details'>
-          <input type='text' class='inputText' required />
-          <p class='floating-label'>First Name</p>
-          <input type='text' class='inputText' required />
-          <p class='floating-label'>Last Name</p>
-          <input type='text' class='inputText' required />
+          <input type='text' v-model="fullName" class='inputText' required />
+          <p class='floating-label'>Full Name</p>
+          <input type='text' v-model="email" class='inputText' required />
           <p class='floating-label'>Email Address</p>
-          <input type='text' class='inputText' required />
+          <input type='number' v-model="phoneNr" class='inputText' required />
           <p class='floating-label'>Phone Number</p>
         </div>
-
-        <select class='employee-role' name='employee role'>
+        <select class='employee-role' v-model="role" name='employee role'>
           <option value='employee'>Employee</option>
           <option value='manager'>Manager</option>
         </select>
         <div class='button-container'>
-          <button class='save-button'>Save</button>
-          <button class='cancel-button'>Cancel</button>
+          <button @click="save()" class='save-button'>Save</button>
+          <button @click="cancel()" class='cancel-button'>Cancel</button>
         </div>
 
       </div>
@@ -29,12 +26,9 @@
 
 <script>
 
-import PopupTemplate from '@/components/PopupTemplate'
-
 export default {
-
-  components: {
-    PopupTemplate
+components: {
+    PopupTemplate: () => import('~/components/PopupTemplate'),
   },
 
   mounted() {
@@ -48,10 +42,32 @@ export default {
     enableOverlayClick: {
       type: Boolean,
       default: true
+    },
+    employeeToEdit: {
+      type: Object,
+      default: () => {}
     }
   },
   data() {
-    return { showModal: false }
+    return {
+      showModal: false,
+      fullName: '',
+      phoneNr: null,
+      email: '',
+      role: 'employee',
+      id: null
+    }
+  },
+  watch: {
+    employeeToEdit() {
+      if (this.employeeToEdit.fullName) {
+        this.fullName = this.employeeToEdit.fullName;
+        this.role = this.employeeToEdit.role;
+        this.email = this.employeeToEdit.email;
+        this.phoneNr = this.employeeToEdit.phoneNr;
+        this.id = this.employeeToEdit.id;
+      }
+    }
   },
   beforeDestroy() {
     this.close()
@@ -60,27 +76,48 @@ export default {
     open() {
       this.$refs.popupOpen.open()
     },
-    openAddEmployeeModal() {
-      this.$refs.AddEmployeePopup.open()
-    },
-    closeAddEmployeeModal() {
-      this.$refs.AddEmployeePopup.close()
-    },
-    closeButtonClicked() {
-      this.$emit('close-button-clicked')
-      this.close()
-    },
     close() {
-      this.showModal = false
-      window.onscroll = function() {
-      }
-      this.$emit('closed')
+      this.$refs.popupOpen.close()
     },
-    overlayClick() {
-      console.log('overlayclijc')
-      if (this.enableOverlayClick) {
-        this.close()
+    async save() {
+      if (this.fullName === '', this.phoneNr === 0, this.email === '', this.role === '') {
+        window.alert("Complete all the fields before saving")
+        return
       }
+      try {
+        if (this.employeeToEdit.fullName) {
+          this.$axios.put(`http://easybeauty.somee.com/v1/api/Employee/${this.id}`, {
+            fullName: this.fullName,
+            phoneNr: this.phoneNr,
+            email: this.email,
+            role: this.role
+          });
+          setTimeout(() => {
+            this.$emit('loadEmployees');
+          }, 1000);
+          this.close();
+        } else {
+          this.$axios.post(`http://easybeauty.somee.com/v1/api/Employee`, {
+            fullName: this.fullName,
+            phoneNr: this.phoneNr,
+            email: this.email,
+            role: this.role
+          });
+          setTimeout(() => {
+            this.$emit('loadEmployees');
+          }, 1000);
+          this.close();
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    cancel() {
+      this.fullName = '',
+        this.phoneNr = null,
+        this.email = '',
+        this.role = 'employee',
+        this.close()
     }
   }
 }

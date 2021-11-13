@@ -43,14 +43,11 @@
 
 <script>
 
-import PopupTemplate from '@/components/PopupTemplate'
-import EditAppointment from '@/components/EditAppointment'
-
 export default {
 
   components: {
-    PopupTemplate,
-    EditAppointment
+    PopupTemplate: () => import('~/components/PopupTemplate'),
+    EditAppointment: () => import('~/components/EditAppointment')
   },
 
   mounted() {

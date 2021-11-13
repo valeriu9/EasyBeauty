@@ -1,7 +1,6 @@
 <template>
   <div>
     <client-only>
-      <EditEmployee />
       <AddEmployee />
       <AddProduct />
       <Navbar />
@@ -11,17 +10,12 @@
 </template>
 
 <script>
-import Navbar from '~/components/Navbar'
-import EditEmployee from '@/components/EditEmployee'
-import AddEmployee from '@/components/AddEmployee'
-import AddProduct from '@/components/AddProduct'
 
 export default {
   components: {
-    Navbar,
-    EditEmployee,
-    AddEmployee,
-    AddProduct
+    Navbar: () => import('~/components/Navbar'),
+    AddEmployee: () => import('~/components/AddEmployee'),
+    AddProduct: () => import('~/components/AddProduct'),
   }
 }
 </script>
