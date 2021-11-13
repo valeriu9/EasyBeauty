@@ -1,6 +1,7 @@
 <template>
   <div class='main-container'>
-    <addProduct ref='addProductPopup' :enableOverlayClick='true' />
+    <BaseLoader ref="loader" />
+    <AddProduct ref='addProductPopup' :itemToEdit="itemToEdit" :enableOverlayClick='true' @loadServices="loadServices" @loadProducts="loadProducts" @openLoader="openLoader" @closeLoader="closeLoader" />
     <div class='services-container'>
 
       <div class='product-service-container'>
@@ -15,19 +16,19 @@
           </div>
         </div>
         <div class='items-grid-container'>
-          <div v-for='(product, index) in filteredList' :key='index' @click='addToSaleList(product)' class='items-grid'>
+          <div v-for='(item, index) in filteredList' :key='index' class='items-grid'>
 
             <div class='image-container'>
-              <button class='edit-item-button' type='button' @click='openAddProductModal()'><i class='far fa-edit'></i>
+              <button class='edit-item-button' type='button' @click='openAddProductModal(item)'><i class='far fa-edit'></i>
               </button>
-              <button class='delete-item-button' type='button' @click='deleteItem()'><i class='far fa-trash-alt'></i>
+              <button class='delete-item-button' type='button' @click='deleteItem(item, index)'><i class='far fa-trash-alt'></i>
               </button>
-              <img :src="product.image" class='grid-item-pic' />
-
+              <img :src="item.image" class='grid-item-pic' @click='addToSaleList(item)' />
             </div>
-            <p class='grid-item-name'>{{ product.name }}</p>
-            <p class='grid-item-description'>{{ product.description }}</p>
-            <p class='grid-item-price'>{{ product.price }}DKK</p>
+            <p class='grid-item-name'>{{ item.name }}</p>
+            <p class='grid-item-description'>{{ item.description }}</p>
+            <p v-if="item.duration" class='grid-item-description'>Duration: {{ item.duration }} min</p>
+            <p class='grid-item-price'>{{ item.price }}DKK</p>
 
           </div>
         </div>
@@ -116,8 +117,11 @@
 </template>
 
 <script>
-
+import BaseLoader from '@/components/BaseLoader'
 export default {
+  components:{
+    BaseLoader
+  },
   mounted() {
     let fontScript = document.createElement('script')
     fontScript.setAttribute('src', 'https://kit.fontawesome.com/52311f6e31.js')
@@ -153,13 +157,23 @@ export default {
   },
 
   data() {
-    return { productList: [], serviceList: [], searchText: '', activeTab: 'products', filteredList: [], saleList: [], discount: 0 }
+    return { productList: [], serviceList: [], searchText: '', activeTab: 'products', filteredList: [], saleList: [], discount: 0, itemToEdit:{} }
   },
   layout: 'default',
   methods: {
-
-    openAddProductModal() {
+    openLoader(){
+      this.$refs.loader.open();
+    },
+    closeLoader(){
+      this.$refs.loader.close();
+    },
+    openAddProductModal(item = {}) {
+      this.itemToEdit = {}
       this.$refs.addProductPopup.open()
+      if(Object.keys(item).length !== 0){
+      item.type = this.activeTab;
+      this.itemToEdit = item;
+      }
     },
     closeAddProductModal() {
       this.$refs.addProductPopup.close()
@@ -207,7 +221,6 @@ export default {
       this.saleList.push(item)
     },
     removeItemFromSaleList(index) {
-      console.log(index)
       this.saleList.splice(index, 1)
     },
     async pay(){
@@ -230,11 +243,51 @@ export default {
     },
     async fetchData(){
       try{
+        this.openLoader();
         const products = await this.$axios.get(`http://easybeauty.somee.com/v1/api/Product`);
         this.productList = products.data;
         this.filteredList = this.productList;
         const services = await this.$axios.get(`http://easybeauty.somee.com/v1/api/Service`);
         this.serviceList = services.data;
+        this.closeLoader();
+    } catch(e){
+      console.log(e);
+    }
+  },
+      async loadProducts(){
+      try{
+        this.filteredList = []
+        const products = await this.$axios.get(`http://easybeauty.somee.com/v1/api/Product`);
+        this.productList = products.data;
+        this.filteredList = this.productList;
+        this.closeLoader();
+    } catch(e){
+      console.log(e);
+    }
+  },
+      async loadServices(){
+        try{
+        this.filteredList = []
+        const services = await this.$axios.get(`http://easybeauty.somee.com/v1/api/Service`);
+        this.serviceList = services.data;
+        this.filteredList = this.serviceList;
+        this.closeLoader();
+    } catch(e){
+      console.log(e);
+    }
+  },
+  async deleteItem(item, index){
+   try{
+     if(this.activeTab === 'services'){
+       await this.$axios.delete(`http://easybeauty.somee.com/v1/api/Service/${item.id}`);
+       this.serviceList.splice(index, 1);
+         this.filteredList = this.serviceList
+       }
+       if(this.activeTab === 'products'){
+         await this.$axios.delete(`http://easybeauty.somee.com/v1/api/Product/${item.id}`);
+         this.productList.splice(index, 1);
+         this.filteredList = this.productList
+       }
     } catch(e){
       console.log(e);
     }
@@ -344,6 +397,7 @@ export default {
   display: flex;
   margin: 5px;
   font-size: 0.8vw;
+  z-index: 10;
 }
 
 .search-wrapper button {

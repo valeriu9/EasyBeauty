@@ -52,7 +52,6 @@ export default {
       this.$emit('closed')
     },
     overlayClick() {
-      console.log('overlayclijc')
       if (this.enableOverlayClick) {
         this.close()
       }

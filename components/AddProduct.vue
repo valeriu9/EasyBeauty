@@ -1,12 +1,12 @@
 <template>
-  <popupTemplate ref='popupOpen'>
+  <PopupTemplate ref='popupOpen'>
     <template #body>
       <div class='user-input-wrapper'>
         <div class='image-upload'>
 
           <input type='file' accept='image/*' @change='onChange' />
           <div class='image-preview' id='preview'>
-            <img v-if='tempImg' :src='tempImg' />
+            <img v-if='image' :src='image' />
           </div>
 
         </div>
@@ -21,22 +21,27 @@
           <p class='floating-label'>Price</p>
           <br />
           <select class='product-service-type' v-model="type" name='product-service-type'>
-            <option value='product'>Product</option>
-            <option value='service'>Service</option>
+            <option value='products'>Product</option>
+            <option value='services'>Service</option>
           </select>
+          <div v-if="type === 'services'"> <input type='text' class='inputText' v-model="duration" required />
+            <p class='floating-label'>Duration</p>
+            <br />
+          </div>
+
         </div>
         <div class='button-container'>
           <button class='save-button' @click="saveProduct()">Save</button>
-          <button class='cancel-button'>Cancel</button>
+          <button class='cancel-button' @click="close()">Cancel</button>
         </div>
       </div>
     </template>
-  </popupTemplate>
+  </PopupTemplate>
 </template>
 
 <script>
 
-import popupTemplate from '@/components/popupTemplate'
+import PopupTemplate from '@/components/PopupTemplate'
 
 export default {
   name: 'imageUpload',
@@ -47,7 +52,7 @@ export default {
       document.head.appendChild(fontScript)
     },
     components: {
-      popupTemplate
+      PopupTemplate
     },
 
     layout: 'default',
@@ -55,17 +60,36 @@ export default {
       enableOverlayClick: {
         type: Boolean,
         default: true
+      },
+      itemToEdit:{
+        type: Object,
+        default: ()=>{}
+      }
+    },
+    watch:{
+      itemToEdit(){
+        if(this.itemToEdit.name){
+        this.name = this.itemToEdit.name;
+        this.type = this.itemToEdit.type;
+        this.description = this.itemToEdit.description;
+        this.price = this.itemToEdit.price;
+        this.image = this.itemToEdit.image;
+        this.duration = this.itemToEdit.duration;
+        this.id = this.itemToEdit.id;
+        }
       }
     },
     data() {
       return {
         showModal: false,
-        tempImg: '',
-          name:'',
-          image:'',
-          description:'',
-          price:0,
-          type:'Product'
+        image: '',
+        name:'',
+        image:'',
+        description:'',
+        price:0,
+        type:'products',
+        duration: 0,
+        id:0
       }
     },
     beforeDestroy() {
@@ -80,9 +104,7 @@ export default {
         this.close()
       },
       close() {
-        this.showModal = false
-        window.onscroll = function () {}
-        this.$emit('closed')
+      this.$refs.popupOpen.close()
       },
       overlayClick() {
         if (this.enableOverlayClick) {
@@ -90,27 +112,71 @@ export default {
         }
       },
     async saveProduct(){
-      this.$refs.popupOpen.close()
-      const imgbbUploader = require("imgbb-uploader");
+      if(this.type === 'services' && (this.name === '', this.price === 0, this.image === '', this.duration === 0)){
+        window.alert("Complete all the fields before saving")
+        return
+      } else if(this.type === 'products' && (this.name === '', this.price === 0, this.image === '')){
+        window.alert("Complete all the fields before saving")
+        return
+      }
+      if (!this.itemToEdit.name){
+        const imgbbUploader = require("imgbb-uploader");
       const options = {
         apiKey: '44be07cc6bc3fb0585b6e9f1b2cce6b6',
-        base64string: this.tempImg.replace("data:", "").replace(/^.+,/, "")
+        base64string: this.image.replace("data:", "").replace(/^.+,/, "")
       }
-      imgbbUploader(options)
-        .then((response) => {this.image = response.medium.url
+        imgbbUploader(options)
+        .then((response) => {
+          this.image = response.medium.url
+          try{
+            if(this.type === 'products'){
+              this.$emit('openLoader');
+              this.$axios.post(`http://easybeauty.somee.com/v1/api/Product`,{name : this.name, description: this.description, price: this.price, image: this.image});
+              this.$refs.popupOpen.close()
+            setTimeout(() => {
+              this.$emit('loadProducts');
+             }, 1000);
+            } else {
+              this.$axios.post(`http://easybeauty.somee.com/v1/api/Service`,{name : this.name, description: this.description, price: this.price, duration: this.duration, image: this.image});
+              setTimeout(() => {
+                this.$emit('loadServices');
+              }, 1000);
+            }
+          } catch(e){
+            console.log(e);
+        this.$emit('closeLoader');
+          }
+      }).catch((error) => console.error(error),
+        this.$emit('closeLoader')
+      );
+      }
+      else {
         try{
-          this.$axios.post(`http://easybeauty.somee.com/v1/api/Product`,{name : this.name, description: this.description, price: this.price, image: this.image});
-        } catch(e){
-          console.log(e);
-        }
-      }).catch((error) => console.error(error));
+          if(this.type === 'products'){
+            this.$emit('openLoader');
+            this.$axios.put(`http://easybeauty.somee.com/v1/api/Product/${this.itemToEdit.id}`,{name : this.name, description: this.description, price: this.price, image: this.image});
+               this.$refs.popupOpen.close()
+             setTimeout(() => {
+               this.$emit('loadProducts');
+             }, 1000);
+            } else {
+              this.$axios.put(`http://easybeauty.somee.com/v1/api/Service/${this.itemToEdit.id}`,{name : this.name, description: this.description, price: this.price, duration: this.duration, image: this.image});
+              setTimeout(() => {
+                this.$emit('loadServices');
+              }, 1000);
+            }
+          } catch(e){
+            console.log(e);
+            this.$emit('closeLoader');
+          }
+      }
       },
       onChange(e) {
         var file = e.target.files[0];
         var reader = new FileReader();
         reader.readAsDataURL(file);
         setTimeout(() => {
-          this.tempImg = reader.result
+          this.image = reader.result
         }, 1000);
       }
     }

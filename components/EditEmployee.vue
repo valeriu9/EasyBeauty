@@ -1,5 +1,5 @@
 <template>
-  <popupTemplate ref='popupOpen'>
+  <PopupTemplate ref='popupOpen'>
     <template #body>
       <AddEmployee ref='AddEmployeePopup' :enableOverlayClick='true' />
       <div class='edit-employee-navbar'>
@@ -39,18 +39,18 @@
 
       </div>
     </template>
-  </popupTemplate>
+  </PopupTemplate>
 </template>
 
 <script>
 
-import popupTemplate from '@/components/popupTemplate'
+import PopupTemplate from '@/components/PopupTemplate'
 import AddEmployee from '@/components/AddEmployee'
 
 export default {
 
   components: {
-    popupTemplate,
+    PopupTemplate,
     AddEmployee
   },
 
@@ -108,7 +108,6 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-
 .edit-employee-navbar {
   overflow: hidden;
   display: flex;

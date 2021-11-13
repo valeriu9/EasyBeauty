@@ -1,10 +1,10 @@
 <template>
-  <popupTemplate ref='popupOpen'>
+  <PopupTemplate ref='popupOpen'>
     <template #body>
       <EditAppointment ref='EditAppointmentPopup' :enableOverlayClick='true' />
       <div class='appointment-navbar'>
         <button class='add-appointment-button' type='button' @click='openAddAppointmentModal()'><i
-          class='fas fa-plus'></i>
+            class='fas fa-plus'></i>
           <p>Add Appointment</p>
         </button>
       </div>
@@ -13,7 +13,7 @@
           <button class='edit-appointment' type='button' @click='openAddAppointmentModal()'><i class='far fa-edit'></i>
           </button>
           <button class='delete-appointment' type='button' @click='removeappointment(index)'><i
-            class='far fa-trash-alt'></i>
+              class='far fa-trash-alt'></i>
           </button>
           <div class='appointment-details'>
             <p class='appointment-name'>Big cut</p>
@@ -26,7 +26,7 @@
           <button class='edit-appointment' type='button' @click='openAddAppointmentModal()'><i class='far fa-edit'></i>
           </button>
           <button class='delete-appointment' type='button' @click='removeappointment(index)'><i
-            class='far fa-trash-alt'></i>
+              class='far fa-trash-alt'></i>
           </button>
           <div class='appointment-details'>
             <p class='appointment-name'>Big cut</p>
@@ -38,18 +38,18 @@
 
       </div>
     </template>
-  </popupTemplate>
+  </PopupTemplate>
 </template>
 
 <script>
 
-import popupTemplate from '@/components/popupTemplate'
+import PopupTemplate from '@/components/PopupTemplate'
 import EditAppointment from '@/components/EditAppointment'
 
 export default {
 
   components: {
-    popupTemplate,
+    PopupTemplate,
     EditAppointment
   },
 
@@ -107,7 +107,6 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-
 .appointment-navbar {
   overflow: hidden;
   display: flex;

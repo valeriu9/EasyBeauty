@@ -1,5 +1,5 @@
 <template>
-  <popupTemplate ref='popupOpen'>
+  <PopupTemplate ref='popupOpen'>
     <template #body>
       <div class='user-input-wrp'>
         <div class='employee-details'>
@@ -24,17 +24,17 @@
 
       </div>
     </template>
-  </popupTemplate>
+  </PopupTemplate>
 </template>
 
 <script>
 
-import popupTemplate from '@/components/popupTemplate'
+import PopupTemplate from '@/components/PopupTemplate'
 
 export default {
 
   components: {
-    popupTemplate
+    PopupTemplate
   },
 
   mounted() {
@@ -87,7 +87,6 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-
 .employee-details {
   margin: 0 40px;
 }
@@ -146,5 +145,4 @@ export default {
   opacity: 1;
   color: #6a6a6a;
 }
-
 </style>
