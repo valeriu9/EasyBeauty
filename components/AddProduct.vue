@@ -6,32 +6,29 @@
 
           <input type='file' accept='image/*' @change='onChange' />
           <div class='image-preview' id='preview'>
-            <img v-if='item.imageUrl' :src='item.imageUrl' />
+            <img v-if='tempImg' :src='tempImg' />
           </div>
-
 
         </div>
         <div class='productService-details'>
-          <input type='text' class='inputText' required />
+          <input type='text' class='inputText' v-model="name" required />
           <p class='floating-label'>Product Name</p>
           <br />
-          <input type='text' class='inputText' required />
+          <input type='text' class='inputText' v-model="description" required />
           <p class='floating-label'>Product Description</p>
           <br />
-          <input type='text' class='inputText' required />
+          <input type='text' class='inputText' v-model="price" required />
           <p class='floating-label'>Price</p>
           <br />
-
-          <select class='product-service-type' name='product-service-type'>
+          <select class='product-service-type' v-model="type" name='product-service-type'>
             <option value='product'>Product</option>
             <option value='service'>Service</option>
           </select>
         </div>
         <div class='button-container'>
-          <button class='save-button'>Save</button>
+          <button class='save-button' @click="saveProduct()">Save</button>
           <button class='cancel-button'>Cancel</button>
         </div>
-
       </div>
     </template>
   </popupTemplate>
@@ -45,65 +42,83 @@ export default {
   name: 'imageUpload',
 
   mounted() {
-    let fontScript = document.createElement('script')
-    fontScript.setAttribute('src', 'https://kit.fontawesome.com/52311f6e31.js')
-    document.head.appendChild(fontScript)
-  },
-  components: {
-    popupTemplate
-  },
-
-  layout: 'default',
-  props: {
-    enableOverlayClick: {
-      type: Boolean,
-      default: true
-    }
-  },
-  data() {
-    return {
-      showModal: false,
-      item: {
-        //...
-        image: null,
-        imageUrl: null
-      }
-    }
-  },
-  beforeDestroy() {
-    this.close()
-  },
-  methods: {
-    open() {
-      this.$refs.popupOpen.open()
+      let fontScript = document.createElement('script')
+      fontScript.setAttribute('src', 'https://kit.fontawesome.com/52311f6e31.js')
+      document.head.appendChild(fontScript)
     },
-    closeButtonClicked() {
-      this.$emit('close-button-clicked')
+    components: {
+      popupTemplate
+    },
+
+    layout: 'default',
+    props: {
+      enableOverlayClick: {
+        type: Boolean,
+        default: true
+      }
+    },
+    data() {
+      return {
+        showModal: false,
+        tempImg: '',
+          name:'',
+          image:'',
+          description:'',
+          price:0,
+          type:'Product'
+      }
+    },
+    beforeDestroy() {
       this.close()
     },
-    close() {
-      this.showModal = false
-      window.onscroll = function() {
-      }
-      this.$emit('closed')
-    },
-    overlayClick() {
-      console.log('overlayclijc')
-      if (this.enableOverlayClick) {
+    methods: {
+      open() {
+        this.$refs.popupOpen.open()
+      },
+      closeButtonClicked() {
+        this.$emit('close-button-clicked')
         this.close()
+      },
+      close() {
+        this.showModal = false
+        window.onscroll = function () {}
+        this.$emit('closed')
+      },
+      overlayClick() {
+        if (this.enableOverlayClick) {
+          this.close()
+        }
+      },
+    async saveProduct(){
+      this.$refs.popupOpen.close()
+      const imgbbUploader = require("imgbb-uploader");
+      const options = {
+        apiKey: '44be07cc6bc3fb0585b6e9f1b2cce6b6',
+        base64string: this.tempImg.replace("data:", "").replace(/^.+,/, "")
       }
-    },
-    onChange(e) {
-      const file = e.target.files[0]
-      this.image = file
-      this.item.imageUrl = URL.createObjectURL(file)
+      imgbbUploader(options)
+        .then((response) => {this.image = response.medium.url
+        try{
+          this.$axios.post(`http://easybeauty.somee.com/v1/api/Product`,{name : this.name, description: this.description, price: this.price, image: this.image});
+        } catch(e){
+          console.log(e);
+        }
+      }).catch((error) => console.error(error));
+      },
+      onChange(e) {
+        var file = e.target.files[0];
+        var reader = new FileReader();
+        reader.readAsDataURL(file);
+        setTimeout(() => {
+          this.tempImg = reader.result
+        }, 1000);
+      }
     }
+
   }
-}
 </script>
 
 <style lang='scss' scoped>
-
 .productService-details {
   width: 50%;
   right: 25px;
@@ -132,7 +147,7 @@ export default {
   height: 55%;
   justify-content: center;
   display: flex;
-  background-image: url("assets/images/image-upload.png");
+  background-image: url('assets/images/image-upload.png');
   background-position: center;
   background-size: 50%;
   background-repeat: no-repeat;
@@ -146,7 +161,6 @@ export default {
   position: fixed;
   bottom: 20px;
   right: 20px;
-
 }
 
 .button-container button {
@@ -158,7 +172,6 @@ export default {
 .user-input-wrapper {
   position: fixed;
   width: 40%;
-
 }
 
 .user-input-wrapper .inputText {
@@ -191,5 +204,4 @@ export default {
   opacity: 1;
   color: #6a6a6a;
 }
-
 </style>

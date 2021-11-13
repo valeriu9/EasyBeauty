@@ -22,7 +22,7 @@
               </button>
               <button class='delete-item-button' type='button' @click='deleteItem()'><i class='far fa-trash-alt'></i>
               </button>
-              <img :src="'data:image/jpeg;base64,'+ product.image" class='grid-item-pic' />
+              <img :src="product.image" class='grid-item-pic' />
 
             </div>
             <p class='grid-item-name'>{{ product.name }}</p>
@@ -212,8 +212,15 @@ export default {
     },
     async pay(){
       try{
-     const res = await this.$axios.post('http://easybeauty.somee.com/v1/api/Payment',{"amount":23132})
-    console.log(res.data);
+        if(this.total === 0) return
+     const res = await this.$axios.post('http://easybeauty.somee.com/v1/api/Payment',{"amount":this.total})
+    if(res.data.error){
+      window.alert(res.data.error)
+    }
+    else{
+      this.saleList = [];
+      window.alert(res.data.succes)
+    }
     } catch(e){
       console.log(e);
     }
@@ -224,14 +231,6 @@ export default {
     async fetchData(){
       try{
         const products = await this.$axios.get(`http://easybeauty.somee.com/v1/api/Product`);
-        // products.data.forEach(data =>{
-        //   data.image = 'data:image/jpeg;base64,' + btoa(
-        //     new Uint8Array(data.image)
-        //     .reduce((data, byte) => data + String.fromCharCode(byte), '')
-        // );
-        // });
-           console.log(products.data);
-
         this.productList = products.data;
         this.filteredList = this.productList;
         const services = await this.$axios.get(`http://easybeauty.somee.com/v1/api/Service`);
@@ -239,9 +238,6 @@ export default {
     } catch(e){
       console.log(e);
     }
-  },
-  convertFromBlob(){
-
   }
   }
 }

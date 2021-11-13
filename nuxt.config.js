@@ -50,6 +50,14 @@ export default {
     loaders: {
       scss: { sourceMap: false },
     },
+    extend (config, { isDev, isClient }) {
+
+      config.node = {
+        fs: 'empty'
+      }
+
+      // ....
+    }
   },
   extend (config, { isDev, isClient, loaders: { vue } }) {
     if (isClient) {
