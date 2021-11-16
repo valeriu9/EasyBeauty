@@ -27,10 +27,13 @@
               </button>
               <img :src="item.image" class='grid-item-pic' @click='addToSaleList(item)' />
             </div>
-            <p class='grid-item-name'>{{ item.name }}</p>
-            <p class='grid-item-description'>{{ item.description }}</p>
-            <p v-if="item.duration" class='grid-item-description'>Duration: {{ item.duration }} min</p>
-            <p class='grid-item-price'>{{ item.price }}DKK</p>
+            <div class='item-container'>
+              <p class='grid-item-name'>{{ item.name }}</p>
+              <p class='grid-item-description'>{{ item.description }}</p>
+              <p v-if="item.duration" class='grid-item-duration'>Duration: {{ item.duration }} min</p>
+              <p class='grid-item-price'>{{ item.price }}DKK</p>
+            </div>
+
           </div>
         </div>
         <div id='Services' class='tabcontent'>
@@ -41,10 +44,11 @@
         </div>
       </div>
       <div class='tab'>
-        <button id='defaultOpen' class='tablinks' @click="switchTab('services')"><i class='fas fa-cut'></i>
+        <button id='defaultOpen' class='tablinks'
+                @click.prevent="setActive('services')" :class="{ active: isActive('services') }" @click="switchTab('services')"><i class='fas fa-cut'></i>
           <p> Services</p>
         </button>
-        <button class='tablinks' @click="switchTab('products')"><i class='fas fa-spray-can'></i>
+        <button class='tablinks' @click.prevent="setActive('products')" :class="{ active: isActive('products') }" @click="switchTab('products')"><i class='fas fa-spray-can'></i>
           <p>
             Products
           </p>
@@ -82,7 +86,7 @@
         <div class='cart-price-container'>
           <div class='price-wrapper'>
             <p>Discount (%)</p>
-            <input name='discount' :value="discount" @input="e => discount = e.target.value" type='number'>
+            <input  name='discount' :value="discount" @input="e => discount = e.target.value" type='number' min="0" max="100">
           </div>
           <div class='price-wrapper'>
             <p>Total without taxes</p>
@@ -114,7 +118,8 @@
 import BaseLoader from '@/components/BaseLoader'
 
 export default {
-  components: {
+
+    components: {
     BaseLoader
   },
   mounted() {
@@ -157,9 +162,10 @@ export default {
       activeTab: 'products',
       filteredList: [],
       saleList: [],
-      discount: 0,
+      discount: null,
       itemToEdit: {}
     }
+
   },
   layout: 'default',
   methods: {
@@ -191,6 +197,13 @@ export default {
         this.activeTab = 'products'
       }
     },
+    isActive (menuItem) {
+      return this.activeItem === menuItem
+    },
+    setActive (menuItem) {
+      this.activeItem = menuItem
+    },
+
     increaseValue(index) {
 
       const temp = JSON.parse(JSON.stringify(this.saleList))
@@ -314,6 +327,14 @@ export default {
   position: fixed;
 }
 
+.item-container{
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
 .services-container {
   width: 70%;
   margin: 10px;
@@ -339,6 +360,7 @@ export default {
 
 .product-service-container {
   height: 100%;
+  max-height: 80%;
   background-color: white;
   box-shadow: 0 10px 16px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%) !important;
   border-radius: 5px;
@@ -350,7 +372,9 @@ export default {
   overflow-y: scroll;
   display: grid;
   grid-template-columns: auto auto auto auto auto;
+  max-height: 89%;
 }
+
 
 .items-grid {
   display: flex;
@@ -360,14 +384,16 @@ export default {
   font-size: 0.8vw;
   margin: 10px;
   position: relative;
+  width: 10vw;
+  height: 80%;
 }
 
 .grid-item-pic {
   border: 2px solid lightgray;
   border-radius: 5px;
   padding: 5px;
-  height: 120px;
-  width: 120px;
+  height: 140px;
+  width: 130px;
   object-fit: cover;
 }
 
@@ -378,12 +404,22 @@ export default {
 .grid-item-name {
   font-weight: 600;
   margin: 10px;
+  width: 80%;
+  margin-top: 0;
+  height: 25px;
+}
+
+.grid-item-description{
+  word-wrap: break-word;
+  margin: 10px;
+  margin-top: 0;
+  height: 30px;
 }
 
 .grid-item-price {
   color: lightseagreen;
   font-weight: 600;
-  margin: 4px;
+  margin: 10px;
 }
 
 .edit-item-button {
@@ -468,11 +504,13 @@ export default {
   align-items: center;
   justify-content: center;
   color: gray;
+  position: relative;
 }
 
 .item-name i {
   margin: 0 10px;
-
+  position: absolute;
+  left: 0;
 }
 
 .item-price {
@@ -559,8 +597,9 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 /* Create an active/current tablink class */
-.tab button.active {
-  background-color: #ccc;
+.tab button:active {
+  color: lightseagreen;
+  border: lightseagreen solid thick;
 }
 
 /* Style the tab content */
@@ -584,6 +623,7 @@ input[type="number"]::-webkit-outer-spin-button {
   background-color: white;
   box-shadow: 0 10px 16px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%) !important;
   border-radius: 5px;
+  max-height: 80%;
 }
 
 .item-list {
@@ -644,7 +684,8 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .cart-price-container .price-wrapper input {
-  width: 20px;
+  width: 35px;
+  -moz-appearance: textfield;
 }
 
 .checkout-buttons {
@@ -707,5 +748,7 @@ input[type="number"]::-webkit-outer-spin-button {
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
+
+
 
 </style>
