@@ -1,5 +1,5 @@
 {
-  "onSave": false,
+  "onSave": true,
   "javascript": {
     "indent_size": 14,
     "indent_char": " ",
@@ -18,7 +18,8 @@
     "e4x": false,
     "end_with_newline": false,
     "comma_first": false,
-    "brace_style": "collapse-preserve-inline"
+    "brace_style": "collapse-preserve-inline",
+    "beatify.enable": false
   },
   "css": {
     "indent_size": 4,

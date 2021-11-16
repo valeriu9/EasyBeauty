@@ -1,59 +1,56 @@
 <template>
   <div class='main-container'>
-      <div class='form-card'>
-        <div class='form-picture'></div>
-        <div class='form-details'>
-          <div class='form-title'>
-           <h2> Book Appointment</h2>
-          </div>
-          <form class='user-form'>
-            <div class='input-group'>
-              <input placeholder='First Name'>
-            </div>
-            <div class='input-group'>
-              <input placeholder='Phone number'>
-            </div>
-            <div class='input-group'>
-              <input placeholder='Email (optional)'>
-            </div>
-            <div class='input-group'>
-              <select class='selection'>
-                <option value="" selected disabled>Employee</option>
-                <option value="employee">Aleks</option>
-                <option value="employee">Eric</option>
-                <option value="employee">Valera</option>
-              </select>
-            </div>
-            <div class='input-group'>
-              <select class='selection'>
-                <option value="" selected disabled>Employee Timeframe</option>
-                <option value="timeframe">0800</option>
-                <option value="timeframe">1200</option>
-                <option value="timeframe">1400</option>
-              </select>
-            </div>
-            <div class='input-group'>
-              <select class='selection'>
-                <option value="" selected disabled>Service Type</option>
-                <option value="serviceType">Long hair</option>
-                <option value="serviceType">Short hair</option>
-                <option value="serviceType">Painting</option>
-              </select>
-            </div>
-            <div class='input-group'>
-              <input placeholder='Note (optional)'>
-            </div>
-              <button>Send Appointment</button>
-          </form>
+    <div class='form-card'>
+      <div class='form-picture'></div>
+      <div class='form-details'>
+        <div class='form-title'>
+          <h2> Book Appointment</h2>
         </div>
+        <form class='user-form'>
+          <div class='input-group'>
+            <input placeholder='First Name'>
+          </div>
+          <div class='input-group'>
+            <input placeholder='Phone number'>
+          </div>
+          <div class='input-group'>
+            <input placeholder='Email (optional)'>
+          </div>
+          <div class='input-group'>
+            <select class='selection'>
+              <option value="" selected disabled>Employee</option>
+              <option value="employee">Aleks</option>
+              <option value="employee">Eric</option>
+              <option value="employee">Valera</option>
+            </select>
+          </div>
+          <div class='input-group'>
+            <select class='selection'>
+              <option value="" selected disabled>Service Type</option>
+              <option value="serviceType">Long hair</option>
+              <option value="serviceType">Short hair</option>
+              <option value="serviceType">Painting</option>
+            </select>
+          </div>
+          <div class='input-group'>
+            <input placeholder='Note (optional)'>
+          </div>
+          <button>Send Appointment</button>
+        </form>
       </div>
+    </div>
+    <Calendar />
   </div>
 </template>
 
 <script>
 
-export default {
+import Calendar from '@/components/Calendar'
 
+export default {
+  components: {
+    Calendar
+  },
   mounted() {
     let fontScript = document.createElement('script')
     fontScript.setAttribute('src', 'https://kit.fontawesome.com/52311f6e31.js')
@@ -61,7 +58,7 @@ export default {
   },
 
 
-  layout: 'default',
+  layout: 'empty',
   props: {
     enableOverlayClick: {
       type: Boolean,
@@ -71,15 +68,14 @@ export default {
 }
 </script>
 
-<style>
-
-.main-container{
+<style lang="scss" scoped>
+.main-container {
   min-height: 100vh;
   display: flex;
   align-items: center;
 }
 
-.form-card{
+.form-card {
   background: black;
   border-radius: 10px;
   box-shadow: 0px 8px 20px 0px rgb(0 0 0 / 15%);
@@ -89,28 +85,28 @@ export default {
   margin: 0 auto;
 }
 
-.form-picture{
+.form-picture {
   width: 50%;
   display: table-cell;
-  background-image: url("assets/images/hairsalon.jpg");
+  background-image: url('assets/images/hairsalon.jpg');
 }
 
-.form-details{
+.form-details {
   padding: 30px 65px;
   display: table-cell;
 }
-.form-title{
+.form-title {
   font-size: 24px;
   color: #fff;
   font-weight: 400;
   margin-bottom: 36px;
 }
-.input-group{
+.input-group {
   position: relative;
   margin-bottom: 33px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
-.input-group input{
+.input-group input {
   outline: none;
   margin: 0;
   border: none;
@@ -123,7 +119,7 @@ export default {
   background: transparent;
 }
 
-.selection{
+.selection {
   background: transparent;
   cursor: pointer;
   color: gray;
@@ -134,11 +130,11 @@ export default {
   margin: 2px -4px;
 }
 
-.selection:focus{
+.selection:focus {
   color: white;
 }
 
-.selection option{
+.selection option {
   color: #000;
   background: #fff;
 }
@@ -146,7 +142,7 @@ export default {
   color: gray;
 }
 
-.user-form button{
+.user-form button {
   border-radius: 20px;
   background: #c19d75;
   display: inline-block;
@@ -158,5 +154,4 @@ export default {
   font-size: 18px;
   border: none;
 }
-
 </style>

@@ -19,7 +19,7 @@ export default {
 
   layout: 'default',
   props: {
-    enableOverlayClick: {
+      enableOverlayClick: {
       type: Boolean,
       default: true
     }

@@ -82,7 +82,7 @@
         <div class='cart-price-container'>
           <div class='price-wrapper'>
             <p>Discount (%)</p>
-            <input name='discount' :value="discount" @input="e => discount = e.target.value" type='number'>
+            <input name='discount' :value="discount" @input="e => discount = e.target.value" type='number' min="0" max="5">
           </div>
           <div class='price-wrapper'>
             <p>Total without taxes</p>
@@ -299,7 +299,7 @@ export default {
 }
 </script>
 
-<style lang='css' scoped>
+<style lang='scss' scoped>
 .fa {
   color: white;
   line-height: 1.4;
@@ -409,7 +409,6 @@ export default {
   margin: 10px;
 }
 
-
 .service-navbar .search-wrapper {
   margin-left: auto;
   align-items: center;
@@ -425,13 +424,12 @@ export default {
   background-color: transparent;
 }
 
-
 .service-navbar input:hover {
   background-color: #ddd;
   color: black;
 }
 
-.service-navbar input[type=text] {
+.service-navbar input[type='text'] {
   padding: 6px;
   font-size: 17px;
   border: none;
@@ -472,7 +470,6 @@ export default {
 
 .item-name i {
   margin: 0 10px;
-
 }
 
 .item-price {
@@ -523,12 +520,11 @@ input#number {
   font-size: 0.8vw;
 }
 
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button {
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
-
 
 /* Style the tab */
 .tab {
@@ -668,7 +664,6 @@ input[type="number"]::-webkit-outer-spin-button {
   border: darkred solid medium;
   font-size: 16px;
   width: 10vw;
-
 }
 
 .pay-order {
@@ -707,5 +702,4 @@ input[type="number"]::-webkit-outer-spin-button {
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
-
 </style>
