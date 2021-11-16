@@ -11,10 +11,10 @@
 
         </div>
         <div class='productService-details'>
-          <input type='text' class='inputText' v-model="name" required />
+          <input type='text' class='inputText' v-model="name" required maxlength="25"/>
           <p class='floating-label'>Product Name</p>
           <br />
-          <input type='text' class='inputText' v-model="description" required />
+          <input type='text' class='inputText' v-model="description" required maxlength="40"/>
           <p class='floating-label'>Product Description</p>
           <br />
           <input type='number' class='inputText' v-model="price" required />
@@ -81,7 +81,6 @@ export default {
       showModal: false,
       image: '',
       name: '',
-      image: '',
       description: '',
       price: null,
       type: 'products',
@@ -115,7 +114,7 @@ export default {
         }
         imgbbUploader(options)
           .then((response) => {
-            this.image = response.medium.url
+            this.image = response.image.url
             try {
               if (this.type === 'products') {
                 this.$emit('openLoader');
