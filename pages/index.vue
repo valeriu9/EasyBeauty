@@ -337,17 +337,17 @@ export default {
 
 .services-container {
   width: 70%;
-  margin: 10px;
   display: flex;
   flex-direction: column;
   background-color: transparent;
+  margin: 10px 10px 10px 70px;
 }
 
 .checkout-container {
   width: 30%;
   display: flex;
   flex-direction: column;
-  margin: 10px;
+  margin: 10px 70px 10px 10px;
 }
 
 .service-navbar {
