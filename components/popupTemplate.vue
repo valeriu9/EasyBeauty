@@ -19,7 +19,7 @@ export default {
 
   layout: 'default',
   props: {
-      enableOverlayClick: {
+    enableOverlayClick: {
       type: Boolean,
       default: true
     }
@@ -90,7 +90,7 @@ export default {
   padding: 15px;
   width: 60%;
   overflow: auto;
-  height: 60%;
+  height: 80%;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);

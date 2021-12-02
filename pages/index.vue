@@ -1,8 +1,8 @@
 <template>
   <div class='main-container'>
-    <BaseLoader ref="loader" />
-    <AddProduct ref='addProductPopup' :itemToEdit="itemToEdit" :enableOverlayClick='true' @loadServices="loadServices"
-      @loadProducts="loadProducts" @openLoader="openLoader" @closeLoader="closeLoader" />
+    <BaseLoader ref='loader' />
+    <AddProduct ref='addProductPopup' :itemToEdit='itemToEdit' :enableOverlayClick='true' @loadServices='loadServices'
+                @loadProducts='loadProducts' @openLoader='openLoader' @closeLoader='closeLoader' />
     <div class='services-container'>
       <div class='product-service-container'>
         <div class='service-navbar'>
@@ -11,7 +11,7 @@
           </button>
           <div class='search-wrapper'>
             <input name='search' :value='searchText' @input='e => searchText = e.target.value' placeholder='Search..'
-              type='text'>
+                   type='text'>
             <button type='submit' @click='search()'><i class='fa fa-search'></i></button>
           </div>
         </div>
@@ -20,17 +20,17 @@
 
             <div class='image-container'>
               <button class='edit-item-button' type='button' @click='openAddProductModal(item)'><i
-                  class='far fa-edit'></i>
+                class='far fa-edit'></i>
               </button>
               <button class='delete-item-button' type='button' @click='deleteItem(item, index)'><i
-                  class='far fa-trash-alt'></i>
+                class='far fa-trash-alt'></i>
               </button>
-              <img :src="item.image" class='grid-item-pic' @click='addToSaleList(item)' />
+              <img :src='item.image' class='grid-item-pic' @click='addToSaleList(item)' />
             </div>
             <div class='item-container'>
               <p class='grid-item-name'>{{ item.name }}</p>
               <p class='grid-item-description'>{{ item.description }}</p>
-              <p v-if="item.duration" class='grid-item-duration'>Duration: {{ item.duration }} min</p>
+              <p v-if='item.duration' class='grid-item-duration'>Duration: {{ item.duration }} min</p>
               <p class='grid-item-price'>{{ item.price }}DKK</p>
             </div>
 
@@ -45,10 +45,12 @@
       </div>
       <div class='tab'>
         <button id='defaultOpen' class='tablinks'
-          @click.prevent="setActive('services')" :class="{ active: isActive('services') }" @click="switchTab('services')"><i class='fas fa-cut'></i>
+                @click.prevent="setActive('services')" :class="{ active: isActive('services') }"
+                @click="switchTab('services')"><i class='fas fa-cut'></i>
           <p> Services</p>
         </button>
-        <button class='tablinks' @click.prevent="setActive('products')" :class="{ active: isActive('products') }" @click="switchTab('products')"><i class='fas fa-spray-can'></i>
+        <button class='tablinks' @click.prevent="setActive('products')" :class="{ active: isActive('products') }"
+                @click="switchTab('products')"><i class='fas fa-spray-can'></i>
           <p>
             Products
           </p>
@@ -86,19 +88,20 @@
         <div class='cart-price-container'>
           <div class='price-wrapper'>
             <p>Discount (%)</p>
-            <input name='discount' :value="discount" @input="e => discount = e.target.value" type='number' min="0" max="100">
+            <input name='discount' :value='discount' @input='e => discount = e.target.value' type='number' min='0'
+                   max='100'>
           </div>
           <div class='price-wrapper'>
             <p>Total without taxes</p>
-            <p>{{totalBeforeTax}}dkk</p>
+            <p>{{ totalBeforeTax }}dkk</p>
           </div>
           <div class='price-wrapper'>
             <p>Tax</p>
-            <p>{{taxes}}dkk</p>
+            <p>{{ taxes }}dkk</p>
           </div>
           <div class='total-price-wrapper'>
             <p class='total-price'>Total </p>
-            <p class='total-price-amount'>{{total}}dkk</p>
+            <p class='total-price-amount'>{{ total }}dkk</p>
           </div>
         </div>
       </div>
@@ -107,7 +110,7 @@
           <p> Cancel Order </p>
         </button>
         <button class='pay-order' type='button' @click='pay()'>
-          <p> Pay ({{total}} DKK) </p>
+          <p> Pay ({{ total }} DKK) </p>
         </button>
       </div>
     </div>
@@ -119,14 +122,14 @@ import BaseLoader from '@/components/BaseLoader'
 
 export default {
 
-    components: {
+  components: {
     BaseLoader
   },
   mounted() {
     let fontScript = document.createElement('script')
     fontScript.setAttribute('src', 'https://kit.fontawesome.com/52311f6e31.js')
     document.head.appendChild(fontScript)
-    this.fetchData();
+    this.fetchData()
   },
   computed: {
     totalBeforeTax() {
@@ -146,8 +149,8 @@ export default {
       return result
     },
     total() {
-      if (this.discount === 0 || this.discount === "") {
-        return this.totalBeforeTax + this.taxes;
+      if (this.discount === 0 || this.discount === '') {
+        return this.totalBeforeTax + this.taxes
       } else {
         return (this.totalBeforeTax + this.taxes) * (1 - (this.discount / 100))
       }
@@ -170,17 +173,17 @@ export default {
   layout: 'default',
   methods: {
     openLoader() {
-      this.$refs.loader.open();
+      this.$refs.loader.open()
     },
     closeLoader() {
-      this.$refs.loader.close();
+      this.$refs.loader.close()
     },
     openAddProductModal(item = {}) {
       this.itemToEdit = {}
       this.$refs.addProductPopup.open()
       if (Object.keys(item).length !== 0) {
-        item.type = this.activeTab;
-        this.itemToEdit = item;
+        item.type = this.activeTab
+        this.itemToEdit = item
       }
     },
     closeAddProductModal() {
@@ -197,10 +200,10 @@ export default {
         this.activeTab = 'products'
       }
     },
-    isActive (menuItem) {
+    isActive(menuItem) {
       return this.activeItem === menuItem
     },
-    setActive (menuItem) {
+    setActive(menuItem) {
       this.activeItem = menuItem
     },
 
@@ -208,7 +211,7 @@ export default {
 
       const temp = JSON.parse(JSON.stringify(this.saleList))
       temp[index].price = temp[index].price + this.saleList[index].initialPrice
-      console.log(temp[index].price + "and " + this.saleList[index].initialPrice);
+      console.log(temp[index].price + 'and ' + this.saleList[index].initialPrice)
       temp[index].quantity++
       this.saleList = []
       this.saleList = temp
@@ -242,70 +245,70 @@ export default {
       try {
         if (this.total === 0) return
         const res = await this.$axios.post('http://easybeauty.somee.com/v1/api/Payment', {
-          "amount": this.total
+          'amount': this.total
         })
         if (res.data.error) {
           window.alert(res.data.error)
         } else {
-          this.saleList = [];
+          this.saleList = []
           window.alert(res.data.succes)
         }
       } catch (e) {
-        console.log(e);
+        console.log(e)
       }
     },
     resetSalesList() {
-      this.saleList = [];
+      this.saleList = []
     },
     async fetchData() {
       try {
-        this.openLoader();
-        const products = await this.$axios.get(`http://easybeauty.somee.com/v1/api/Product`);
-        this.productList = products.data;
-        this.filteredList = this.productList;
-        const services = await this.$axios.get(`http://easybeauty.somee.com/v1/api/Service`);
-        this.serviceList = services.data;
-        this.closeLoader();
+        this.openLoader()
+        const products = await this.$axios.get(`http://easybeauty.somee.com/v1/api/Product`)
+        this.productList = products.data
+        this.filteredList = this.productList
+        const services = await this.$axios.get(`http://easybeauty.somee.com/v1/api/Service`)
+        this.serviceList = services.data
+        this.closeLoader()
       } catch (e) {
-        console.log(e);
+        console.log(e)
       }
     },
     async loadProducts() {
       try {
         this.filteredList = []
-        const products = await this.$axios.get(`http://easybeauty.somee.com/v1/api/Product`);
-        this.productList = products.data;
-        this.filteredList = this.productList;
-        this.closeLoader();
+        const products = await this.$axios.get(`http://easybeauty.somee.com/v1/api/Product`)
+        this.productList = products.data
+        this.filteredList = this.productList
+        this.closeLoader()
       } catch (e) {
-        console.log(e);
+        console.log(e)
       }
     },
     async loadServices() {
       try {
         this.filteredList = []
-        const services = await this.$axios.get(`http://easybeauty.somee.com/v1/api/Service`);
-        this.serviceList = services.data;
-        this.filteredList = this.serviceList;
-        this.closeLoader();
+        const services = await this.$axios.get(`http://easybeauty.somee.com/v1/api/Service`)
+        this.serviceList = services.data
+        this.filteredList = this.serviceList
+        this.closeLoader()
       } catch (e) {
-        console.log(e);
+        console.log(e)
       }
     },
     async deleteItem(item, index) {
       try {
         if (this.activeTab === 'services') {
-          await this.$axios.delete(`http://easybeauty.somee.com/v1/api/Service/${item.id}`);
-          this.serviceList.splice(index, 1);
+          await this.$axios.delete(`http://easybeauty.somee.com/v1/api/Service/${item.id}`)
+          this.serviceList.splice(index, 1)
           this.filteredList = this.serviceList
         }
         if (this.activeTab === 'products') {
-          await this.$axios.delete(`http://easybeauty.somee.com/v1/api/Product/${item.id}`);
-          this.productList.splice(index, 1);
+          await this.$axios.delete(`http://easybeauty.somee.com/v1/api/Product/${item.id}`)
+          this.productList.splice(index, 1)
           this.filteredList = this.productList
         }
       } catch (e) {
-        console.log(e);
+        console.log(e)
       }
     }
   }
@@ -333,6 +336,7 @@ export default {
   justify-content: center;
   flex-direction: column;
   align-items: center;
+  height: 38%;
 }
 
 .services-container {
@@ -384,7 +388,7 @@ export default {
   margin: 10px;
   position: relative;
   width: 10vw;
-  height: 80%;
+  height: 90%;
 }
 
 .grid-item-pic {
@@ -402,16 +406,12 @@ export default {
 
 .grid-item-name {
   font-weight: 600;
-  margin: 10px;
-  width: 80%;
-  margin-top: 0;
-  height: 25px;
+  width: 85%;
+  height: 4vh;
 }
 
 .grid-item-description {
   word-wrap: break-word;
-  margin: 10px;
-  margin-top: 0;
   height: 30px;
 }
 
