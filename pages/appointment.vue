@@ -26,7 +26,10 @@
               <option v-for="(employee, index) in employeeList" :key="index" :value="index">{{employee.fullName}}</option>
             </select>
           </div>
-
+          <div class="input-group date">
+            <input type="datetime-local" class="inputField" readonly>
+            <button class='date-button' type="button"> <i class="far fa-calendar"></i></button>
+          </div>
           <div class='input-group'>
             <input placeholder='Note (optional)'>
           </div>
@@ -129,6 +132,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.input-group.date {
+  display: flex;
+}
+
+.inputField {
+  flex: 1;
+}
+.date-button {
+  padding: 0 14px !important;
+}
+
 .main-container {
   min-height: 100vh;
   display: flex;

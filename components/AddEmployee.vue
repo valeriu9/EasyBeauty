@@ -3,20 +3,27 @@
     <template #body>
       <div class='user-input-wrp'>
         <div class='employee-details'>
-          <input type='text' v-model="fullName" class='inputText' required />
-          <p class='floating-label'>Full Name</p>
-          <input type='text' v-model="email" class='inputText' required />
-          <p class='floating-label'>Email Address</p>
-          <input type='number' v-model="phoneNr" class='inputText' required />
-          <p class='floating-label'>Phone Number</p>
+          <div class='employee'>
+            <input type='text' v-model='fullName' class='inputText' required />
+            <p class='floating-label'>Full Name</p>
+          </div>
+          <div class='employee'>
+            <input type='text' v-model='email' class='inputText' required />
+            <p class='floating-label'>Email Address</p>
+          </div>
+          <div class='employee'>
+            <input type='text' v-model='phoneNr' class='inputText' required />
+            <p class='floating-label'>Phone Number</p>
+          </div>
+
         </div>
-        <select class='employee-role' v-model="role" name='employee role'>
+        <select class='employee-role' v-model='role' name='employee role'>
           <option value='employee'>Employee</option>
           <option value='manager'>Manager</option>
         </select>
         <div class='button-container'>
-          <button @click="save()" class='save-button'>Save</button>
-          <button @click="cancel()" class='cancel-button'>Cancel</button>
+          <button @click='save()' class='save-button'>Save</button>
+          <button @click='cancel()' class='cancel-button'>Cancel</button>
         </div>
 
       </div>
@@ -27,8 +34,8 @@
 <script>
 
 export default {
-components: {
-    PopupTemplate: () => import('~/components/PopupTemplate'),
+  components: {
+    PopupTemplate: () => import('~/components/PopupTemplate')
   },
 
   mounted() {
@@ -45,7 +52,8 @@ components: {
     },
     employeeToEdit: {
       type: Object,
-      default: () => {}
+      default: () => {
+      }
     }
   },
   data() {
@@ -61,11 +69,11 @@ components: {
   watch: {
     employeeToEdit() {
       if (this.employeeToEdit.fullName) {
-        this.fullName = this.employeeToEdit.fullName;
-        this.role = this.employeeToEdit.role;
-        this.email = this.employeeToEdit.email;
-        this.phoneNr = this.employeeToEdit.phoneNr;
-        this.id = this.employeeToEdit.id;
+        this.fullName = this.employeeToEdit.fullName
+        this.role = this.employeeToEdit.role
+        this.email = this.employeeToEdit.email
+        this.phoneNr = this.employeeToEdit.phoneNr
+        this.id = this.employeeToEdit.id
       }
     }
   },
@@ -81,7 +89,7 @@ components: {
     },
     async save() {
       if (this.fullName === '', this.phoneNr === 0, this.email === '', this.role === '') {
-        window.alert("Complete all the fields before saving")
+        window.alert('Complete all the fields before saving')
         return
       }
       try {
@@ -91,25 +99,25 @@ components: {
             phoneNr: this.phoneNr,
             email: this.email,
             role: this.role
-          });
+          })
           setTimeout(() => {
-            this.$emit('loadEmployees');
-          }, 1000);
-          this.close();
+            this.$emit('loadEmployees')
+          }, 1000)
+          this.close()
         } else {
           this.$axios.post(`http://easybeauty.somee.com/v1/api/Employee`, {
             fullName: this.fullName,
             phoneNr: this.phoneNr,
             email: this.email,
             role: this.role
-          });
+          })
           setTimeout(() => {
-            this.$emit('loadEmployees');
-          }, 1000);
-          this.close();
+            this.$emit('loadEmployees')
+          }, 1000)
+          this.close()
         }
       } catch (e) {
-        console.log(e);
+        console.log(e)
       }
     },
     cancel() {
@@ -126,10 +134,21 @@ components: {
 <style lang='scss' scoped>
 .employee-details {
   margin: 0 40px;
+  height: 50%;
+}
+
+.employee {
+  position: relative;
+  height: 33%;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .employee-role {
-  margin: 10px 40px;
+  margin: 20px 40px;
+  margin-top: 0;
   cursor: pointer;
 }
 
@@ -159,6 +178,7 @@ components: {
   border: none;
   border-bottom: 1px solid #777;
   box-shadow: none !important;
+  height: 35%;
 }
 
 .user-input-wrp .inputText:focus {
@@ -176,7 +196,7 @@ components: {
 
 .user-input-wrp input:focus + .floating-label,
 .user-input-wrp input:not(:focus):valid + .floating-label {
-  top: -35px;
+  top: -40px;
   left: 10px;
   font-size: 13px;
   opacity: 1;

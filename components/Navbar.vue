@@ -53,6 +53,9 @@
             <div class='active' @click="goToAppointment()"><i class='fa fa-calendar-o'></i> Appointments</div>
           </div>
           <div class='button'>
+            <div class='active' @click="openAppointmentsModal()"><i class='fa fa-calendar-o'></i> Edit Appointments</div>
+          </div>
+          <div class='button'>
             <div class='active' @click="openEmployeeModal()"><i class='fas fa-user-friends'></i> Employees</div>
           </div>
 
@@ -72,6 +75,7 @@ export default {
 
   components:{
      EditEmployee: () => import('~/components/EditEmployee'),
+     EditAppointment: () => import('~/components/EditAppointment'),
   },
   beforeMount() {
     this.userInfo = this.$store.state.user
