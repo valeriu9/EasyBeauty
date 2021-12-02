@@ -11,10 +11,10 @@
 
         </div>
         <div class='productService-details'>
-          <input type='text' class='inputText' v-model="name" required maxlength="25"/>
+          <input type='text' class='inputText' v-model="name" required maxlength="25" />
           <p class='floating-label'>Product Name</p>
           <br />
-          <input type='text' class='inputText' v-model="description" required maxlength="40"/>
+          <input type='text' class='inputText' v-model="description" required maxlength="40" />
           <p class='floating-label'>Product Description</p>
           <br />
           <input type='number' class='inputText' v-model="price" required />
@@ -118,7 +118,7 @@ export default {
             try {
               if (this.type === 'products') {
                 this.$emit('openLoader');
-                this.$axios.post(`http://easybeauty.somee.com/v1/api/Product`, {
+                this.$axios.post(`https://localhost:5001/api/Product`, {
                   name: this.name,
                   description: this.description,
                   price: this.price,

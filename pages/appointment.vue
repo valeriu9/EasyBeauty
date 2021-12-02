@@ -39,7 +39,7 @@
         </form>
       </div>
     </div>
-    <Calendar />
+    <Calendar :duration="100" />
   </div>
 </template>
 
