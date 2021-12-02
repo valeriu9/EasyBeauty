@@ -31,17 +31,30 @@ export default {
     duration:{
       type: Number,
       default: null
+    },
+    scheduleForEmployee:{
+      type: Array,
+      default:[]
     }
   },
-
+  watch:{
+    duration(){
+    const hours = Math.floor(this.duration / 60);
+    const minutes = this.duration % 60;
+    this.stringDuration = '0'+hours+':'+minutes+":00";
+    },
+    currentEvents(){
+      this.isDateSelected = this.currentEvents.some(x => x.groupId === '2');
+      console.log(this.isDateSelected);
+    }
+  },
   data() {
-    const serviceDuration = this.duration;
-    const hours = Math.floor(serviceDuration / 60);
-    const minutes = serviceDuration % 60;
+    const hours = Math.floor(this.duration / 60);
+    const minutes = this.duration % 60;
     const stringDuration = '0'+hours+':'+minutes+":00";
     return {
-      serviceDuration,
       stringDuration,
+      isDateSelected: false,
       calendarOptions: {
         plugins: [
           dayGridPlugin,
@@ -62,7 +75,7 @@ export default {
       validRange: function(nowDate) {
           return {
             start: nowDate,
-            // user json to clone clone
+            // user json to flatten an observable
             end: JSON.parse(JSON.stringify(addMonths(nowDate, 1)))
           };
         },
@@ -71,7 +84,8 @@ export default {
         end: '18:00', // an end time
         },
         initialView: 'timeGridWeek',
-        initialEvents: INITIAL_EVENTS, // alternatively, use the `events` setting to fetch from a feed
+        nowIndicator: true,
+        events: this.scheduleForEmployee, // alternatively, use the `events` setting to fetch from a feed
         editable: true,
         selectable: true,
         selectMirror: false,
@@ -80,7 +94,6 @@ export default {
         slotMaxTime: "18:00:00",
         forceEventDuration: true,
         duration: stringDuration,
-        // snapDuration: stringDuration,
         weekends: false,
         allDaySlot: false,
         select: this.handleDateSelect,
@@ -96,11 +109,6 @@ export default {
         eventOverlap:  function(stillEvent, movingEvent) {
          return stillEvent.allDay && movingEvent.allDay;
         },
-        /* you can update a remote database when these fire:
-        eventAdd:
-        eventChange:
-        eventRemove:
-        */
       },
       currentEvents: []
     }
@@ -108,13 +116,10 @@ export default {
 
   methods: {
     handleDateSelect(selectInfo) {
-      console.log(selectInfo.startStr);
       const startTime = JSON.parse(JSON.stringify(selectInfo.startStr));
-      const endTime = JSON.parse(JSON.stringify(addMinutes(parseISO(selectInfo.startStr), this.serviceDuration)));
-      console.log(this.serviceDuration);
+      const endTime = JSON.parse(JSON.stringify(addMinutes(parseISO(selectInfo.startStr), this.duration)));
         let calendarApi = selectInfo.view.calendar
         calendarApi.unselect() // clear date selection
-        // console.log(format(parseISO(endTime),'HH'));
       if(format(parseISO(endTime),'HH') > 18){
         window.alert('Expected end time is out of business hours')
         return
@@ -123,22 +128,22 @@ export default {
         window.alert('Expected end time is out of business hours')
         return
       }
-      if(selectInfo.start > new Date){
-      let title = prompt('Please enter a new title for your event')
-      if (title) {
+      if(selectInfo.start > new Date && !this.isDateSelected){
         calendarApi.addEvent({
           id: createEventId(),
-          title,
+          groupId: 2,
           start: startTime,
           end: endTime,
           constraint: 'businessHours'
         })
       }
-      }
     },
 
     handleEventClick(clickInfo) {
-      console.log(clickInfo);
+      console.log(clickInfo.event.groupId);
+      if(clickInfo.event.groupId === '1'){
+        return
+      }
       if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
         clickInfo.event.remove()
       }
@@ -201,6 +206,10 @@ b { /* used for event dates/times */
 
 .fc { /* the calendar root */
   margin: 0 auto;
+}
+.fc-event-main {
+    font-size: 11px;
+    cursor: default;
 }
 
 </style>

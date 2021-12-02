@@ -11,25 +11,19 @@
             <input placeholder='First Name'>
           </div>
           <div class='input-group'>
-            <input placeholder='Phone number'>
+            <input placeholder='Phone number' type="number">
           </div>
           <div class='input-group'>
             <input placeholder='Email (optional)'>
           </div>
           <div class='input-group'>
-            <select class='selection'>
-              <option value="" selected disabled>Employee</option>
-              <option value="employee">Aleks</option>
-              <option value="employee">Eric</option>
-              <option value="employee">Valera</option>
+            <select @change="selectService($event)" class='selection'>
+              <option v-for="(service, index) in serviceList" :key="index" :value="index">{{service.name}} - {{service.duration}} minutes</option>
             </select>
           </div>
           <div class='input-group'>
-            <select class='selection'>
-              <option value="" selected disabled>Service Type</option>
-              <option value="serviceType">Long hair</option>
-              <option value="serviceType">Short hair</option>
-              <option value="serviceType">Painting</option>
+            <select @change="selectEmployee($event)" class='selection'>
+              <option v-for="(employee, index) in employeeList" :key="index" :value="index">{{employee.fullName}}</option>
             </select>
           </div>
           <div class="input-group date">
@@ -43,15 +37,22 @@
         </form>
       </div>
     </div>
-    <Calendar :duration="100" />
+    <Calendar :duration="selectedService.duration" :scheduleForEmployee="this.scheduleForEmployee" />
   </div>
 </template>
 
 <script>
 
 import Calendar from '@/components/Calendar'
-
+import {createEventId } from '~/helpers/event-utils'
 export default {
+  layout: 'empty',
+  props: {
+    enableOverlayClick: {
+      type: Boolean,
+      default: true
+    }
+  },
   components: {
     Calendar
   },
@@ -59,21 +60,78 @@ export default {
     let fontScript = document.createElement('script')
     fontScript.setAttribute('src', 'https://kit.fontawesome.com/52311f6e31.js')
     document.head.appendChild(fontScript)
+    this.loadServices();
+    this.loadEmployees();
+  },
+  data(){
+    return {employeeList: [], serviceList:[], selectedService:{}, selectedEmployee:{}, scheduleForEmployee: []}
+  },
+  watch:{
+    selectedService(){
+      console.log(this.selectedService);
+    },
+    selectedEmployee(){
+      console.log(this.selectedEmployee);
+    }
+  },
+  methods:{
+      async loadServices() {
+      try {
+        const services = await this.$axios.get(`http://easybeauty.somee.com/v1/api/Service`);
+        this.serviceList = services.data;
+        this.selectedService = services.data[1]
+      } catch (e) {
+        console.log(e);
+      }
+    },
+      async loadEmployees() {
+      try {
+        const employees = await this.$axios.get(`http://easybeauty.somee.com/v1/api/Employee`);
+        this.employeeList = employees.data;
+        this.selectedEmployee = employees.data[0]
+        this.getAppointmentsByEmployee(employees.data[0].id);
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    selectService(event){
+      this.selectedService = this.serviceList[event.target.value];
+    },
+    selectEmployee(event){
+      this.scheduleForEmployee.splice(0, this.scheduleForEmployee.length)
+      this.selectedEmployee = this.employeeList[event.target.value];
+      this.getAppointmentsByEmployee(this.selectedEmployee.id);
+    },
+      async getAppointmentsByEmployee(employeeId) {
+      try {
+        var startDay = new Date();
+        startDay.setUTCHours(0,0,0,0);
+        this.scheduleForEmployee.push({
+          id: createEventId(),
+          start: startDay.toISOString(),
+          end: '2021-12-02T17:00:00',
+          color: '#ccc',
+          constraint: 'businessHours',
+          groupId: 1,
+          display: 'background'
+        })
+        const appointments = await this.$axios.get(`http://easybeauty.somee.com/v1/api/Appointment/${employeeId}`);
+        if(appointments.data.length > 0 ){
+          appointments.data.forEach(appointment => {
+            this.scheduleForEmployee.push({id: createEventId(), groupId: 1, 'start':appointment.startTime, 'end': appointment.endTime, 'editable': false, color:'#ddd',  constraint: 'businessHours'});
+          });
+        }
+       console.log(window.document.getElementById('1'));
+      } catch (e) {
+        console.log(e);
+      }
+    },
   },
 
-
-  layout: 'empty',
-  props: {
-    enableOverlayClick: {
-      type: Boolean,
-      default: true
-    }
-  }
 }
 </script>
 
 <style lang="scss" scoped>
-
 .input-group.date {
   display: flex;
 }
@@ -81,7 +139,7 @@ export default {
 .inputField {
   flex: 1;
 }
-.date-button{
+.date-button {
   padding: 0 14px !important;
 }
 
@@ -169,5 +227,16 @@ export default {
   transition: all 0.4s ease;
   font-size: 18px;
   border: none;
+}
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type='number'] {
+  -moz-appearance: textfield;
 }
 </style>
