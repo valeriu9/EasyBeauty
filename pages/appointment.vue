@@ -6,15 +6,24 @@
         <div class='form-title'>
           <h2> Book Appointment</h2>
         </div>
-        <form class='user-form'>
-          <div class='input-group'>
-            <input placeholder='First Name'>
+        <form class='user-form' @submit="onSubmit($event)">
+          <div v-for="(error, index) in errorList" :key="index" class="error-message">
+            <p v-if="error.active" class="error-color">
+              {{error.message}}
+            </p>
           </div>
           <div class='input-group'>
-            <input placeholder='Phone number' type="number">
+            <input :value="fullName" @input="e => fullName = e.target.value"
+              @blur="validateFullName(fullName)" placeholder='Full Name'>
           </div>
           <div class='input-group'>
-            <input placeholder='Email (optional)'>
+            <input placeholder='Phone number'
+              :value="phoneNr" @input="e => phoneNr = e.target.value"
+              @blur="validatePhoneNr(phoneNr)" type="number">
+          </div>
+          <div class='input-group'>
+            <input :value="email" @input="e => email = e.target.value"
+              @blur="validateEmail(email)" type="text" placeholder="Email (optional)">
           </div>
           <div class='input-group'>
             <select @change="selectService($event)" class='selection'>
@@ -27,22 +36,26 @@
             </select>
           </div>
           <div class="input-group date">
-            <input type="datetime-local" class="inputField" readonly>
-            <button class='date-button' type="button"> <i class="far fa-calendar"></i></button>
+            <input type="datetime-local" :value="timeFrame" class="inputField" readonly>
+            <button class='date-button' type="button" @click="open()"> <i class="far fa-calendar"></i></button>
           </div>
           <div class='input-group'>
             <input placeholder='Note (optional)'>
           </div>
-          <button>Send Appointment</button>
+          <button @click="saveAppointmnet()">Send Appointment</button>
         </form>
       </div>
     </div>
-    <Calendar :duration="selectedService.duration" :scheduleForEmployee="this.scheduleForEmployee" />
+    <PopupTemplate ref="schedulePopUp">
+      <template>
+        <Calendar :duration="selectedService.duration" :scheduleForEmployee="this.scheduleForEmployee" />
+      </template>
+    </PopupTemplate>
   </div>
 </template>
 
 <script>
-
+import PopupTemplate from '~/components/PopupTemplate'
 import Calendar from '@/components/Calendar'
 import {createEventId } from '~/helpers/event-utils'
 export default {
@@ -54,6 +67,7 @@ export default {
     }
   },
   components: {
+    PopupTemplate,
     Calendar
   },
   mounted() {
@@ -64,17 +78,40 @@ export default {
     this.loadEmployees();
   },
   data(){
-    return {employeeList: [], serviceList:[], selectedService:{}, selectedEmployee:{}, scheduleForEmployee: []}
-  },
-  watch:{
-    selectedService(){
-      console.log(this.selectedService);
-    },
-    selectedEmployee(){
-      console.log(this.selectedEmployee);
-    }
+    return {
+      employeeList: [],
+      serviceList:[],
+      selectedService:{},
+      selectedEmployee:{},
+      scheduleForEmployee: [],
+      email:'',
+      fullName: '',
+      startTime: new Date(),
+      endTime: new Date(),
+      phoneNr: null,
+      timeFrame: {},
+      errorList:[
+        {
+          message: '*Invalid Email',
+          active: false
+        },
+        {
+          message: '*Invalid phone nr',
+          active: false
+        },
+        {
+          message: '*Name is required',
+          active: false
+        }
+      ]}
   },
   methods:{
+    open() {
+      this.$refs.schedulePopUp.open()
+    },
+    close() {
+      this.$refs.schedulePopUp.close()
+    },
       async loadServices() {
       try {
         const services = await this.$axios.get(`http://easybeauty.somee.com/v1/api/Service`);
@@ -102,12 +139,11 @@ export default {
       this.selectedEmployee = this.employeeList[event.target.value];
       this.getAppointmentsByEmployee(this.selectedEmployee.id);
     },
-      async getAppointmentsByEmployee(employeeId) {
+    async getAppointmentsByEmployee(employeeId) {
       try {
         var startDay = new Date();
         startDay.setUTCHours(0,0,0,0);
         this.scheduleForEmployee.push({
-          id: createEventId(),
           start: startDay.toISOString(),
           end: '2021-12-02T17:00:00',
           color: '#ccc',
@@ -115,17 +151,49 @@ export default {
           groupId: 1,
           display: 'background'
         })
-        const appointments = await this.$axios.get(`http://easybeauty.somee.com/v1/api/Appointment/${employeeId}`);
+        const appointments = await this.$axios.get(`http://easybeauty.somee.com/v1/schedule/${employeeId}`);
         if(appointments.data.length > 0 ){
           appointments.data.forEach(appointment => {
             this.scheduleForEmployee.push({id: createEventId(), groupId: 1, 'start':appointment.startTime, 'end': appointment.endTime, 'editable': false, color:'#ddd',  constraint: 'businessHours'});
           });
         }
-       console.log(window.document.getElementById('1'));
       } catch (e) {
         console.log(e);
       }
     },
+    validateFullName(fullName){
+      this.errorList[2].active = false;
+      if(fullName.length === 0){
+        this.errorList[2].active = true;
+      }
+    },
+    validatePhoneNr(phoneNr){
+      this.errorList[1].active = false;
+      if(phoneNr === null || phoneNr.length < 6 || phoneNr.length > 12){
+        this.errorList[1].active = true;
+      }
+    },
+    validateEmail(email){
+      this.errorList[0].active = false;
+      if (email === '' || !this.email.match(
+          /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+          )) {
+        this.errorList[0].active = true;
+      } else {
+        this.errorList[0].active = false;
+      }
+    },
+    onSubmit(event){
+      event.preventDefault()
+    },
+    saveAppointmnet(){
+      this.validateFullName(this.fullName)
+      this.validateEmail(this.email)
+      this.validatePhoneNr(this.phoneNr)
+      if(this.errorList.find(x => x.active === true)){
+        return
+      }
+    }
   },
 
 }
@@ -238,5 +306,9 @@ input::-webkit-inner-spin-button {
 /* Firefox */
 input[type='number'] {
   -moz-appearance: textfield;
+}
+.error-color {
+  color: crimson;
+  margin-bottom: 20px;
 }
 </style>

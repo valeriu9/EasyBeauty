@@ -40,6 +40,7 @@
 </template>
 
 <script>
+import {getCookieDataUnparsed} from '~/helpers/cookies.js'
 export default {
   name: 'imageUpload',
 
@@ -85,7 +86,8 @@ export default {
       price: null,
       type: 'products',
       duration: null,
-      id: 0
+      id: 0,
+      cookie: getCookieDataUnparsed('session')
     }
   },
   beforeDestroy() {
@@ -118,7 +120,7 @@ export default {
             try {
               if (this.type === 'products') {
                 this.$emit('openLoader');
-                this.$axios.post(`https://localhost:5001/api/Product`, {
+                this.$axios.post(`http://easybeauty.somee.com/v1/api/Product?cookie=${this.cookie}`, {
                   name: this.name,
                   description: this.description,
                   price: this.price,
@@ -129,7 +131,7 @@ export default {
                   this.$emit('loadProducts');
                 }, 1000);
               } else {
-                this.$axios.post(`http://easybeauty.somee.com/v1/api/Service`, {
+                this.$axios.post(`http://easybeauty.somee.com/v1/api/Service?cookie=${this.cookie}`, {
                   name: this.name,
                   description: this.description,
                   price: this.price,
@@ -151,7 +153,7 @@ export default {
         try {
           if (this.type === 'products') {
             this.$emit('openLoader');
-            this.$axios.put(`http://easybeauty.somee.com/v1/api/Product/${this.itemToEdit.id}`, {
+            this.$axios.put(`http://easybeauty.somee.com/v1/api/Product?id=${this.itemToEdit.id}&cookie=${this.cookie}`, {
               name: this.name,
               description: this.description,
               price: this.price,
@@ -162,7 +164,7 @@ export default {
               this.$emit('loadProducts');
             }, 1000);
           } else {
-            this.$axios.put(`http://easybeauty.somee.com/v1/api/Service/${this.itemToEdit.id}`, {
+            this.$axios.put(`http://easybeauty.somee.com/v1/api/Service?id=${this.itemToEdit.id}&cookie=${this.cookie}`, {
               name: this.name,
               description: this.description,
               price: this.price,

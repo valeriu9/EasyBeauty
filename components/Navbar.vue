@@ -71,6 +71,7 @@
 </template>
 
 <script>
+import {getCookieDataUnparsed} from '~/helpers/cookies.js'
 export default {
 
   components:{
@@ -87,10 +88,11 @@ export default {
   methods: {
     async logout() {
       try {
-        await this.$axios.delete(`http://easybeauty.somee.com/v1/api/Login/logout?id=` + this.userInfo.id + `&token=` + this.userInfo.token)
+         const cookie = getCookieDataUnparsed('session');
+        await this.$axios.delete(`http://easybeauty.somee.com/v1/api/Login/logout?cookie=${cookie}`)
         this.$cookies.remove('easybeauty_user')
         this.$store.dispatch('user/userLoggedOut')
-        window.location.href = '/'
+        window.location.href = '/login'
       } catch (e) {
         console.log(e)
       }

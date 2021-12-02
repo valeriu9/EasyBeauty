@@ -2,24 +2,24 @@
   <PopupTemplate ref='popupOpen'>
     <template #body>
       <AddEmployee ref='AddEmployeePopup' :enableOverlayClick='true' @loadEmployees='loadEmployees()'
-                   :employeeToEdit='employeeToEdit' />
+        :employeeToEdit='employeeToEdit' />
       <div class='edit-employee-navbar'>
         <button class='add-employee-button' type='button' @click='openAddEmployeeModal()'><i class='fas fa-plus'></i>
           <p>Add employee</p>
         </button>
         <div class='search-wrapper'>
           <input name='search' :value='searchText' @input='e => searchText = e.target.value' placeholder='Search..'
-                 type='text'>
+            type='text'>
           <button type='submit' @click='search()'><i class='fa fa-search'></i></button>
         </div>
       </div>
       <div class='employee-list-container'>
         <div v-for='(employee, index) in filteredList' :key='employee.index' class='existing-employee'>
           <button class='edit-employee' type='button' @click='openAddEmployeeModal(employee)'><i
-            class='far fa-edit'></i>
+              class='far fa-edit'></i>
           </button>
           <button class='delete-employee' type='button' @click='removeEmployee(index, employee.id)'><i
-            class='far fa-trash-alt'></i>
+              class='far fa-trash-alt'></i>
           </button>
           <div class='employee-details'>
             <p class='employee-name'>{{ employee.fullName }}</p>
@@ -34,6 +34,7 @@
 </template>
 
 <script>
+import {getCookieDataUnparsed} from '~/helpers/cookies.js'
 export default {
   components: {
     AddEmployee: () => import('~/components/AddEmployee'),
@@ -60,7 +61,8 @@ export default {
       searchText: '',
       filteredList: [],
       employeeList: [],
-      employeeToEdit: {}
+      employeeToEdit: {},
+         cookie: getCookieDataUnparsed('session')
     }
   },
   beforeDestroy() {
@@ -109,7 +111,7 @@ export default {
     },
     async removeEmployee(index, id) {
       try {
-        await this.$axios.delete(`http://easybeauty.somee.com/v1/api/Employee/${id}`)
+        await this.$axios.delete(`http://easybeauty.somee.com/v1/api/Employee?id=${id}&cookie=${this.cookie}`)
         this.employeeList.splice(index, 1)
         this.filteredList = this.employeeList
       } catch (e) {

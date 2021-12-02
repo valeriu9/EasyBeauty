@@ -44,7 +44,7 @@
               {{error.message}}
             </p>
           </div>
-          <input v-if="state === stateTypes.EMAIL" id="emailId" :value="email" @input="e => email = e.target.value"
+          <input v-if="state === stateTypes.EMAIL" :value="email" @input="e => email = e.target.value"
             @blur="validateEmail(email)" type="text" placeholder="Email">
           <input v-if="state === stateTypes.PASSWORD" type="password" :value="password" @input="e => password = e.target.value"
             @blur="validatePassword(password)" class="password" placeholder="Password">
@@ -68,7 +68,7 @@
 
 <script>
   import crypto from 'crypto-js';
-  import {setCookie} from '~/helpers/cookies.js'
+  import {setCookie, setCookieUnparsed} from '~/helpers/cookies.js'
   import backgroundImage from '~/assets/images/loginBackground.jpg';
   export default {
     layout: 'default',
@@ -146,6 +146,7 @@
               this.errorList[3].active = true;
             }
             else{
+            setCookieUnparsed('session', res.data.cookie)
              const decodeCookie = JSON.parse(crypto.enc.Base64.parse(res.data.cookie).toString(crypto.enc.Utf8));
              const user = {email: this.email, name: decodeCookie.FullName, id: decodeCookie.Id, token: decodeCookie.Token, role: decodeCookie.Role}
              setCookie('easybeauty_user', user);

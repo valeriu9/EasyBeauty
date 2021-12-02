@@ -20,7 +20,7 @@ import FullCalendar from '@fullcalendar/vue'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
-import { INITIAL_EVENTS, createEventId } from '~/helpers/event-utils'
+import { createEventId } from '~/helpers/event-utils'
 import { addMinutes, addMonths, format, parseISO } from 'date-fns'
 export default {
 
@@ -183,8 +183,6 @@ b { /* used for event dates/times */
   min-height: 100%;
   font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
   font-size: 14px;
-
-  width: 50% !important;
 }
 
 .demo-app-sidebar {
