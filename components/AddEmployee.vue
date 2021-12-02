@@ -8,11 +8,11 @@
             <p class='floating-label'>Full Name</p>
           </div>
           <div class='employee'>
-            <input type='text' v-model='email' class='inputText' required />
+            <input type='email' v-model='email' class='inputText' required />
             <p class='floating-label'>Email Address</p>
           </div>
           <div class='employee'>
-            <input type='text' v-model='phoneNr' class='inputText' required />
+            <input type='number' v-model='phoneNr' class='inputText' required />
             <p class='floating-label'>Phone Number</p>
           </div>
 
