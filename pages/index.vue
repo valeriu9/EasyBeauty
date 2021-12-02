@@ -338,7 +338,7 @@ export default {
   justify-content: center;
   flex-direction: column;
   align-items: center;
-  height: 38%;
+  height: 40%;
 }
 
 .services-container {
@@ -668,7 +668,7 @@ input[type='number']::-webkit-outer-spin-button {
   justify-content: space-between;
   background-color: #f2f2f2;
   padding: 15px;
-  height: 50px;
+  height: 7vh;
   color: gray;
 }
 
@@ -678,7 +678,7 @@ input[type='number']::-webkit-outer-spin-button {
   justify-content: space-between;
   align-items: center;
   padding: 0 15px;
-  margin: auto 0;
+  height: 7vh;
 }
 
 .cart-price-container .price-wrapper input {

@@ -4,35 +4,40 @@
       <div class='user-input-wrapper'>
         <div class='image-upload'>
 
-          <input type='file' accept='image/*' @change='onChange' />
+          <input type='file' accept='image/jpeg, image/png' @change='onChange' />
           <div class='image-preview' id='preview'>
             <img v-if='image' :src='image' />
           </div>
 
         </div>
         <div class='productService-details'>
-          <input type='text' class='inputText' v-model="name" required maxlength="25" />
+          <input type='text' class='inputText' v-model='name' required maxlength='25' />
           <p class='floating-label'>Product Name</p>
           <br />
-          <input type='text' class='inputText' v-model="description" required maxlength="40" />
+          <input type='text' class='inputText' v-model='description' required maxlength='40' />
           <p class='floating-label'>Product Description</p>
           <br />
-          <input type='number' class='inputText' v-model="price" required />
-          <p class='floating-label'>Price</p>
+          <div class='product-price'>
+
+            <input type='number' class='inputText' v-model='price' required />
+            <p class='floating-label'>Price </p>
+            <p class='currency-code'>DKK</p>
+          </div>
+
           <br />
-          <select class='product-service-type' v-model="type" name='product-service-type'>
+          <select class='product-service-type' v-model='type' name='product-service-type'>
             <option value='products'>Product</option>
             <option value='services'>Service</option>
           </select>
-          <div v-if="type === 'services'"> <input type='text' class='inputText' v-model="duration" required />
+          <div v-if="type === 'services'"><input type='text' class='inputText' v-model='duration' required />
             <p class='floating-label'>Duration</p>
             <br />
           </div>
 
         </div>
         <div class='button-container'>
-          <button class='save-button' @click="saveProduct()">Save</button>
-          <button class='cancel-button' @click="close()">Cancel</button>
+          <button class='save-button' @click='saveProduct()'>Save</button>
+          <button class='cancel-button' @click='close()'>Cancel</button>
         </div>
       </div>
     </template>
@@ -61,19 +66,20 @@ export default {
     },
     itemToEdit: {
       type: Object,
-      default: () => {}
+      default: () => {
+      }
     }
   },
   watch: {
     itemToEdit() {
       if (this.itemToEdit.name) {
-        this.name = this.itemToEdit.name;
-        this.type = this.itemToEdit.type;
-        this.description = this.itemToEdit.description;
-        this.price = this.itemToEdit.price;
-        this.image = this.itemToEdit.image;
-        this.duration = this.itemToEdit.duration;
-        this.id = this.itemToEdit.id;
+        this.name = this.itemToEdit.name
+        this.type = this.itemToEdit.type
+        this.description = this.itemToEdit.description
+        this.price = this.itemToEdit.price
+        this.image = this.itemToEdit.image
+        this.duration = this.itemToEdit.duration
+        this.id = this.itemToEdit.id
       }
     }
   },
@@ -102,17 +108,17 @@ export default {
     },
     async saveProduct() {
       if (this.type === 'services' && (this.name === '', this.price === 0, this.image === '', this.duration === 0)) {
-        window.alert("Complete all the fields before saving")
+        window.alert('Complete all the fields before saving')
         return
       } else if (this.type === 'products' && (this.name === '', this.price === 0, this.image === '')) {
-        window.alert("Complete all the fields before saving")
+        window.alert('Complete all the fields before saving')
         return
       }
       if (!this.itemToEdit.name) {
-        const imgbbUploader = require("imgbb-uploader");
+        const imgbbUploader = require('imgbb-uploader')
         const options = {
           apiKey: '44be07cc6bc3fb0585b6e9f1b2cce6b6',
-          base64string: this.image.replace("data:", "").replace(/^.+,/, "")
+          base64string: this.image.replace('data:', '').replace(/^.+,/, '')
         }
         imgbbUploader(options)
           .then((response) => {
@@ -125,11 +131,11 @@ export default {
                   description: this.description,
                   price: this.price,
                   image: this.image
-                });
+                })
                 this.$refs.popupOpen.close()
                 setTimeout(() => {
-                  this.$emit('loadProducts');
-                }, 1000);
+                  this.$emit('loadProducts')
+                }, 1000)
               } else {
                 this.$axios.post(`http://easybeauty.somee.com/v1/api/Service?cookie=${this.cookie}`, {
                   name: this.name,
@@ -137,18 +143,18 @@ export default {
                   price: this.price,
                   duration: this.duration,
                   image: this.image
-                });
+                })
                 setTimeout(() => {
-                  this.$emit('loadServices');
-                }, 1000);
+                  this.$emit('loadServices')
+                }, 1000)
               }
             } catch (e) {
-              console.log(e);
-              this.$emit('closeLoader');
+              console.log(e)
+              this.$emit('closeLoader')
             }
           }).catch((error) => console.error(error),
-            this.$emit('closeLoader')
-          );
+          this.$emit('closeLoader')
+        )
       } else {
         try {
           if (this.type === 'products') {
@@ -158,11 +164,11 @@ export default {
               description: this.description,
               price: this.price,
               image: this.image
-            });
+            })
             this.$refs.popupOpen.close()
             setTimeout(() => {
-              this.$emit('loadProducts');
-            }, 1000);
+              this.$emit('loadProducts')
+            }, 1000)
           } else {
             this.$axios.put(`http://easybeauty.somee.com/v1/api/Service?id=${this.itemToEdit.id}&cookie=${this.cookie}`, {
               name: this.name,
@@ -170,24 +176,24 @@ export default {
               price: this.price,
               duration: this.duration,
               image: this.image
-            });
+            })
             setTimeout(() => {
-              this.$emit('loadServices');
-            }, 1000);
+              this.$emit('loadServices')
+            }, 1000)
           }
         } catch (e) {
-          console.log(e);
-          this.$emit('closeLoader');
+          console.log(e)
+          this.$emit('closeLoader')
         }
       }
     },
     onChange(e) {
-      var file = e.target.files[0];
-      var reader = new FileReader();
-      reader.readAsDataURL(file);
+      var file = e.target.files[0]
+      var reader = new FileReader()
+      reader.readAsDataURL(file)
       setTimeout(() => {
         this.image = reader.result
-      }, 1000);
+      }, 1000)
     }
   }
 
@@ -195,6 +201,12 @@ export default {
 </script>
 
 <style lang='scss' scoped>
+.currency-code {
+  position: absolute;
+  left: 70px;
+  top: 38%;
+  font-size: 13px;
+}
 .productService-details {
   width: 50%;
   right: 25px;
@@ -208,6 +220,13 @@ export default {
 .product-service-type {
   margin: 12px 40px;
   cursor: pointer;
+}
+.product-price {
+  position: relative;
+  width: 30%;
+}
+.product-price .inputText {
+  width: 100%;
 }
 
 .image-upload {
@@ -251,7 +270,7 @@ export default {
 }
 
 .user-input-wrapper .inputText {
-  width: 100%;
+  padding-left: 10px;
   outline: none;
   border: none;
   border-bottom: 1px solid #777;
