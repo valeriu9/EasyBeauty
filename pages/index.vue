@@ -162,7 +162,7 @@ export default {
       productList: [],
       serviceList: [],
       searchText: '',
-      activeTab: 'products',
+      activeTab: 'services',
       filteredList: [],
       saleList: [],
       discount: null,
@@ -267,9 +267,9 @@ export default {
 
         const products = await this.$axios.get(`http://easybeauty.somee.com/v1/api/Product?cookie=${this.cookie}`)
         this.productList = products.data
-        this.filteredList = this.productList
         const services = await this.$axios.get(`http://easybeauty.somee.com/v1/api/Service?cookie=${this.cookie}`)
         this.serviceList = services.data
+        this.filteredList = this.serviceList
         this.closeLoader()
       } catch (e) {
         console.log(e)

@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <EditEmployee ref="employeePopup" :enableOverlayClick="true" />
-<!--
+    <!--
     <EditAppointment ref="appointmentPopup" :enableOverlayClick="true" />
 -->
     <nav class='nav-menu-wrapper'>
@@ -49,9 +49,6 @@
 
         </div>
         <div class='buttons-wrapper'>
-          <div class='button'>
-            <div class='active' @click="goToHome()"><i class='fa fa-fw fa-home'></i> Home</div>
-          </div>
           <div class='button'>
             <div class='active' @click="goToAppointment()"><i class='fa fa-calendar-o'></i> Appointments</div>
           </div>

@@ -14,12 +14,12 @@
           </div>
           <div class='input-group'>
             <input :value="fullName" @input="e => fullName = e.target.value"
-              @blur="validateFullName(fullName)" placeholder='Full Name'>
+              @blur="validateFullName(fullName)" placeholder='Full Name' type="name">
           </div>
           <div class='input-group'>
             <input placeholder='Phone number'
               :value="phoneNr" @input="e => phoneNr = e.target.value"
-              @blur="validatePhoneNr(phoneNr)" type="number">
+              @blur="validatePhoneNr(phoneNr)" type="tel">
           </div>
           <div class='input-group'>
             <input :value="email" @input="e => email = e.target.value"
@@ -36,28 +36,34 @@
             </select>
           </div>
           <div class="input-group date">
-            <input type="datetime-local" :value="timeFrame" class="inputField" readonly>
-            <button class='date-button' type="button" @click="open()"> <i class="far fa-calendar"></i></button>
+            <div v-if="selectedEvent.length !== 0">
+              <p>{{formatDateDisplay(selectedEvent[0].startStr)}} {{formatTimeDisplay(selectedEvent[0].startStr)}} - {{formatTimeDisplay(selectedEvent[0].endStr)}}</p>
+            </div>
+            <div v-else>
+              <p>Choose a date and time</p>
+            </div>
+            <button class='date-button' type="button" @click="$refs.calendar.open()"> <i class="far fa-calendar"></i></button>
           </div>
           <div class='input-group'>
             <input placeholder='Note (optional)'>
           </div>
-          <button @click="saveAppointmnet()">Send Appointment</button>
+          <button>Send Appointment</button>
         </form>
       </div>
     </div>
-    <PopupTemplate ref="schedulePopUp">
-      <template>
-        <Calendar :duration="selectedService.duration" :scheduleForEmployee="this.scheduleForEmployee" />
+    <PopupTemplate ref="success">
+      <template #body>
+        <div>ale uliu</div>
       </template>
     </PopupTemplate>
+    <Calendar ref="calendar" :duration="selectedService.duration" :scheduleForEmployee="this.scheduleForEmployee" @selectedEvent="setEvent($event)" />
   </div>
 </template>
-
 <script>
-import PopupTemplate from '~/components/PopupTemplate'
+
 import Calendar from '@/components/Calendar'
 import {createEventId } from '~/helpers/event-utils'
+import {parseISO, format } from 'date-fns'
 export default {
   layout: 'empty',
   props: {
@@ -67,8 +73,8 @@ export default {
     }
   },
   components: {
-    PopupTemplate,
-    Calendar
+    Calendar,
+    PopupTemplate: () => import('~/components/PopupTemplate')
   },
   mounted() {
     let fontScript = document.createElement('script')
@@ -86,10 +92,8 @@ export default {
       scheduleForEmployee: [],
       email:'',
       fullName: '',
-      startTime: new Date(),
-      endTime: new Date(),
       phoneNr: null,
-      timeFrame: {},
+      selectedEvent: [],
       errorList:[
         {
           message: '*Invalid Email',
@@ -102,16 +106,14 @@ export default {
         {
           message: '*Name is required',
           active: false
+        },
+         {
+          message: '*Select a time for appointment',
+          active: false
         }
       ]}
   },
   methods:{
-    open() {
-      this.$refs.schedulePopUp.open()
-    },
-    close() {
-      this.$refs.schedulePopUp.close()
-    },
       async loadServices() {
       try {
         const services = await this.$axios.get(`http://easybeauty.somee.com/v1/api/Service`);
@@ -133,6 +135,11 @@ export default {
     },
     selectService(event){
       this.selectedService = this.serviceList[event.target.value];
+    },
+    setEvent(event){
+      this.selectedEvent = event;
+      this.errorList[3].active = false;
+      this.scheduleForEmployee = this.scheduleForEmployee.concat(event);
     },
     selectEmployee(event){
       this.scheduleForEmployee.splice(0, this.scheduleForEmployee.length)
@@ -175,24 +182,48 @@ export default {
     },
     validateEmail(email){
       this.errorList[0].active = false;
-      if (email === '' || !this.email.match(
+      if (!email.match(
           /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
           )) {
         this.errorList[0].active = true;
       } else {
         this.errorList[0].active = false;
       }
+      if(email === '' ){
+        this.errorList[0].active = false;
+      }
+    },
+    validateEvent(selectedEvent){
+      this.errorList[3].active = false;
+      if(selectedEvent.length === 0){
+        this.errorList[3].active = true
+      }
+    },
+    formatTimeDisplay(date){
+      if(date){
+      return format(parseISO(date), 'HH:mm')
+      }
+    },
+    formatDateDisplay(date){
+      if(date){
+      return format(parseISO(date), 'dd/MM/yyyy')
+      }
     },
     onSubmit(event){
       event.preventDefault()
-    },
-    saveAppointmnet(){
       this.validateFullName(this.fullName)
       this.validateEmail(this.email)
       this.validatePhoneNr(this.phoneNr)
+      this.validateEvent(this.selectedEvent)
       if(this.errorList.find(x => x.active === true)){
         return
       }
+      else{
+        const objToSend = {fullName: this.fullName, phoneNr: this.phoneNr, serviceId: this.selectedService.id, employeeId: this.selectedEmployee.id, startTime: this.selectedEvent[0].startStr, endTime: this.selectedEvent[0].endStr, notes: this.notes, email: this.email }
+        console.log(objToSend);
+        this.$refs.success.open()
+      }
+
     }
   },
 
@@ -202,6 +233,9 @@ export default {
 <style lang="scss" scoped>
 .input-group.date {
   display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding-bottom: 4px;
 }
 
 .inputField {
@@ -210,7 +244,11 @@ export default {
 .date-button {
   padding: 0 14px !important;
 }
-
+.date {
+  p {
+    color: #ccc;
+  }
+}
 .main-container {
   min-height: 100vh;
   display: flex;

@@ -1,18 +1,30 @@
 
 <template>
-  <div class='demo-app'>
-    <div class='demo-app-main'>
-      <FullCalendar
-        class='demo-app-calendar'
-        :options='calendarOptions'>
-        <template v-slot:eventContent='arg'>
-          <p>{{arg.endTime}}</p>
-          <b>{{ arg.timeText }}</b>
-          <i>{{ arg.event.title }}</i>
-        </template>
-      </FullCalendar>
-    </div>
-  </div>
+  <PopupTemplate ref="schedulePopUp">
+    <template #body>
+      <div class='demo-app'>
+        <div class='demo-app-main'>
+          <FullCalendar
+            ref="calendarData"
+            class='demo-app-calendar'
+            :options='calendarOptions'>
+            <template v-slot:eventContent='arg'>
+              <p>{{arg.endTime}}</p>
+              <p>{{ arg.timeText }}</p>
+            </template>
+          </FullCalendar>
+          <p>*Drag and drop your event for changing date and time</p>
+          <p>*Click on your event in order to delete it</p>
+          <br>
+          <p>*If you want to make more than one appointment, contact salon employees</p>
+          <br>
+          <p>Your time:</p>
+          <p v-if="selectedEvent.length !== 0">{{formatDateDisplay(selectedEvent[0].startStr)}} from {{formatTimeDisplay(selectedEvent[0].startStr)}} to {{formatTimeDisplay(selectedEvent[0].endStr)}}</p>
+          <div class="button" @click="$emit('selectedEvent', selectedEvent), close()">Choose</div>
+        </div>
+      </div>
+    </template>
+  </PopupTemplate>
 </template>
 
 <script>
@@ -22,10 +34,11 @@ import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import { createEventId } from '~/helpers/event-utils'
 import { addMinutes, addMonths, format, parseISO } from 'date-fns'
+import PopupTemplate from '~/components/PopupTemplate'
 export default {
-
   components: {
-    FullCalendar
+    FullCalendar,
+    PopupTemplate
   },
   props:{
     duration:{
@@ -45,7 +58,6 @@ export default {
     },
     currentEvents(){
       this.isDateSelected = this.currentEvents.some(x => x.groupId === '2');
-      console.log(this.isDateSelected);
     }
   },
   data() {
@@ -54,6 +66,7 @@ export default {
     const stringDuration = '0'+hours+':'+minutes+":00";
     return {
       stringDuration,
+      selectedEvent: [],
       isDateSelected: false,
       calendarOptions: {
         plugins: [
@@ -85,7 +98,7 @@ export default {
         },
         initialView: 'timeGridWeek',
         nowIndicator: true,
-        events: this.scheduleForEmployee, // alternatively, use the `events` setting to fetch from a feed
+        events: this.scheduleForEmployee,
         editable: true,
         selectable: true,
         selectMirror: false,
@@ -115,6 +128,12 @@ export default {
   },
 
   methods: {
+    open() {
+      this.$refs.schedulePopUp.open()
+    },
+    close() {
+      this.$refs.schedulePopUp.close()
+    },
     handleDateSelect(selectInfo) {
       const startTime = JSON.parse(JSON.stringify(selectInfo.startStr));
       const endTime = JSON.parse(JSON.stringify(addMinutes(parseISO(selectInfo.startStr), this.duration)));
@@ -136,28 +155,37 @@ export default {
           end: endTime,
           constraint: 'businessHours'
         })
+        this.selectedEvent = this.currentEvents.filter(x => x.groupId === '2')
       }
     },
 
     handleEventClick(clickInfo) {
-      console.log(clickInfo.event.groupId);
       if(clickInfo.event.groupId === '1'){
         return
       }
-      if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
+      if (confirm(`Are you sure you want to delete the appointment?`)) {
         clickInfo.event.remove()
       }
     },
 
     handleEvents(events) {
       this.currentEvents = events
+    },
+    formatTimeDisplay(date){
+      if(date){
+      return format(parseISO(date), 'HH:mm')
+      }
+    },
+    formatDateDisplay(date){
+      if(date){
+      return format(parseISO(date), 'dd/MM/yyyy')
+      }
     }
   }
 }
 </script>
 
-<style lang='css'>
-
+<style lang='scss' scoped>
 h2 {
   margin: 0;
   font-size: 16px;
@@ -173,7 +201,8 @@ li {
   padding: 0;
 }
 
-b { /* used for event dates/times */
+b {
+  /* used for event dates/times */
   margin-right: 3px;
 }
 
@@ -202,12 +231,31 @@ b { /* used for event dates/times */
   height: 100%;
 }
 
-.fc { /* the calendar root */
+.fc {
+  /* the calendar root */
   margin: 0 auto;
 }
 .fc-event-main {
-    font-size: 11px;
-    cursor: default;
+  font-size: 11px;
+  /* cursor: default; */
 }
-
+.fc-event {
+  cursor: pointer;
+}
+.myCalendar {
+  cursor: pointer;
+}
+.button {
+  width: 120px;
+  padding: 14px;
+  border: 1px solid white;
+  border-radius: 14px;
+  cursor: pointer;
+  font-weight: 600;
+  color: #fff;
+  background-color: #2c3e50;
+  text-align: center;
+  margin-right: 0;
+  float: right;
+}
 </style>
