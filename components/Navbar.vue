@@ -56,7 +56,7 @@
             <div class='active' @click='openAppointmentsModal()'><i class='fa fa-calendar-o'></i> Edit Appointments
             </div>
           </div>
-          <div class='button' v-if='hide'>
+          <div class='button'>
             <div class='active' @click='openEmployeeModal()'><i class='fas fa-user-friends'></i> Employees</div>
           </div>
 
@@ -85,25 +85,15 @@ export default {
   beforeMount() {
     this.userInfo = this.$store.state.user
     console.log(this.$store.state.user)
-    this.hideClick()
   },
   data() {
     return {
       userInfo: {},
-      hide: true
     }
 
   },
   methods: {
-
-    hideClick(){
-      if (this.userInfo.role === "employee") {
-        console.log()
-        this.hide = false
-      }
-    },
-
-    async logout() {
+        async logout() {
       try {
         const cookie = getCookieDataUnparsed('session')
         await this.$axios.delete(`http://easybeauty.somee.com/v1/api/Login/logout?cookie=${cookie}`)
