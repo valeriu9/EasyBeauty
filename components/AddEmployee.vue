@@ -37,13 +37,6 @@ export default {
   components: {
     PopupTemplate: () => import('~/components/PopupTemplate')
   },
-
-  mounted() {
-    let fontScript = document.createElement('script')
-    fontScript.setAttribute('src', 'https://kit.fontawesome.com/52311f6e31.js')
-    document.head.appendChild(fontScript)
-  },
-
   layout: 'default',
   props: {
     enableOverlayClick: {
@@ -133,6 +126,35 @@ export default {
 </script>
 
 <style lang='scss' scoped>
+
+.save-button {
+  cursor: pointer;
+  padding: 10px;
+  transition: 0.3s;
+  font-size: 17px;
+  background-color: lightseagreen;
+  margin: 0 15px;
+  border: none;
+  color: white;
+  border-radius: 10px;
+  box-shadow: 0 0 10px 0 rgb(0 0 0 / 10%), 0 0 10px 0 rgb(0 0 0 / 10%) !important;
+  width: 14vw;
+}
+
+.cancel-button {
+  cursor: pointer;
+  padding: 10px;
+  transition: 0.3s;
+  font-size: 17px;
+  margin: 0 15px;
+  border-radius: 10px;
+  width: 14vw;
+  background-color: rgba(255, 255, 255, 0.5);
+  border: darkred solid medium;
+  box-shadow: 0 0 10px 0 rgb(0 0 0 / 10%), 0 0 10px 0 rgb(0 0 0 / 10%) !important;
+  color: darkred;
+}
+
 .employee-details {
   margin: 0 40px;
   height: 50%;
@@ -151,6 +173,12 @@ export default {
   margin: 20px 40px;
   margin-top: 0;
   cursor: pointer;
+  padding: 10px;
+  transition: 0.3s;
+  font-size: 13px;
+  border-radius: 10px;
+  background-color: white;
+  border: lightseagreen solid thin;
 }
 
 .button-container {
@@ -203,4 +231,14 @@ export default {
   opacity: 1;
   color: #6a6a6a;
 }
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
 </style>

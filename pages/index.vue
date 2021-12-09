@@ -2,31 +2,37 @@
   <div class='main-container'>
     <BaseLoader ref='loader' />
     <AddProduct ref='addProductPopup' :itemToEdit='itemToEdit' :enableOverlayClick='true' @loadServices='loadServices'
-      @loadProducts='loadProducts' @openLoader='openLoader' @closeLoader='closeLoader' />
+                @loadProducts='loadProducts' @openLoader='openLoader' @closeLoader='closeLoader' />
     <div class='services-container'>
       <div class='product-service-container'>
         <div class='service-navbar'>
-          <button v-if="user.role === 'manager'" class='add-item-button' type='button' @click='openAddProductModal()'><i class='fas fa-plus'></i>
+          <button v-if="user.role === 'manager'" class='add-item-button' type='button' @click='openAddProductModal()'>
+            <img
+              src='~/assets/images/plus-solid.svg'>
             <p>Add new Item</p>
           </button>
           <div class='search-wrapper'>
             <input name='search' id='searchField' :value='searchText' @input='e => searchText = e.target.value'
-              placeholder='Search..'
-              type='text'>
-            <button type='submit' @click='search()'><i class='fa fa-search'></i></button>
+                   placeholder='Search..'
+                   type='text'>
+            <img @click='search()' src='~/assets/images/search-solid.svg'>
           </div>
         </div>
         <div class='items-grid-container'>
           <div v-for='(item, index) in filteredList' :key='index' class='items-grid'>
 
             <div class='image-container'>
-              <button v-if="user.role === 'manager'" class='edit-item-button' type='button' @click='openAddProductModal(item)'><i
-                  class='far fa-edit'></i>
+              <button v-if="user.role === 'manager'" class='edit-item-button'
+                      @click='openAddProductModal(item)'>
+                <img
+                  src='~/assets/images/edit-regular.svg'>
               </button>
-              <button v-if="user.role === 'manager'" class='delete-item-button' type='button' @click='deleteItem(item, index)'><i
-                  class='far fa-trash-alt'></i>
+              <button v-if="user.role === 'manager'" class='delete-item-button'
+                      @click='deleteItem(item, index)'>
+                <img
+                  src='~/assets/images/trash-solid.svg'>
               </button>
-              <img :src='item.image' class='grid-item-pic' @click='addToSaleList(item)' />
+              <img :src='item.image' class='grid-item-pic' @click='addToSaleList(item)'>
             </div>
             <div class='item-container'>
               <p class='grid-item-name'>{{ item.name }}</p>
@@ -39,12 +45,24 @@
       </div>
       <div class='tab'>
         <button id='defaultOpen' class='tablinks'
-          @click.prevent='setActive' :class="[isActive ? 'active' : '']"
-          @click="switchTab('services')"><i class='fas fa-cut'></i>
+                @click.prevent='setActive' :class="[isActive ? 'active' : '']"
+                @click="switchTab('services')">
+          <svg aria-hidden='true' focusable='false' data-prefix='fas' data-icon='cut'
+               class='svg-inline--fa fa-cut fa-w-14' role='img' xmlns='http://www.w3.org/2000/svg'
+               viewBox='0 0 448 512'>
+            <path fill='currentColor'
+                  d='M278.06 256L444.48 89.57c4.69-4.69 4.69-12.29 0-16.97-32.8-32.8-85.99-32.8-118.79 0L210.18 188.12l-24.86-24.86c4.31-10.92 6.68-22.81 6.68-35.26 0-53.02-42.98-96-96-96S0 74.98 0 128s42.98 96 96 96c4.54 0 8.99-.32 13.36-.93L142.29 256l-32.93 32.93c-4.37-.61-8.83-.93-13.36-.93-53.02 0-96 42.98-96 96s42.98 96 96 96 96-42.98 96-96c0-12.45-2.37-24.34-6.68-35.26l24.86-24.86L325.69 439.4c32.8 32.8 85.99 32.8 118.79 0 4.69-4.68 4.69-12.28 0-16.97L278.06 256zM96 160c-17.64 0-32-14.36-32-32s14.36-32 32-32 32 14.36 32 32-14.36 32-32 32zm0 256c-17.64 0-32-14.36-32-32s14.36-32 32-32 32 14.36 32 32-14.36 32-32 32z'></path>
+          </svg>
           <p> Services</p>
         </button>
         <button class='tablinks' @click.prevent='setActive' :class="[!isActive ? 'active' : '']"
-          @click="switchTab('products')"><i class='fas fa-spray-can'></i>
+                @click="switchTab('products')">
+          <svg aria-hidden='true' focusable='false' data-prefix='fas' data-icon='spray-can'
+               class='svg-inline--fa fa-spray-can fa-w-16' role='img' xmlns='http://www.w3.org/2000/svg'
+               viewBox='0 0 512 512'>
+            <path fill='currentColor'
+                  d='M224 32c0-17.67-14.33-32-32-32h-64c-17.67 0-32 14.33-32 32v96h128V32zm256 96c-17.67 0-32 14.33-32 32s14.33 32 32 32 32-14.33 32-32-14.33-32-32-32zm-256 32H96c-53.02 0-96 42.98-96 96v224c0 17.67 14.33 32 32 32h256c17.67 0 32-14.33 32-32V256c0-53.02-42.98-96-96-96zm-64 256c-44.18 0-80-35.82-80-80s35.82-80 80-80 80 35.82 80 80-35.82 80-80 80zM480 96c17.67 0 32-14.33 32-32s-14.33-32-32-32-32 14.33-32 32 14.33 32 32 32zm-96 32c-17.67 0-32 14.33-32 32s14.33 32 32 32 32-14.33 32-32-14.33-32-32-32zm-96-96c-17.67 0-32 14.33-32 32s14.33 32 32 32 32-14.33 32-32-14.33-32-32-32zm96 0c-17.67 0-32 14.33-32 32s14.33 32 32 32 32-14.33 32-32-14.33-32-32-32zm96 192c-17.67 0-32 14.33-32 32s14.33 32 32 32 32-14.33 32-32-14.33-32-32-32z'></path>
+          </svg>
           <p>
             Products
           </p>
@@ -64,16 +82,18 @@
         <div class='item-list'>
           <div v-for='(item, index) in saleList' :key='index' class='cart-item'>
             <div class='item-name'>
-              <i class='far fa-trash-alt' @click='removeItemFromSaleList(index)'></i>
+              <img src='~/assets/images/trash-solid.svg' @click='removeItemFromSaleList(index)'>
               <p>{{ item.name }}</p>
             </div>
             <div class='item-quantity'>
               <div id='decrease' class='value-button' value='Decrease Value' @click='decreaseValue(index)'>
-                <i class='fas fa-minus'></i>
+                <img
+                  src='~/assets/images/minus-solid.svg'>
               </div>
               <input id='number' :value='item.quantity' />
               <div id='increase' class='value-button' value='Increase Value' @click='increaseValue(index)'>
-                <i class='fas fa-plus'></i>
+                <img
+                  src='~/assets/images/plus-solid.svg'>
               </div>
             </div>
             <p class='item-price'>{{ item.price }} DKK</p>
@@ -83,7 +103,7 @@
           <div class='price-wrapper'>
             <p>Discount (%)</p>
             <input name='discount' :value='discount' @input='e => discount = e.target.value' type='number' min='0'
-              max='100'>
+                   max='100'>
           </div>
           <div class='price-wrapper'>
             <p>Total without taxes</p>
@@ -121,9 +141,6 @@ export default {
     BaseLoader
   },
   mounted() {
-    let fontScript = document.createElement('script')
-    fontScript.setAttribute('src', 'https://kit.fontawesome.com/52311f6e31.js')
-    document.head.appendChild(fontScript)
     this.fetchData()
   },
   watch: {
@@ -407,6 +424,7 @@ export default {
 
 .image-container {
   position: relative;
+
 }
 
 .grid-item-name {
@@ -432,6 +450,11 @@ export default {
   display: flex;
   margin: 5px;
   font-size: 0.8vw;
+
+  img {
+    height: 13px;
+    cursor: pointer;
+  }
 }
 
 .delete-item-button {
@@ -441,12 +464,21 @@ export default {
   margin: 5px;
   font-size: 0.8vw;
   z-index: 10;
+
+  img {
+    height: 13px;
+    cursor: pointer;
+  }
 }
 
-.search-wrapper button {
+
+.search-wrapper img {
   border-radius: 100%;
   background: lightseagreen;
   margin: 10px;
+  padding: 7px;
+  height: 30px;
+  cursor: pointer;
 }
 
 .service-navbar .search-wrapper {
@@ -462,6 +494,10 @@ export default {
   display: flex;
   color: lightseagreen;
   background-color: transparent;
+}
+
+.add-item-button img {
+  height: 20px;
 }
 
 .service-navbar input:hover {
@@ -507,12 +543,13 @@ export default {
   justify-content: center;
   color: gray;
   position: relative;
-}
-
-.item-name i {
-  margin: 0 10px;
-  position: absolute;
-  left: 0;
+  img{
+    height: 12px;
+    margin: 0 10px;
+    position: absolute;
+    left: 0;
+    cursor: pointer;
+  }
 }
 
 .item-price {
@@ -529,6 +566,9 @@ export default {
   width: 25%;
   color: lightseagreen;
   font-size: 0.8vw;
+  img{
+    height: 15px;
+  }
 }
 
 .value-button {
@@ -601,6 +641,10 @@ input[type='number']::-webkit-outer-spin-button {
 .tablinks.active {
   color: lightseagreen;
   border: lightseagreen solid thick;
+}
+
+.tablinks svg{
+  height: 20px;
 }
 
 /* Style the tab content */

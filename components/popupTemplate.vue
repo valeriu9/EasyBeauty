@@ -10,14 +10,7 @@
 <script>
 
 export default {
-
-  mounted() {
-    let fontScript = document.createElement('script')
-    fontScript.setAttribute('src', 'https://kit.fontawesome.com/52311f6e31.js')
-    document.head.appendChild(fontScript)
-  },
-
-  layout: 'default',
+    layout: 'default',
   props: {
     enableOverlayClick: {
       type: Boolean,

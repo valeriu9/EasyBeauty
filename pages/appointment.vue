@@ -42,7 +42,7 @@
             <div v-else>
               <p>Choose a date and time</p>
             </div>
-            <button class='date-button' type="button" @click="$refs.calendar.open()"> <i class="far fa-calendar"></i></button>
+            <img class='date-button' type="button" @click="$refs.calendar.open()" src='~/assets/images/calendar-regular.svg'>
           </div>
           <div class='input-group'>
             <input placeholder='Note (optional)'>
@@ -77,9 +77,6 @@ export default {
     PopupTemplate: () => import('~/components/PopupTemplate')
   },
   mounted() {
-    let fontScript = document.createElement('script')
-    fontScript.setAttribute('src', 'https://kit.fontawesome.com/52311f6e31.js')
-    document.head.appendChild(fontScript)
     this.loadServices();
     this.loadEmployees();
   },
@@ -247,6 +244,7 @@ export default {
 }
 .date-button {
   padding: 0 14px !important;
+
 }
 .date {
   p {
@@ -289,6 +287,10 @@ export default {
   position: relative;
   margin-bottom: 33px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  img{
+    height: 18px;
+    cursor: pointer;
+  }
 }
 .input-group input {
   outline: none;

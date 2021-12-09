@@ -2,25 +2,24 @@
   <PopupTemplate ref='popupOpen'>
     <template #body>
       <AddEmployee ref='AddEmployeePopup' :enableOverlayClick='true' @loadEmployees='loadEmployees()'
-        :employeeToEdit='employeeToEdit' />
+                   :employeeToEdit='employeeToEdit' />
       <div class='edit-employee-navbar'>
-        <button class='add-employee-button' type='button' @click='openAddEmployeeModal()'><i class='fas fa-plus'></i>
+        <button class='add-employee-button' type='button' @click='openAddEmployeeModal()'><img
+          src='~/assets/images/plus-solid.svg'>
           <p>Add employee</p>
         </button>
         <div class='search-wrapper'>
           <input name='search' :value='searchText' @input='e => searchText = e.target.value' placeholder='Search..'
-            type='text'>
-          <button type='submit' @click='search()'><i class='fa fa-search'></i></button>
+                 type='text'>
+          <img @click='search()' src='~/assets/images/search-solid.svg'>
         </div>
       </div>
       <div class='employee-list-container'>
         <div v-for='(employee, index) in filteredList' :key='employee.index' class='existing-employee'>
-          <button class='edit-employee' type='button' @click='openAddEmployeeModal(employee)'><i
-              class='far fa-edit'></i>
-          </button>
-          <button class='delete-employee' type='button' @click='removeEmployee(index, employee.id)'><i
-              class='far fa-trash-alt'></i>
-          </button>
+          <img class='edit-employee' @click='openAddEmployeeModal(employee)' src='~/assets/images/edit-regular.svg'>
+          <img class='delete-employee' @click='removeEmployee(index, employee.id)'
+               src='~/assets/images/trash-solid.svg'>
+
           <div class='employee-details'>
             <p class='employee-name'>{{ employee.fullName }}</p>
             <p class='employee-email'> {{ employee.email }} </p>
@@ -34,7 +33,8 @@
 </template>
 
 <script>
-import {getCookieDataUnparsed} from '~/helpers/cookies.js'
+import { getCookieDataUnparsed } from '~/helpers/cookies.js'
+
 export default {
   components: {
     AddEmployee: () => import('~/components/AddEmployee'),
@@ -42,9 +42,6 @@ export default {
   },
 
   mounted() {
-    let fontScript = document.createElement('script')
-    fontScript.setAttribute('src', 'https://kit.fontawesome.com/52311f6e31.js')
-    document.head.appendChild(fontScript)
     this.loadEmployees()
   },
 
@@ -62,7 +59,7 @@ export default {
       filteredList: [],
       employeeList: [],
       employeeToEdit: {},
-         cookie: getCookieDataUnparsed('session')
+      cookie: getCookieDataUnparsed('session')
     }
   },
   beforeDestroy() {
@@ -181,6 +178,8 @@ export default {
   margin: 5px;
   font-size: 14px;
   cursor: pointer;
+  height: 20px;
+  width: 20px;
 }
 
 .delete-employee {
@@ -190,17 +189,17 @@ export default {
   margin: 5px;
   font-size: 14px;
   cursor: pointer;
+  height: 20px;
+  width: 20px;
 }
 
-.search-wrapper button {
+.search-wrapper img {
   border-radius: 100%;
   background: lightseagreen;
   margin: 10px;
-  border: none;
-  padding: 10px;
+  padding: 7px;
   height: 30px;
-  display: flex;
-  align-items: center;
+  cursor: pointer;
 }
 
 .edit-employee-navbar input:hover {
@@ -235,6 +234,10 @@ export default {
   border: none;
   font-size: 15px;
   cursor: pointer;
+}
+
+.add-employee-button img {
+  height: 20px;
 }
 
 .add-employee-button p {
