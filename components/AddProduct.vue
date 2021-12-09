@@ -18,10 +18,11 @@
           <p class='floating-label'>Product Description</p>
           <br />
           <div class='product-price'>
+            <span class='currency-input'>
+              <input type='number' class='inputText' v-model='price' required />
+              <p class='floating-label'>Price </p>
+            </span>
 
-            <input type='number' class='inputText' v-model='price' required />
-            <p class='floating-label'>Price </p>
-            <p class='currency-code'>DKK</p>
           </div>
 
           <br />
@@ -45,7 +46,8 @@
 </template>
 
 <script>
-import {getCookieDataUnparsed} from '~/helpers/cookies.js'
+import { getCookieDataUnparsed } from '~/helpers/cookies.js'
+
 export default {
   name: 'imageUpload',
 
@@ -125,7 +127,7 @@ export default {
             this.image = response.image.url
             try {
               if (this.type === 'products') {
-                this.$emit('openLoader');
+                this.$emit('openLoader')
                 this.$axios.post(`http://easybeauty.somee.com/v1/api/Product?cookie=${this.cookie}`, {
                   name: this.name,
                   description: this.description,
@@ -158,7 +160,7 @@ export default {
       } else {
         try {
           if (this.type === 'products') {
-            this.$emit('openLoader');
+            this.$emit('openLoader')
             this.$axios.put(`http://easybeauty.somee.com/v1/api/Product?id=${this.itemToEdit.id}&cookie=${this.cookie}`, {
               name: this.name,
               description: this.description,
@@ -201,12 +203,15 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-.currency-code {
+
+.currency-input:after {
   position: absolute;
-  left: 70px;
+  left: 60px;
   top: 38%;
   font-size: 13px;
+  content: "DKK";
 }
+
 .productService-details {
   width: 50%;
   right: 25px;
@@ -218,13 +223,17 @@ export default {
 }
 
 .product-service-type {
-  margin: 12px 40px;
+  margin: 12px 0;
   cursor: pointer;
 }
+
 .product-price {
   position: relative;
-  width: 30%;
+  width: min-content;
+  min-width: 50px;
+
 }
+
 .product-price .inputText {
   width: 100%;
 }
@@ -259,7 +268,7 @@ export default {
 }
 
 .button-container button {
-  padding: 5px;
+  padding: 10px;
   margin: 0 15px;
   cursor: pointer;
 }
@@ -298,5 +307,15 @@ export default {
   font-size: 13px;
   opacity: 1;
   color: #6a6a6a;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
 }
 </style>

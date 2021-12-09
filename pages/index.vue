@@ -2,7 +2,7 @@
   <div class='main-container'>
     <BaseLoader ref='loader' />
     <AddProduct ref='addProductPopup' :itemToEdit='itemToEdit' :enableOverlayClick='true' @loadServices='loadServices'
-      @loadProducts='loadProducts' @openLoader='openLoader' @closeLoader='closeLoader' />
+                @loadProducts='loadProducts' @openLoader='openLoader' @closeLoader='closeLoader' />
     <div class='services-container'>
       <div class='product-service-container'>
         <div class='service-navbar'>
@@ -10,8 +10,9 @@
             <p>Add new Item</p>
           </button>
           <div class='search-wrapper'>
-            <input name='search' :value='searchText' @input='e => searchText = e.target.value' placeholder='Search..'
-              type='text'>
+            <input name='search' id='searchField' :value='searchText' @input='e => searchText = e.target.value'
+                   placeholder='Search..'
+                   type='text'>
             <button type='submit' @click='search()'><i class='fa fa-search'></i></button>
           </div>
         </div>
@@ -20,10 +21,10 @@
 
             <div class='image-container'>
               <button class='edit-item-button' type='button' @click='openAddProductModal(item)'><i
-                  class='far fa-edit'></i>
+                class='far fa-edit'></i>
               </button>
               <button class='delete-item-button' type='button' @click='deleteItem(item, index)'><i
-                  class='far fa-trash-alt'></i>
+                class='far fa-trash-alt'></i>
               </button>
               <img :src='item.image' class='grid-item-pic' @click='addToSaleList(item)' />
             </div>
@@ -35,21 +36,15 @@
             </div>
           </div>
         </div>
-        <div id='Services' class='tabcontent'>
-          <h3>Services</h3>
-        </div>
-        <div id='Products' class='tabcontent'>
-          <h3>Products</h3>
-        </div>
       </div>
       <div class='tab'>
         <button id='defaultOpen' class='tablinks'
-          @click.prevent="setActive('services')" :class="{ active: isActive('services') }"
-          @click="switchTab('services')"><i class='fas fa-cut'></i>
+                @click.prevent='setActive' :class="[isActive ? 'active' : '']"
+                @click="switchTab('services')"><i class='fas fa-cut'></i>
           <p> Services</p>
         </button>
-        <button class='tablinks' @click.prevent="setActive('products')" :class="{ active: isActive('products') }"
-          @click="switchTab('products')"><i class='fas fa-spray-can'></i>
+        <button class='tablinks' @click.prevent='setActive' :class="[!isActive ? 'active' : '']"
+                @click="switchTab('products')"><i class='fas fa-spray-can'></i>
           <p>
             Products
           </p>
@@ -88,7 +83,7 @@
           <div class='price-wrapper'>
             <p>Discount (%)</p>
             <input name='discount' :value='discount' @input='e => discount = e.target.value' type='number' min='0'
-              max='100'>
+                   max='100'>
           </div>
           <div class='price-wrapper'>
             <p>Total without taxes</p>
@@ -118,7 +113,8 @@
 
 <script>
 import BaseLoader from '@/components/BaseLoader'
-import {getCookieDataUnparsed} from '~/helpers/cookies.js'
+import { getCookieDataUnparsed } from '~/helpers/cookies.js'
+
 export default {
 
   components: {
@@ -129,6 +125,11 @@ export default {
     fontScript.setAttribute('src', 'https://kit.fontawesome.com/52311f6e31.js')
     document.head.appendChild(fontScript)
     this.fetchData()
+  },
+  watch: {
+    searchText() {
+      this.search()
+    }
   },
   computed: {
     totalBeforeTax() {
@@ -162,6 +163,7 @@ export default {
       serviceList: [],
       searchText: '',
       activeTab: 'services',
+      isActive: true,
       filteredList: [],
       saleList: [],
       discount: null,
@@ -172,6 +174,12 @@ export default {
   },
   layout: 'default',
   methods: {
+
+    setActive() {
+      this.isActive = !this.isActive
+    },
+
+
     openLoader() {
       this.$refs.loader.open()
     },
@@ -200,12 +208,7 @@ export default {
         this.activeTab = 'products'
       }
     },
-    isActive(menuItem) {
-      return this.activeItem === menuItem
-    },
-    setActive(menuItem) {
-      this.activeItem = menuItem
-    },
+
 
     increaseValue(index) {
 
@@ -594,10 +597,11 @@ input[type='number']::-webkit-outer-spin-button {
 }
 
 /* Create an active/current tablink class */
-.tab button:active {
+.tablinks.active {
   color: lightseagreen;
   border: lightseagreen solid thick;
 }
+
 
 /* Style the tab content */
 .tabcontent {
@@ -624,7 +628,7 @@ input[type='number']::-webkit-outer-spin-button {
 }
 
 .item-list {
-  height: 50%;
+  height: 60%;
   overflow-y: scroll;
 }
 
@@ -656,7 +660,7 @@ input[type='number']::-webkit-outer-spin-button {
 }
 
 .cart-price-container {
-  height: 40%;
+  height: 30%;
   display: flex;
   justify-content: center;
   flex-direction: column;
@@ -666,9 +670,10 @@ input[type='number']::-webkit-outer-spin-button {
   display: flex;
   justify-content: space-between;
   background-color: #f2f2f2;
-  padding: 15px;
-  height: 7vh;
+  padding: 0 50px;
+  height: 6vh;
   color: gray;
+  align-items: center;
 }
 
 .cart-price-container .total-price-wrapper {
@@ -676,7 +681,7 @@ input[type='number']::-webkit-outer-spin-button {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 15px;
+  padding: 0 50px;
   height: 7vh;
 }
 

@@ -49,18 +49,21 @@
         </div>
         <div class='buttons-wrapper'>
           <div class='button'>
-            <div class='active' @click="goToAppointment()"><i class='fa fa-calendar-o'></i> Appointments</div>
+            <div class='active' @click='goToAppointment()'><i class='fa fa-calendar-o'></i> Appointments</div>
           </div>
           <div class='button'>
-            <div class='active' @click="openAppointmentsModal()"><i class='fa fa-calendar-o'></i> Edit Appointments</div>
+            <div class='active' @click='openAppointmentsModal()'><i class='fa fa-calendar-o'></i> Edit Appointments
+            </div>
           </div>
           <div class='button'>
-            <div class='active' @click="openEmployeeModal()"><i class='fas fa-user-friends'></i> Employees</div>
+            <div class='active' @click='openEmployeeModal()'><i class='fas fa-user-friends'></i> Employees</div>
           </div>
 
         </div>
         <div class='extras'>
           <p>{{ userInfo.name }}</p>
+          <p>{{ userInfo.role }}</p>
+
           <div v-if='userInfo.name' class='cursor-pointer' @click='logout()'><i class='fas fa-door-open'></i></div>
           <a v-if='!userInfo.name' href='/login'><i class='fas fa-door-open'></i></a>
         </div>
@@ -70,24 +73,28 @@
 </template>
 
 <script>
-import {getCookieDataUnparsed} from '~/helpers/cookies.js'
+import { getCookieDataUnparsed } from '~/helpers/cookies.js'
+
 export default {
 
-  components:{
-     EditEmployee: () => import('~/components/EditEmployee'),
-     EditAppointment: () => import('~/components/EditAppointment'),
+  components: {
+    EditEmployee: () => import('~/components/EditEmployee'),
+    EditAppointment: () => import('~/components/EditAppointment')
   },
   beforeMount() {
     this.userInfo = this.$store.state.user
     console.log(this.$store.state.user)
   },
   data() {
-    return { userInfo: {} }
+    return {
+      userInfo: {},
+    }
+
   },
   methods: {
-    async logout() {
+        async logout() {
       try {
-         const cookie = getCookieDataUnparsed('session');
+        const cookie = getCookieDataUnparsed('session')
         await this.$axios.delete(`http://easybeauty.somee.com/v1/api/Login/logout?cookie=${cookie}`)
         this.$cookies.remove('easybeauty_user')
         this.$store.dispatch('user/userLoggedOut')
@@ -96,25 +103,25 @@ export default {
         console.log(e)
       }
     },
-      goToAppointment(){
-        this.$router.push('/appointment');
-      },
-      goToHome(){
-        this.$router.push('/');
-      },
+    goToAppointment() {
+      this.$router.push('/appointment')
+    },
+    goToHome() {
+      this.$router.push('/')
+    },
 
 
-    openEmployeeModal(){
-      this.$refs.employeePopup.open();
+    openEmployeeModal() {
+      this.$refs.employeePopup.open()
     },
-    closeEmployeeModal(){
-      this.$refs.employeePopup.close();
+    closeEmployeeModal() {
+      this.$refs.employeePopup.close()
     },
-    openAppointmentsModal(){
-      this.$refs.appointmentPopup.open();
+    openAppointmentsModal() {
+      this.$refs.appointmentPopup.open()
     },
-    closeAppointmentsModal(){
-      this.$refs.appointmentPopup.close();
+    closeAppointmentsModal() {
+      this.$refs.appointmentPopup.close()
     }
   }
 }
