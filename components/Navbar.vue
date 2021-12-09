@@ -51,19 +51,17 @@
           <div class='button'>
             <div class='active' @click='goToAppointment()'><i class='fa fa-calendar-o'></i> Appointments</div>
           </div>
-          <div class='button'>
+          <div v-if="userInfo.role === 'manager'" class='button'>
             <div class='active' @click='openAppointmentsModal()'><i class='fa fa-calendar-o'></i> Edit Appointments
             </div>
           </div>
-          <div class='button'>
+          <div v-if="userInfo.role === 'manager'" class='button'>
             <div class='active' @click='openEmployeeModal()'><i class='fas fa-user-friends'></i> Employees</div>
           </div>
 
         </div>
         <div class='extras'>
           <p>{{ userInfo.name }}</p>
-          <p>{{ userInfo.role }}</p>
-
           <div v-if='userInfo.name' class='cursor-pointer' @click='logout()'><i class='fas fa-door-open'></i></div>
           <a v-if='!userInfo.name' href='/login'><i class='fas fa-door-open'></i></a>
         </div>
@@ -83,7 +81,6 @@ export default {
   },
   beforeMount() {
     this.userInfo = this.$store.state.user
-    console.log(this.$store.state.user)
   },
   data() {
     return {

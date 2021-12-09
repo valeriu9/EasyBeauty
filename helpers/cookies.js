@@ -27,7 +27,7 @@ export function setCookie (name, value, domain) {
   if (!document) { console.error('Failed to setCookie: No access to the document object'); return; }
 
   const date = new Date();
-  date.setHours(date.getHours() + 1);
+  date.setMinutes(date.getMinutes() + 30);
   const expires = ` expires=${date.toUTCString()};`;
   const cookieDomain = domain ? ` domain=${domain};` : '';
   document.cookie = name + '=' + encodeURIComponent(JSON.stringify(value)) + '; path=/ ;' + expires + cookieDomain;
@@ -38,7 +38,7 @@ export function setCookieUnparsed (name, value) {
   if (!document) { console.error('Failed to setCookieUnparsed: No access to the document object'); return; }
 
   const date = new Date();
-  date.setHours(date.getHours() + 1);
+  date.setMinutes(date.getMinutes() + 30);
   const expires = ' expires=' + date.toUTCString() + ';';
   document.cookie = name + '=' + value + '; path=/ ;' + expires;
 }

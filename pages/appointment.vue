@@ -158,7 +158,7 @@ export default {
           groupId: 1,
           display: 'background'
         })
-        const appointments = await this.$axios.get(`http://easybeauty.somee.com/v1/schedule/${employeeId}`);
+        const appointments = await this.$axios.get(`http://easybeauty.somee.com/v1/api/Schedule?employeeId=${employeeId}`);
         if(appointments.data.length > 0 ){
           appointments.data.forEach(appointment => {
             this.scheduleForEmployee.push({id: createEventId(), groupId: 1, 'start':appointment.startTime, 'end': appointment.endTime, 'editable': false, color:'#ddd',  constraint: 'businessHours'});

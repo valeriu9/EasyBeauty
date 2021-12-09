@@ -2,17 +2,17 @@
   <div class='main-container'>
     <BaseLoader ref='loader' />
     <AddProduct ref='addProductPopup' :itemToEdit='itemToEdit' :enableOverlayClick='true' @loadServices='loadServices'
-                @loadProducts='loadProducts' @openLoader='openLoader' @closeLoader='closeLoader' />
+      @loadProducts='loadProducts' @openLoader='openLoader' @closeLoader='closeLoader' />
     <div class='services-container'>
       <div class='product-service-container'>
         <div class='service-navbar'>
-          <button class='add-item-button' type='button' @click='openAddProductModal()'><i class='fas fa-plus'></i>
+          <button v-if="user.role === 'manager'" class='add-item-button' type='button' @click='openAddProductModal()'><i class='fas fa-plus'></i>
             <p>Add new Item</p>
           </button>
           <div class='search-wrapper'>
             <input name='search' id='searchField' :value='searchText' @input='e => searchText = e.target.value'
-                   placeholder='Search..'
-                   type='text'>
+              placeholder='Search..'
+              type='text'>
             <button type='submit' @click='search()'><i class='fa fa-search'></i></button>
           </div>
         </div>
@@ -20,11 +20,11 @@
           <div v-for='(item, index) in filteredList' :key='index' class='items-grid'>
 
             <div class='image-container'>
-              <button class='edit-item-button' type='button' @click='openAddProductModal(item)'><i
-                class='far fa-edit'></i>
+              <button v-if="user.role === 'manager'" class='edit-item-button' type='button' @click='openAddProductModal(item)'><i
+                  class='far fa-edit'></i>
               </button>
-              <button class='delete-item-button' type='button' @click='deleteItem(item, index)'><i
-                class='far fa-trash-alt'></i>
+              <button v-if="user.role === 'manager'" class='delete-item-button' type='button' @click='deleteItem(item, index)'><i
+                  class='far fa-trash-alt'></i>
               </button>
               <img :src='item.image' class='grid-item-pic' @click='addToSaleList(item)' />
             </div>
@@ -39,12 +39,12 @@
       </div>
       <div class='tab'>
         <button id='defaultOpen' class='tablinks'
-                @click.prevent='setActive' :class="[isActive ? 'active' : '']"
-                @click="switchTab('services')"><i class='fas fa-cut'></i>
+          @click.prevent='setActive' :class="[isActive ? 'active' : '']"
+          @click="switchTab('services')"><i class='fas fa-cut'></i>
           <p> Services</p>
         </button>
         <button class='tablinks' @click.prevent='setActive' :class="[!isActive ? 'active' : '']"
-                @click="switchTab('products')"><i class='fas fa-spray-can'></i>
+          @click="switchTab('products')"><i class='fas fa-spray-can'></i>
           <p>
             Products
           </p>
@@ -83,7 +83,7 @@
           <div class='price-wrapper'>
             <p>Discount (%)</p>
             <input name='discount' :value='discount' @input='e => discount = e.target.value' type='number' min='0'
-                   max='100'>
+              max='100'>
           </div>
           <div class='price-wrapper'>
             <p>Total without taxes</p>
@@ -168,6 +168,7 @@ export default {
       saleList: [],
       discount: null,
       itemToEdit: {},
+      user: this.$store.state.user,
       cookie: getCookieDataUnparsed('session')
     }
 
@@ -601,7 +602,6 @@ input[type='number']::-webkit-outer-spin-button {
   color: lightseagreen;
   border: lightseagreen solid thick;
 }
-
 
 /* Style the tab content */
 .tabcontent {

@@ -49,9 +49,9 @@
           <input v-if="state === stateTypes.PASSWORD" type="password" :value="password" @input="e => password = e.target.value"
             @blur="validatePassword(password)" class="password" placeholder="Password" v-on:keyup.enter="login">
           <input v-if="state === stateTypes.NEWPASSWORD" :value="newPassword" @input="e => newPassword = e.target.value"
-            @blur="validatePassword(newPassword)" class="newPassword" type="password" placeholder="New Password" >
+            @blur="validatePassword(newPassword)" class="newPassword" type="password" placeholder="New Password">
           <input v-if="state === stateTypes.NEWPASSWORD" :value="repeatNewPassword"
-            @input="e => repeatNewPassword = e.target.value" @blur="validateRepeatPassword(repeatNewPassword)"
+            @input="e => repeatNewPassword = e.target.value" v-on:keyup.enter="createPassword(newPassword, repeatNewPassword)" @blur="validateRepeatPassword(repeatNewPassword)"
             class="repeatPassword" type="password" placeholder=" Repeat Password">
           <div v-if="state === stateTypes.EMAIL" class="submit-button" type="button" @click="checkForExistingEmail()">
             Next
@@ -142,7 +142,7 @@
           try {
           if (this.validatePassword(password) && this.email) {
           const res = await this.$axios.get(`http://easybeauty.somee.com/v1/api/Login/login?password=`+this.password+`&email=`+this.email);
-            if(res.data === 'Not authenticated'){
+            if(res.data.error){
               this.errorList[3].active = true;
             }
             else{

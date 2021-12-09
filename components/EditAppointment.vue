@@ -32,7 +32,9 @@
           </div>
         </form>
         <div class='demo-app-main'>
-          <FullCalendar
+          <CalendarEmp ref="calendar" :scheduleForEmployee="appointmentList" @selectedEvent="setEvent($event)">
+          </CalendarEmp>
+          <!-- <FullCalendar
             ref="calendarData"
             class='demo-app-calendar'
             :options='calendarOptions'>
@@ -40,7 +42,7 @@
               <p>{{arg.endTime}}</p>
               <p>{{ arg.timeText }}</p>
             </template>
-          </FullCalendar>
+          </FullCalendar> -->
           <p>*Drag and drop your event for changing date and time</p>
           <p>*Click on your event in order to delete it</p>
           <br>
@@ -52,86 +54,26 @@
 </template>
 
 <script>
-import FullCalendar from '@fullcalendar/vue'
-import dayGridPlugin from '@fullcalendar/daygrid'
-import timeGridPlugin from '@fullcalendar/timegrid'
-import interactionPlugin from '@fullcalendar/interaction'
 import { createEventId } from '~/helpers/event-utils'
-import { addMinutes, addMonths, format, parseISO } from 'date-fns'
 import PopupTemplate from '~/components/PopupTemplate'
+import CalendarEmp from '~/components/CalendarEmp'
 export default {
   components: {
-    FullCalendar,
+    CalendarEmp,
     PopupTemplate
   },
-  mounted(){
-    this.loadServices();
-    this.loadAppointmentsById();
+  created(){
+    setTimeout(() => {
+      this.loadServices();
+      this.loadAppointmentsById();
+      }, 1000);
+
   },
   data() {
-    const appointmentList = [];
-    const serviceList = [];
-    const selectedService = {};
     return {
-      serviceList,
-      appointmentList,
-      selectedService,
-      selectedEvent: {},
-      calendarOptions: {
-        plugins: [
-          dayGridPlugin,
-          timeGridPlugin,
-          interactionPlugin
-        ],
-        headerToolbar: {
-          left: 'prev,next',
-          center: 'title',
-          right: 'today'
-        },
-        businessHours: {
-        // days of week. an array of zero-based day of week integers (0=Sunday)
-        daysOfWeek: [ 1, 2, 3, 4, 5 ],
-        startTime: '10:00', // a start time (10am in this example)
-        endTime: '18:00', // an end time (6pm in this example)
-      },
-      validRange: function(nowDate) {
-          return {
-            start: nowDate,
-            // user json to flatten an observable
-            end: JSON.parse(JSON.stringify(addMonths(nowDate, 1)))
-          };
-        },
-        eventConstraint:{
-        start: '10:00', // a start time
-        end: '18:00', // an end time
-        },
-        initialView: 'timeGridWeek',
-        nowIndicator: true,
-        initialEvents: this.appointmentList,
-        editable: true,
-        selectable: true,
-        selectMirror: false,
-        dayMaxEvents: false,
-        slotMinTime: "10:00:00",
-        slotMaxTime: "18:00:00",
-        forceEventDuration: true,
-        weekends: false,
-        allDaySlot: false,
-        select: this.handleDateSelect,
-        eventClick: this.handleEventClick,
-        eventsSet: this.handleEvents,
-        eventDurationEditable: false,
-        contentHeight: "auto",
-        eventDrop: function( eventDropInfo ) {
-          if(eventDropInfo.event.start < new Date() ){
-            eventDropInfo.revert();
-          }
-        },
-        eventOverlap:  function(stillEvent, movingEvent) {
-         return stillEvent.allDay && movingEvent.allDay;
-        },
-      },
-      currentEvents: []
+      serviceList: [],
+      appointmentList: [],
+      selectedEvent: {fullName:'', phoneNr:null, email: ''}
     }
   },
 
@@ -142,24 +84,8 @@ export default {
     close() {
       this.$refs.schedulePopUp.close()
     },
-    handleDateSelect(selectInfo) {
-      console.log(selectInfo);
-    //  if(selec)
-    },
 
-    handleEventClick(clickInfo) {
-      if(clickInfo.event.groupId === '1'){
-        return
-      }
-      if (confirm(`Are you sure you want to delete the appointment?`)) {
-        this.selectedEvent = {}
-        clickInfo.event.remove()
-      }
-    },
 
-    handleEvents(events) {
-      this.currentEvents = events
-    },
     formatTimeDisplay(date){
       if(date){
       return format(parseISO(date), 'HH:mm')
@@ -183,18 +109,15 @@ export default {
         const appointments = await this.$axios.get(`http://easybeauty.somee.com/v1/api/Appointment?employeeId=${this.$store.state.user.id}`);
 
           if(appointments.data.length > 0 ){
+            console.log(appointments);
           appointments.data.forEach(appointment => {
-            this.appointmentList.push({id: createEventId(), groupId: 1, 'start':appointment.startTime+'0Z', 'end': appointment.endTime+'0Z', 'editable': false, color:'#ddd',  constraint: 'businessHours'});
+            this.appointmentList.push({id: createEventId(), groupId: 1, 'start': appointment.startTime, 'end': appointment.endTime, 'editable': false, color:'#ddd',  constraint: 'businessHours'});
           });
-          this.$refs.calendarData.render()
         }
       } catch (e) {
         console.log(e);
       }
     },
-    selectService(event){
-      this.selectedService = this.serviceList[event.target.value];
-    }
   }
 }
 </script>

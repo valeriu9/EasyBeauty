@@ -1,7 +1,7 @@
 export function initializeUserData (store) {
-  const userIsLoggedIn = $cookies.get('movie_user');
+  const userIsLoggedIn = $cookies.get('easybeauty_user');
 
   if (userIsLoggedIn) {
-    store.dispatch('user/userLoggedIn', $cookies.get('movie_user'));
+    store.dispatch('user/userLoggedIn', $cookies.get('easybeauty_user'));
   }
 }
