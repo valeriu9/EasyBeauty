@@ -3,25 +3,25 @@
   <PopupTemplate ref="schedulePopUp" design='editAppointment'>
     <template #body>
       <div class='demo-app'>
-        <form class='user-form' @submit="onSubmit($event)">
+        <div class='user-form'>
           <div class='input-group'>
-            <input :value="selectedEvent.fullName" placeholder='Full Name' disabled>
+            <input :value="selectedEvent.customerName" placeholder='Full Name' disabled>
           </div>
           <div class='input-group'>
             <input placeholder='Phone number'
               :value="selectedEvent.phoneNr" disabled>
           </div>
           <div class='input-group'>
-            <input :value="selectedEvent.email" placeholder="Email (optional)" disabled>
+            <input :value="selectedEvent.customerEmail" placeholder="Email (optional)" disabled>
           </div>
           <div class='input-group'>
             <select @change="selectService($event)" class='selection'>
-              <option v-for="(service, index) in serviceList" :key="index" :value="index">{{service.name}} - {{service.duration}} minutes</option>
+              <option v-for="(service, index) in serviceList" :key="index" :selected="service.id === selectedEvent.serviceId" :value="index">{{service.name}} - {{service.duration}} minutes</option>
             </select>
           </div>
           <div class="input-group date">
-            <div v-if="selectedEvent.startStr">
-              <p>{{formatDateDisplay(selectedEvent.startStr)}} {{formatTimeDisplay(selectedEvent.startStr)}} - {{formatTimeDisplay(selectedEvent.endStr)}}</p>
+            <div v-if="selectedEvent.startTime">
+              <p>{{formatDateDisplay(selectedEvent.startTime)}} {{formatTimeDisplay(selectedEvent.startTime)}} - {{formatTimeDisplay(selectedEvent.endTime)}}</p>
             </div>
             <div v-else>
               <p>Choose an event</p>
@@ -30,50 +30,43 @@
           <div class='input-group'>
             <input placeholder='Note (optional)' :value="selectedEvent.note">
           </div>
-        </form>
+          <button v-if="selectedEvent.isAccepted" @click="onSubmit()">Save changes</button>
+          <button v-else @click="onSubmit()">Accept & save</button>
+          <button class="red" @click="onDecline()">Decline</button>
+        </div>
         <div class='demo-app-main'>
-          <CalendarEmp ref="calendar" :scheduleForEmployee="appointmentList" @selectedEvent="setEvent($event)">
+          <CalendarEmp ref="calendar" :scheduleForEmployee="appointmentForCalendar" @selectedEvent="setEvent($event)">
           </CalendarEmp>
-          <!-- <FullCalendar
-            ref="calendarData"
-            class='demo-app-calendar'
-            :options='calendarOptions'>
-            <template v-slot:eventContent='arg'>
-              <p>{{arg.endTime}}</p>
-              <p>{{ arg.timeText }}</p>
-            </template>
-          </FullCalendar> -->
           <p>*Drag and drop your event for changing date and time</p>
           <p>*Click on your event in order to delete it</p>
           <br>
         </div>
       </div>
-      <div class="button" @click="close()">Choose</div>
     </template>
   </PopupTemplate>
 </template>
 
 <script>
-import { createEventId } from '~/helpers/event-utils'
 import PopupTemplate from '~/components/PopupTemplate'
 import CalendarEmp from '~/components/CalendarEmp'
+import { format, parseISO } from 'date-fns'
+import { getCookieDataUnparsed } from '~/helpers/cookies.js'
 export default {
   components: {
     CalendarEmp,
     PopupTemplate
   },
-  created(){
-    setTimeout(() => {
-      this.loadServices();
-      this.loadAppointmentsById();
-      }, 1000);
-
+  mounted(){
+        this.loadServices();
+        this.loadAppointmentsById(this.$store.state.user.id);
   },
   data() {
     return {
       serviceList: [],
-      appointmentList: [],
-      selectedEvent: {fullName:'', phoneNr:null, email: ''}
+      appointmentsFromServer:[],
+      appointmentForCalendar: [],
+      cookie: getCookieDataUnparsed('session'),
+      selectedEvent: {customerName:'', phoneNr:null, customerEmail: '', serviceId: null}
     }
   },
 
@@ -96,6 +89,12 @@ export default {
       return format(parseISO(date), 'dd/MM/yyyy')
       }
     },
+    setEvent(eventId){
+      this.selectedEvent = this.appointmentsFromServer.find(obj => {
+        return obj.id.toString() === eventId.toString()
+      });
+      console.log(this.selectedEvent);
+    },
     async loadServices() {
       try {
         const services = await this.$axios.get(`http://easybeauty.somee.com/v1/api/Service`);
@@ -104,20 +103,52 @@ export default {
         console.log(e);
       }
     },
-    async loadAppointmentsById() {
+    async loadAppointmentsById(userId) {
       try {
-        const appointments = await this.$axios.get(`http://easybeauty.somee.com/v1/api/Appointment?employeeId=${this.$store.state.user.id}`);
-
+        this.appointmentForCalendar.splice(0, this.appointmentForCalendar.length);
+        const appointments = await this.$axios.get(`http://easybeauty.somee.com/v1/api/Appointment?employeeId=${userId}`);
           if(appointments.data.length > 0 ){
-            console.log(appointments);
+            this.appointmentsFromServer = appointments.data;
           appointments.data.forEach(appointment => {
-            this.appointmentList.push({id: createEventId(), groupId: 1, 'start': appointment.startTime, 'end': appointment.endTime, 'editable': false, color:'#ddd',  constraint: 'businessHours'});
+            this.appointmentForCalendar.push({id: appointment.id, title: appointment.customerFullName ,'start': appointment.startTime, 'end': appointment.endTime, color: appointment.isAccepted? '': '#ccc',  constraint: 'businessHours'});
           });
         }
       } catch (e) {
         console.log(e);
       }
     },
+    selectService(event){
+      this.selectedEvent.serviceId = this.serviceList[event.target.value].id;
+    },
+      async onSubmit(){
+     try {
+        const objToSend = {startTime: this.selectedEvent.startTime,  endTime: this.selectedEvent.endTime, customerName: this.selectedEvent.customerName, phoneNr: this.selectedEvent.phoneNr, serviceId: this.selectedEvent.serviceId, employeeId: this.selectedEvent.employeeId, notes: this.selectedEvent.notes, customerEmail: this.selectedEvent.customerEmail, isAccepted: true }
+        const res = await this.$axios.put(`http://easybeauty.somee.com/v1/api/Appointment?id=${this.selectedEvent.id}&cookie=${this.cookie}`,objToSend);
+        if(res.data.error){
+          window.alert(res.data.error);
+        }
+        else{
+          this.loadAppointmentsById(this.$store.state.user.id);
+        }
+      }
+      catch (e) {
+        console.log(e);
+      }
+      },
+      async onDecline(){
+        try{
+         const res = await this.$axios.delete(`http://easybeauty.somee.com/v1/api/Appointment?id=${this.selectedEvent.id}&cookie=${this.cookie}`);
+            if(res.data.error){
+          window.alert(res.data.error);
+        }
+        else{
+          this.loadAppointmentsById(this.$store.state.user.id);
+        }
+        }
+        catch(e){
+          console.log(e);
+        }
+      }
   }
 }
 </script>
@@ -297,6 +328,10 @@ b {
   transition: all 0.4s ease;
   font-size: 18px;
   border: none;
+  margin-bottom: 20px;
+}
+.red {
+  color: rgb(155, 10, 10);
 }
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,

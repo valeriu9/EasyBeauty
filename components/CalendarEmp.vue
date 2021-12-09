@@ -7,8 +7,7 @@
         class='demo-app-calendar'
         :options='calendarOptions'>
         <template v-slot:eventContent='arg'>
-          <p>{{arg.endTime}}</p>
-          <p>{{ arg.timeText }}</p>
+          <p>{{arg.timeText }}</p>
         </template>
       </FullCalendar>
     </div>
@@ -20,8 +19,7 @@ import FullCalendar from '@fullcalendar/vue'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
-import { createEventId } from '~/helpers/event-utils'
-import { addMinutes, addMonths, format, parseISO } from 'date-fns'
+import { format, parseISO } from 'date-fns'
 export default {
   components: {
     FullCalendar
@@ -32,14 +30,13 @@ export default {
       default:[]
     }
   },
-  watch:{
-    currentEvents(){
-      this.isDateSelected = this.currentEvents.some(x => x.groupId === '2');
+   computed:{
+    selectedEvent(event){
+      return event
     }
   },
   data() {
     return {
-      selectedEvent: [],
       isDateSelected: false,
       calendarOptions: {
         plugins: [
@@ -53,18 +50,10 @@ export default {
           right: 'today'
         },
         businessHours: {
-        // days of week. an array of zero-based day of week integers (0=Sunday)
         daysOfWeek: [ 1, 2, 3, 4, 5 ],
         startTime: '10:00', // a start time (10am in this example)
         endTime: '18:00', // an end time (6pm in this example)
       },
-      // validRange: function(nowDate) {
-      //     return {
-      //       start: nowDate,
-      //       // user json to flatten an observable
-      //       end: JSON.parse(JSON.stringify(addMonths(nowDate, 1)))
-      //     };
-      //   },
         eventConstraint:{
         start: '10:00', // a start time
         end: '18:00', // an end time
@@ -73,6 +62,7 @@ export default {
         nowIndicator: true,
         events: this.scheduleForEmployee,
         editable: true,
+        snapDuration:'00:10:00',
         selectable: true,
         selectMirror: false,
         dayMaxEvents: false,
@@ -84,7 +74,7 @@ export default {
         select: this.handleDateSelect,
         eventClick: this.handleEventClick,
         eventsSet: this.handleEvents,
-        eventDurationEditable: false,
+        eventDurationEditable: true,
         contentHeight: "auto",
         eventDrop: function( eventDropInfo ) {
           if(eventDropInfo.event.start < new Date() ){
@@ -94,49 +84,17 @@ export default {
         eventOverlap:  function(stillEvent, movingEvent) {
          return stillEvent.allDay && movingEvent.allDay;
         },
-      },
-      currentEvents: []
+          eventResize: function(clickInfo) {
+          // selectedEvent = clickInfo
+          window.alert('si fasi waii?')
+  }
+      }
     }
   },
 
   methods: {
-    handleDateSelect(selectInfo) {
-      const startTime = JSON.parse(JSON.stringify(selectInfo.startStr));
-      const endTime = JSON.parse(JSON.stringify(addMinutes(parseISO(selectInfo.startStr), this.duration)));
-        let calendarApi = selectInfo.view.calendar
-        calendarApi.unselect() // clear date selection
-      if(format(parseISO(endTime),'HH') > 18){
-        window.alert('Expected end time is out of business hours')
-        return
-      }
-      if(parseInt(format(parseISO(endTime),'HH')) === 18 && parseInt(format(parseISO(endTime),'mm')) > 0){
-        window.alert('Expected end time is out of business hours')
-        return
-      }
-      if(selectInfo.start > new Date && !this.isDateSelected){
-        calendarApi.addEvent({
-          id: createEventId(),
-          groupId: 2,
-          start: startTime,
-          end: endTime,
-          constraint: 'businessHours'
-        })
-        this.selectedEvent = this.currentEvents.filter(x => x.groupId === '2')
-      }
-    },
-
     handleEventClick(clickInfo) {
-      if(clickInfo.event.groupId === '1'){
-        return
-      }
-      if (confirm(`Are you sure you want to delete the appointment?`)) {
-        this.selectedEvent = []
-        clickInfo.event.remove()
-      }
-    },
-
-    handleEvents(events) {
-      this.currentEvents = events
+    this.$emit('selectedEvent', clickInfo.event.id);
     },
     formatTimeDisplay(date){
       if(date){

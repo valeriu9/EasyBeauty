@@ -151,7 +151,8 @@
              const user = {email: this.email, name: decodeCookie.FullName, id: decodeCookie.Id, token: decodeCookie.Token, role: decodeCookie.Role}
              setCookie('easybeauty_user', user);
              this.$store.dispatch('user/userLoggedIn', user);
-             this.$router.push('/')
+            //  this.$router.push('/')
+            window.location.href ='/'
             }
           }
         } catch (e) {
