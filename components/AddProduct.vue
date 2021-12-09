@@ -4,8 +4,8 @@
       <div class='user-input-wrapper'>
         <div class='image-upload'>
 
-          <input type='file' accept='image/jpeg, image/png' @change='onChange' />
           <div class='image-preview' id='preview'>
+            <input type='file' accept='image/jpeg, image/png' @change='onChange' />
             <img v-if='image' :src='image' />
           </div>
 
@@ -190,6 +190,7 @@ export default {
       }
     },
     onChange(e) {
+      document.getElementById('preview').style.backgroundImage = 'none'
       var file = e.target.files[0]
       var reader = new FileReader()
       reader.readAsDataURL(file)
@@ -203,6 +204,39 @@ export default {
 </script>
 
 <style lang='scss' scoped>
+input[type='file'] {
+  opacity: 0;
+  cursor: pointer;
+}
+
+
+.save-button {
+  cursor: pointer;
+  padding: 10px;
+  transition: 0.3s;
+  font-size: 17px;
+  background-color: lightseagreen;
+  margin: 0 15px;
+  border: none;
+  color: white;
+  border-radius: 10px;
+  box-shadow: 0 10px 16px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%) !important;
+  width: 14vw;
+}
+
+.cancel-button {
+  cursor: pointer;
+  padding: 10px;
+  transition: 0.3s;
+  font-size: 17px;
+  margin: 0 15px;
+  border-radius: 10px;
+  width: 14vw;
+  background-color: rgba(255, 255, 255, 0.5);
+  border: darkred solid medium;
+  box-shadow: 0 10px 16px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%) !important;
+  color: darkred;
+}
 
 .currency-input:after {
   position: absolute;
@@ -223,8 +257,14 @@ export default {
 }
 
 .product-service-type {
-  margin: 12px 0;
   cursor: pointer;
+  padding: 10px;
+  transition: 0.3s;
+  font-size: 13px;
+  border-radius: 10px;
+  width: 70%;
+  background-color: rgba(255, 255, 255, 1);
+  border: lightseagreen solid thin;
 }
 
 .product-price {
@@ -239,7 +279,7 @@ export default {
 }
 
 .image-upload {
-  width: 45%;
+  width: 40%;
   position: fixed;
   height: 90%;
   display: flex;
@@ -265,12 +305,6 @@ export default {
   position: fixed;
   bottom: 20px;
   right: 20px;
-}
-
-.button-container button {
-  padding: 10px;
-  margin: 0 15px;
-  cursor: pointer;
 }
 
 .user-input-wrapper {
