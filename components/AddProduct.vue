@@ -50,12 +50,6 @@ import { getCookieDataUnparsed } from '~/helpers/cookies.js'
 
 export default {
   name: 'imageUpload',
-
-  mounted() {
-    let fontScript = document.createElement('script')
-    fontScript.setAttribute('src', 'https://kit.fontawesome.com/52311f6e31.js')
-    document.head.appendChild(fontScript)
-  },
   components: {
     PopupTemplate: () => import('~/components/PopupTemplate')
   },
@@ -220,7 +214,7 @@ input[type='file'] {
   border: none;
   color: white;
   border-radius: 10px;
-  box-shadow: 0 10px 16px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%) !important;
+  box-shadow: 0 0 10px 0 rgb(0 0 0 / 10%), 0 0 10px 0 rgb(0 0 0 / 10%) !important;
   width: 14vw;
 }
 
@@ -234,7 +228,7 @@ input[type='file'] {
   width: 14vw;
   background-color: rgba(255, 255, 255, 0.5);
   border: darkred solid medium;
-  box-shadow: 0 10px 16px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%) !important;
+  box-shadow: 0 0 10px 0 rgb(0 0 0 / 10%), 0 0 10px 0 rgb(0 0 0 / 10%) !important;
   color: darkred;
 }
 
