@@ -32,7 +32,7 @@
 </template>
 
 <script>
-
+import {getCookieDataUnparsed} from '~/helpers/cookies.js'
 export default {
   components: {
     PopupTemplate: () => import('~/components/PopupTemplate')
@@ -63,7 +63,8 @@ export default {
       phoneNr: null,
       email: '',
       role: 'employee',
-      id: null
+      id: null,
+      cookie: getCookieDataUnparsed('session')
     }
   },
   watch: {
@@ -94,7 +95,7 @@ export default {
       }
       try {
         if (this.employeeToEdit.fullName) {
-          this.$axios.put(`http://easybeauty.somee.com/v1/api/Employee/${this.id}`, {
+          this.$axios.put(`http://easybeauty.somee.com/v1/api/Employee?id=${this.id}&cookie=${this.cookie} `, {
             fullName: this.fullName,
             phoneNr: this.phoneNr,
             email: this.email,
@@ -105,7 +106,7 @@ export default {
           }, 1000)
           this.close()
         } else {
-          this.$axios.post(`http://easybeauty.somee.com/v1/api/Employee`, {
+          this.$axios.post(`http://easybeauty.somee.com/v1/api/Employee?&cookie=${this.cookie}`, {
             fullName: this.fullName,
             phoneNr: this.phoneNr,
             email: this.email,

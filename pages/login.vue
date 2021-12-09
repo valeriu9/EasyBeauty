@@ -141,7 +141,7 @@
       this.errorList[3].active = false;
           try {
           if (this.validatePassword(password) && this.email) {
-          const res = await this.$axios.get(`http://easybeauty.somee.com/v1/api/Login/login?id=`+this.id+`&password=`+this.password+`&email=`+this.email);
+          const res = await this.$axios.get(`http://easybeauty.somee.com/v1/api/Login/login?password=`+this.password+`&email=`+this.email);
             if(res.data === 'Not authenticated'){
               this.errorList[3].active = true;
             }

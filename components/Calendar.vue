@@ -164,6 +164,7 @@ export default {
         return
       }
       if (confirm(`Are you sure you want to delete the appointment?`)) {
+        this.selectedEvent = []
         clickInfo.event.remove()
       }
     },

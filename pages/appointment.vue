@@ -209,8 +209,9 @@ export default {
       return format(parseISO(date), 'dd/MM/yyyy')
       }
     },
-    onSubmit(event){
-      event.preventDefault()
+   async onSubmit(event){
+     event.preventDefault()
+     try {
       this.validateFullName(this.fullName)
       this.validateEmail(this.email)
       this.validatePhoneNr(this.phoneNr)
@@ -219,12 +220,15 @@ export default {
         return
       }
       else{
-        const objToSend = {fullName: this.fullName, phoneNr: this.phoneNr, serviceId: this.selectedService.id, employeeId: this.selectedEmployee.id, startTime: this.selectedEvent[0].startStr, endTime: this.selectedEvent[0].endStr, notes: this.notes, email: this.email }
-        console.log(objToSend);
+        console.log(event);
+        const objToSend = {customerName: this.fullName, phoneNr: this.phoneNr, serviceId: this.selectedService.id, employeeId: this.selectedEmployee.id, startTime: this.selectedEvent[0].start, endTime: this.selectedEvent[0].end, notes: this.notes, customerEmail: this.email }
+        await this.$axios.post(`http://easybeauty.somee.com/v1/api/Appointment`,objToSend);
+      }
+      } catch (e) {
+        console.log(e);
+      }
         this.$refs.success.open()
       }
-
-    }
   },
 
 }
