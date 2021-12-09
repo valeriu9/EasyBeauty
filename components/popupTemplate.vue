@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="wrapper" :design="design">
     <div class='normal-window' :class="showModal ? 'is-active' : ''" @click='overlayClick' />
     <div class='popup-window' :class="showModal ? 'is-active' : ''">
       <slot v-if='showModal' name='body'></slot>
@@ -22,7 +22,14 @@ export default {
     enableOverlayClick: {
       type: Boolean,
       default: true
-    }
+    },
+    design: {
+      validator: prop => [
+        '',
+        'editAppointment'
+      ].includes(prop),
+      default: ''
+    },
   },
   data() {
     return { showModal: false }
@@ -114,6 +121,11 @@ export default {
 
   &::-webkit-scrollbar {
     display: none;
+  }
+}
+.wrapper[design='editAppointment'] {
+  .popup-window {
+    width: 90%;
   }
 }
 </style>

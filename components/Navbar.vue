@@ -1,9 +1,8 @@
 <template>
   <div class="container">
     <EditEmployee ref="employeePopup" :enableOverlayClick="true" />
-    <!--
     <EditAppointment ref="appointmentPopup" :enableOverlayClick="true" />
--->
+
     <nav class='nav-menu-wrapper'>
       <div class='nav-menu-content'>
         <div class='logo'>
