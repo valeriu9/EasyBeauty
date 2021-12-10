@@ -219,12 +219,13 @@ export default {
       else{
         console.log(event);
         const objToSend = {customerName: this.fullName, phoneNr: this.phoneNr, serviceId: this.selectedService.id, employeeId: this.selectedEmployee.id, startTime: this.selectedEvent[0].start, endTime: this.selectedEvent[0].end, notes: this.notes, customerEmail: this.email }
-        await this.$axios.post(`http://easybeauty.somee.com/v1/api/Appointment`,objToSend);
+       const res = await this.$axios.post(`http://easybeauty.somee.com/v1/api/Appointment`,objToSend);
+      window.alert(res.data.error ? res.data.error : res.data.success)
       }
       } catch (e) {
         console.log(e);
       }
-        this.$refs.success.open()
+
       }
   },
 
@@ -244,7 +245,6 @@ export default {
 }
 .date-button {
   padding: 0 14px !important;
-
 }
 .date {
   p {
@@ -287,7 +287,7 @@ export default {
   position: relative;
   margin-bottom: 33px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  img{
+  img {
     height: 18px;
     cursor: pointer;
   }
