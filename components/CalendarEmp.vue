@@ -11,6 +11,7 @@
           <p>{{ arg.timeText }}</p>
         </template>
       </FullCalendar>
+      <p v-if="error" class="red">{{error}}</p>
     </div>
   </div>
 </template>
@@ -50,10 +51,12 @@ export default {
   data() {
     const hours = Math.floor(this.duration / 60);
     const minutes = this.duration % 60;
+
     const stringDuration = '0'+hours+':'+minutes+":00";
     return {
       stringDuration,
       selectedEvent: null,
+      error: '',
       isDateSelected: false,
       calendarOptions: {
         plugins: [
@@ -114,23 +117,25 @@ export default {
       this.$emit('selectedEvent', clickInfo.event.id);
       this.selectedEvent = clickInfo.event.id;
     },
-    checkIfEventSelected(event){
+    checkIfEventSelected(){
+      this.error = ''
       if(this.selectedEvent){
-        console.log(event);
       return
+      }
+      else{
+        this.error = '*Select appointment first';
       }
     },
     handleDateSelect(){
+       this.$emit('selectedEvent', 0);
       this.selectedEvent = null;
     },
     eventChanged(event){
-      console.log(this.selectedEvent);
          if(event.event.start < new Date() || this.selectedEvent === null){
             event.revert();
-            console.log(event);
           }
-          const startTime = event.event.startStr.split('+')
-          const endTime = event.event.endStr.split('+')
+          const startTime = event.event.startStr
+          const endTime = event.event.endStr
           const newDates = {startTime : startTime[0], endTime : endTime[0] };
           this.$emit('newDatesForEvent',newDates)
     },
@@ -171,7 +176,9 @@ b {
   /* used for event dates/times */
   margin-right: 3px;
 }
-
+.red {
+  color: rgb(216, 0, 0);
+}
 .demo-app {
   display: flex;
   flex-direction: column;

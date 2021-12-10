@@ -30,14 +30,15 @@
           <div class='input-group'>
             <input placeholder='Note (optional)' :value="selectedEvent.note">
           </div>
-          <button v-if="selectedEvent.isAccepted" @click="onSubmit()">Save changes</button>
-          <button v-else @click="onSubmit()">Accept & save</button>
-          <button class="red" @click="onDecline()">Decline</button>
+          <div class="buttons-form" v-if="selectedEvent.phoneNr">
+            <button v-if="selectedEvent.isAccepted" @click="onSubmit()">Save changes</button>
+            <button v-else @click="onSubmit()">Accept & save</button>
+            <button class="red" @click="onDecline()">Decline & remove</button>
+          </div>
         </div>
         <div class='demo-app-main'>
           <CalendarEmp ref="calendar" :duration="serviceDuration" :scheduleForEmployee="appointmentForCalendar" @selectedEvent="setEvent($event)" @newDatesForEvent="setNewDatesForEvent($event)">
           </CalendarEmp>
-          <p>*Click on your event in order to delete it</p>
           <br>
         </div>
       </div>
@@ -48,7 +49,7 @@
 <script>
 import PopupTemplate from '~/components/PopupTemplate'
 import CalendarEmp from '~/components/CalendarEmp'
-import { format, parseISO } from 'date-fns'
+import { format, parseISO, addMinutes } from 'date-fns'
 import { getCookieDataUnparsed } from '~/helpers/cookies.js'
 export default {
   components: {
@@ -92,6 +93,9 @@ export default {
       this.selectedEvent = this.appointmentsFromServer.find(obj => {
         return obj.id.toString() === eventId.toString()
       });
+      if(!this.selectedEvent){
+        this.selectedEvent = {customerName:'', phoneNr:null, customerEmail: '', serviceId: null}
+      }
     },
     setNewDatesForEvent(eventDates){
       this.selectedEvent.endTime = eventDates.endTime;
@@ -121,13 +125,18 @@ export default {
     },
     selectService(event){
       this.selectedEvent.serviceId = this.serviceList[event.target.value].id;
+      const selectedService = this.serviceList.find(x =>{return x.id.toString() === this.selectedEvent.serviceId.toString()})
+      const tempStartTime = this.selectedEvent.startTime;
       this.appointmentForCalendar.forEach(appointment => {
         if(appointment.id === this.selectedEvent.id){
           appointment.serviceId = this.selectedEvent.serviceId
-          appointment.startTime = this.selectedEvent.startTime
-          appointment.endTime = this.selectedEvent.endTime
+          appointment.start = this.selectedEvent.startTime
+          appointment.end = addMinutes(parseISO(tempStartTime), selectedService.duration).toISOString()
+          this.selectedEvent.startTime = appointment.start
+          this.selectedEvent.endTime = appointment.end
         }
       });
+      console.log(this.appointmentForCalendar);
     },
       async onSubmit(){
      try {
@@ -352,5 +361,8 @@ input::-webkit-inner-spin-button {
 /* Firefox */
 input[type='number'] {
   -moz-appearance: textfield;
+}
+.buttons-form {
+  max-width: fit-content;
 }
 </style>

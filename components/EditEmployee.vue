@@ -1,16 +1,15 @@
 <template>
   <PopupTemplate ref='popupOpen'>
     <template #body>
-      <AddEmployee ref='AddEmployeePopup' :enableOverlayClick='true' @loadEmployees='loadEmployees()'
-                   :employeeToEdit='employeeToEdit' />
+      <AddEmployee ref='AddEmployeePopup' :enableOverlayClick='true' @loadEmployees='loadEmployees()' :employeeToEdit='employeeToEdit' />
       <div class='edit-employee-navbar'>
         <button class='add-employee-button' type='button' @click='openAddEmployeeModal()'><img
-          src='~/assets/images/plus-solid.svg'>
+            src='~/assets/images/plus-solid.svg'>
           <p>Add employee</p>
         </button>
         <div class='search-wrapper'>
           <input name='search' :value='searchText' @input='e => searchText = e.target.value' placeholder='Search..'
-                 type='text'>
+            type='text'>
           <img @click='search()' src='~/assets/images/search-solid.svg'>
         </div>
       </div>
@@ -18,7 +17,7 @@
         <div v-for='(employee, index) in filteredList' :key='employee.index' class='existing-employee'>
           <img class='edit-employee' @click='openAddEmployeeModal(employee)' src='~/assets/images/edit-regular.svg'>
           <img class='delete-employee' @click='removeEmployee(index, employee.id)'
-               src='~/assets/images/trash-solid.svg'>
+            src='~/assets/images/trash-solid.svg'>
 
           <div class='employee-details'>
             <p class='employee-name'>{{ employee.fullName }}</p>
