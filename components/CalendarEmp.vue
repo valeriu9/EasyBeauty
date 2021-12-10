@@ -20,7 +20,6 @@ import FullCalendar from '@fullcalendar/vue'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
-import { createEventId } from '~/helpers/event-utils'
 import { addMinutes, addMonths, format, parseISO } from 'date-fns'
 import PopupTemplate from '~/components/PopupTemplate'
 export default {
@@ -54,7 +53,7 @@ export default {
     const stringDuration = '0'+hours+':'+minutes+":00";
     return {
       stringDuration,
-      selectedEvent: [],
+      selectedEvent: null,
       isDateSelected: false,
       calendarOptions: {
         plugins: [
@@ -73,13 +72,6 @@ export default {
         startTime: '10:00', // a start time (10am in this example)
         endTime: '18:00', // an end time (6pm in this example)
       },
-      validRange: function(nowDate) {
-          return {
-            start: nowDate,
-            // user json to flatten an observable
-            end: JSON.parse(JSON.stringify(addMonths(nowDate, 1)))
-          };
-        },
         eventConstraint:{
         start: '10:00', // a start time
         end: '18:00', // an end time
@@ -99,14 +91,10 @@ export default {
         allDaySlot: false,
         select: this.handleDateSelect,
         eventClick: this.handleEventClick,
-        eventsSet: this.handleEvents,
         eventDurationEditable: false,
         contentHeight: "auto",
-        eventDrop: function( eventDropInfo ) {
-          if(eventDropInfo.event.start < new Date() ){
-            eventDropInfo.revert();
-          }
-        },
+        eventDrop: this.eventChanged,
+        eventDragStart: this.checkIfEventSelected,
         eventOverlap:  function(stillEvent, movingEvent) {
          return stillEvent.allDay && movingEvent.allDay;
         },
@@ -122,35 +110,30 @@ export default {
     close() {
       this.$refs.schedulePopUp.close()
     },
-    handleDateSelect(selectInfo) {
-      const startTime = JSON.parse(JSON.stringify(selectInfo.startStr));
-      const endTime = JSON.parse(JSON.stringify(addMinutes(parseISO(selectInfo.startStr), this.duration)));
-        let calendarApi = selectInfo.view.calendar
-        calendarApi.unselect() // clear date selection
-      if(format(parseISO(endTime),'HH') > 18){
-        window.alert('Expected end time is out of business hours')
-        return
-      }
-      if(parseInt(format(parseISO(endTime),'HH')) === 18 && parseInt(format(parseISO(endTime),'mm')) > 0){
-        window.alert('Expected end time is out of business hours')
-        return
-      }
-      if(selectInfo.start > new Date && !this.isDateSelected){
-        calendarApi.addEvent({
-          id: createEventId(),
-          groupId: 2,
-          start: startTime,
-          end: endTime,
-          constraint: 'businessHours'
-        })
-        this.selectedEvent = this.currentEvents.filter(x => x.groupId === '2')
-      }
-    },
-
     handleEventClick(clickInfo) {
       this.$emit('selectedEvent', clickInfo.event.id);
+      this.selectedEvent = clickInfo.event.id;
     },
-
+    checkIfEventSelected(event){
+      if(this.selectedEvent){
+        console.log(event);
+      return
+      }
+    },
+    handleDateSelect(){
+      this.selectedEvent = null;
+    },
+    eventChanged(event){
+      console.log(this.selectedEvent);
+         if(event.event.start < new Date() || this.selectedEvent === null){
+            event.revert();
+            console.log(event);
+          }
+          const startTime = event.event.startStr.split('+')
+          const endTime = event.event.endStr.split('+')
+          const newDates = {startTime : startTime[0], endTime : endTime[0] };
+          this.$emit('newDatesForEvent',newDates)
+    },
     handleEvents(events) {
       this.currentEvents = events
     },

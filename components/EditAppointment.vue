@@ -35,7 +35,7 @@
           <button class="red" @click="onDecline()">Decline</button>
         </div>
         <div class='demo-app-main'>
-          <CalendarEmp ref="calendar" :scheduleForEmployee="appointmentForCalendar" @selectedEvent="setEvent($event)">
+          <CalendarEmp ref="calendar" :duration="serviceDuration" :scheduleForEmployee="appointmentForCalendar" @selectedEvent="setEvent($event)" @newDatesForEvent="setNewDatesForEvent($event)">
           </CalendarEmp>
           <p>*Click on your event in order to delete it</p>
           <br>
@@ -64,6 +64,7 @@ export default {
       serviceList: [],
       appointmentsFromServer:[],
       appointmentForCalendar: [],
+      serviceDuration: 30,
       cookie: getCookieDataUnparsed('session'),
       selectedEvent: {customerName:'', phoneNr:null, customerEmail: '', serviceId: null}
     }
@@ -91,7 +92,10 @@ export default {
       this.selectedEvent = this.appointmentsFromServer.find(obj => {
         return obj.id.toString() === eventId.toString()
       });
-      console.log(this.selectedEvent);
+    },
+    setNewDatesForEvent(eventDates){
+      this.selectedEvent.endTime = eventDates.endTime;
+      this.selectedEvent.startTime = eventDates.startTime;
     },
     async loadServices() {
       try {
@@ -117,6 +121,13 @@ export default {
     },
     selectService(event){
       this.selectedEvent.serviceId = this.serviceList[event.target.value].id;
+      this.appointmentForCalendar.forEach(appointment => {
+        if(appointment.id === this.selectedEvent.id){
+          appointment.serviceId = this.selectedEvent.serviceId
+          appointment.startTime = this.selectedEvent.startTime
+          appointment.endTime = this.selectedEvent.endTime
+        }
+      });
     },
       async onSubmit(){
      try {

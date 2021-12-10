@@ -22,15 +22,9 @@
               <input type='number' class='inputText' v-model='price' required />
               <p class='floating-label'>Price </p>
             </span>
-
           </div>
-
           <br />
-          <select class='product-service-type' v-model='type' name='product-service-type'>
-            <option value='products'>Product</option>
-            <option value='services'>Service</option>
-          </select>
-          <div v-if="type === 'services'"><input type='text' class='inputText' v-model='duration' required />
+          <div v-if="activeTab === 'services'"><input type='text' class='inputText' v-model='duration' required />
             <p class='floating-label'>Duration</p>
             <br />
           </div>
@@ -64,11 +58,14 @@ export default {
       type: Object,
       default: () => {
       }
+    },
+    activeTab:{
+      type: String,
+      default: 'Service'
     }
   },
   watch: {
     itemToEdit() {
-      if (this.itemToEdit.name) {
         this.name = this.itemToEdit.name
         this.type = this.itemToEdit.type
         this.description = this.itemToEdit.description
@@ -76,17 +73,14 @@ export default {
         this.image = this.itemToEdit.image
         this.duration = this.itemToEdit.duration
         this.id = this.itemToEdit.id
-      }
     }
   },
   data() {
     return {
-      showModal: false,
       image: '',
       name: '',
       description: '',
       price: null,
-      type: 'products',
       duration: null,
       id: 0,
       cookie: getCookieDataUnparsed('session')
@@ -100,13 +94,14 @@ export default {
       this.$refs.popupOpen.open()
     },
     close() {
+      this.$emit('closed')
       this.$refs.popupOpen.close()
     },
     async saveProduct() {
-      if (this.type === 'services' && (this.name === '', this.price === 0, this.image === '', this.duration === 0)) {
+      if (this.activeTab === 'services' && (this.name === '', this.price === 0, this.image === '', this.duration === 0)) {
         window.alert('Complete all the fields before saving')
         return
-      } else if (this.type === 'products' && (this.name === '', this.price === 0, this.image === '')) {
+      } else if (this.activeTab === 'products' && (this.name === '', this.price === 0, this.image === '')) {
         window.alert('Complete all the fields before saving')
         return
       }
@@ -120,15 +115,15 @@ export default {
           .then((response) => {
             this.image = response.image.url
             try {
-              if (this.type === 'products') {
-                this.$emit('openLoader')
+               this.$emit('openLoader')
+              if (this.activeTab === 'products') {
                 this.$axios.post(`http://easybeauty.somee.com/v1/api/Product?cookie=${this.cookie}`, {
                   name: this.name,
                   description: this.description,
                   price: this.price,
                   image: this.image
                 })
-                this.$refs.popupOpen.close()
+                this.close()
                 setTimeout(() => {
                   this.$emit('loadProducts')
                 }, 1000)
@@ -140,28 +135,27 @@ export default {
                   duration: this.duration,
                   image: this.image
                 })
+                this.close()
                 setTimeout(() => {
                   this.$emit('loadServices')
                 }, 1000)
               }
             } catch (e) {
               console.log(e)
-              this.$emit('closeLoader')
             }
           }).catch((error) => console.error(error),
-          this.$emit('closeLoader')
         )
       } else {
         try {
-          if (this.type === 'products') {
-            this.$emit('openLoader')
+          this.$emit('openLoader')
+          if (this.activeTab === 'products') {
             this.$axios.put(`http://easybeauty.somee.com/v1/api/Product?id=${this.itemToEdit.id}&cookie=${this.cookie}`, {
               name: this.name,
               description: this.description,
               price: this.price,
               image: this.image
             })
-            this.$refs.popupOpen.close()
+            this.close()
             setTimeout(() => {
               this.$emit('loadProducts')
             }, 1000)
@@ -173,13 +167,13 @@ export default {
               duration: this.duration,
               image: this.image
             })
+            this.close()
             setTimeout(() => {
               this.$emit('loadServices')
             }, 1000)
           }
         } catch (e) {
           console.log(e)
-          this.$emit('closeLoader')
         }
       }
     },
@@ -202,7 +196,6 @@ input[type='file'] {
   opacity: 0;
   cursor: pointer;
 }
-
 
 .save-button {
   cursor: pointer;
@@ -237,7 +230,7 @@ input[type='file'] {
   left: 60px;
   top: 38%;
   font-size: 13px;
-  content: "DKK";
+  content: 'DKK';
 }
 
 .productService-details {
@@ -265,7 +258,6 @@ input[type='file'] {
   position: relative;
   width: min-content;
   min-width: 50px;
-
 }
 
 .product-price .inputText {
@@ -343,7 +335,7 @@ input::-webkit-inner-spin-button {
   margin: 0;
 }
 
-input[type=number] {
+input[type='number'] {
   -moz-appearance: textfield;
 }
 </style>

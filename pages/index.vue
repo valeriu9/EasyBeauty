@@ -1,7 +1,7 @@
 <template>
   <div class='main-container'>
     <BaseLoader ref='loader' />
-    <AddProduct ref='addProductPopup' :itemToEdit='itemToEdit' :enableOverlayClick='true' @loadServices='loadServices'
+    <AddProduct ref='addProductPopup' :itemToEdit='itemToEdit' :activeTab="this.activeTab" :enableOverlayClick='true' @loadServices='loadServices' @closed="closedAddProduct"
       @loadProducts='loadProducts' @openLoader='openLoader' @closeLoader='closeLoader' />
     <div class='services-container'>
       <div class='product-service-container'>
@@ -191,7 +191,10 @@ export default {
   },
   layout: 'default',
   methods: {
-
+closedAddProduct(){
+  this.itemToEdit = {}
+  console.log('wawa');
+},
     setActive() {
       this.isActive = !this.isActive
     },
@@ -203,12 +206,9 @@ export default {
       this.$refs.loader.close()
     },
     openAddProductModal(item = {}) {
-      this.itemToEdit = {}
       this.$refs.addProductPopup.open()
-      if (Object.keys(item).length !== 0) {
-        item.type = this.activeTab
         this.itemToEdit = item
-      }
+
     },
     closeAddProductModal() {
       this.$refs.addProductPopup.close()
