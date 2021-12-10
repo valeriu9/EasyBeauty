@@ -34,17 +34,14 @@
 
 <script>
 import { getCookieDataUnparsed } from '~/helpers/cookies.js'
-
 export default {
   components: {
     AddEmployee: () => import('~/components/AddEmployee'),
     PopupTemplate: () => import('~/components/PopupTemplate')
   },
-
   mounted() {
     this.loadEmployees()
   },
-
   layout: 'default',
   props: {
     enableOverlayClick: {
@@ -130,7 +127,6 @@ export default {
   height: 15%;
   align-items: center;
 }
-
 .employee-list-container {
   display: flex;
   flex-direction: column;
@@ -139,7 +135,6 @@ export default {
   height: 90%;
   margin-top: 10px;
 }
-
 .existing-employee {
   height: 10%;
   width: 100%;
@@ -150,27 +145,22 @@ export default {
   border-bottom: 2px solid darkgray;
   padding: 10px 0;
 }
-
 .employee-name {
   font-weight: 600;
   width: 20%;
 }
-
 .employee-email {
   width: 35%;
 }
-
 .employee-phone {
   width: 12%;
 }
-
 .employee-details {
   display: flex;
   justify-content: space-between;
   align-items: center;
   width: 80%;
 }
-
 .edit-employee {
   position: absolute;
   right: 10px;
@@ -181,7 +171,6 @@ export default {
   height: 20px;
   width: 20px;
 }
-
 .delete-employee {
   position: absolute;
   right: 50px;
@@ -192,7 +181,6 @@ export default {
   height: 20px;
   width: 20px;
 }
-
 .search-wrapper img {
   border-radius: 100%;
   background: lightseagreen;
@@ -201,12 +189,10 @@ export default {
   height: 30px;
   cursor: pointer;
 }
-
 .edit-employee-navbar input:hover {
   background-color: #ddd;
   color: black;
 }
-
 .edit-employee-navbar input[type='text'] {
   padding: 5px;
   font-size: 14px;
@@ -218,13 +204,11 @@ export default {
   height: 30px;
   color: gray;
 }
-
 .edit-employee-navbar .search-wrapper {
   margin-left: auto;
   align-items: center;
   display: flex;
 }
-
 .edit-employee-navbar .add-employee-button {
   margin-right: auto;
   align-items: center;
@@ -235,11 +219,9 @@ export default {
   font-size: 15px;
   cursor: pointer;
 }
-
 .add-employee-button img {
   height: 20px;
 }
-
 .add-employee-button p {
   margin: 0 10px;
 }
