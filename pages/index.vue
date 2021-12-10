@@ -193,7 +193,6 @@ export default {
   methods: {
 closedAddProduct(){
   this.itemToEdit = {}
-  console.log('wawa');
 },
     setActive() {
       this.isActive = !this.isActive

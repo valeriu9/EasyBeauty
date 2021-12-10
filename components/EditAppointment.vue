@@ -37,7 +37,7 @@
           </div>
         </div>
         <div class='demo-app-main'>
-          <CalendarEmp ref="calendar" :duration="serviceDuration" :scheduleForEmployee="appointmentForCalendar" @selectedEvent="setEvent($event)" @newDatesForEvent="setNewDatesForEvent($event)">
+          <CalendarEmp ref="calendar" :duration="serviceDuration" :eventHasChanges="eventHasChanges" :scheduleForEmployee="appointmentForCalendar" @selectedEvent="setEvent($event)" @newDatesForEvent="setNewDatesForEvent($event)">
           </CalendarEmp>
           <br>
         </div>
@@ -66,6 +66,7 @@ export default {
       appointmentsFromServer:[],
       appointmentForCalendar: [],
       serviceDuration: 30,
+      eventHasChanges: false,
       cookie: getCookieDataUnparsed('session'),
       selectedEvent: {customerName:'', phoneNr:null, customerEmail: '', serviceId: null}
     }
@@ -90,6 +91,10 @@ export default {
       }
     },
     setEvent(eventId){
+      if(this.eventHasChanges){
+        window.alert('Save changes before selecting another appointment')
+        return
+         }
       this.selectedEvent = this.appointmentsFromServer.find(obj => {
         return obj.id.toString() === eventId.toString()
       });
@@ -100,6 +105,7 @@ export default {
     setNewDatesForEvent(eventDates){
       this.selectedEvent.endTime = eventDates.endTime;
       this.selectedEvent.startTime = eventDates.startTime;
+      this.eventHasChanges = true;
     },
     async loadServices() {
       try {
@@ -126,26 +132,27 @@ export default {
     selectService(event){
       this.selectedEvent.serviceId = this.serviceList[event.target.value].id;
       const selectedService = this.serviceList.find(x =>{return x.id.toString() === this.selectedEvent.serviceId.toString()})
-      const tempStartTime = this.selectedEvent.startTime;
+      let tempEndTime = addMinutes(parseISO(this.selectedEvent.startTime), selectedService.duration)
       this.appointmentForCalendar.forEach(appointment => {
         if(appointment.id === this.selectedEvent.id){
           appointment.serviceId = this.selectedEvent.serviceId
           appointment.start = this.selectedEvent.startTime
-          appointment.end = addMinutes(parseISO(tempStartTime), selectedService.duration).toISOString()
+          appointment.end = format(tempEndTime, "yyyy-MM-dd'T'HH:mm:ss")
           this.selectedEvent.startTime = appointment.start
           this.selectedEvent.endTime = appointment.end
         }
       });
-      console.log(this.appointmentForCalendar);
+       this.eventHasChanges = true;
     },
       async onSubmit(){
      try {
-        const objToSend = {startTime: this.selectedEvent.startTime,  endTime: this.selectedEvent.endTime, customerName: this.selectedEvent.customerName, phoneNr: this.selectedEvent.phoneNr, serviceId: this.selectedEvent.serviceId, employeeId: this.selectedEvent.employeeId, notes: this.selectedEvent.notes, customerEmail: this.selectedEvent.customerEmail, isAccepted: true }
+       const objToSend = {startTime: this.selectedEvent.startTime,  endTime: this.selectedEvent.endTime, customerName: this.selectedEvent.customerName, phoneNr: this.selectedEvent.phoneNr, serviceId: this.selectedEvent.serviceId, employeeId: this.selectedEvent.employeeId, notes: this.selectedEvent.notes, customerEmail: this.selectedEvent.customerEmail, isAccepted: true }
         const res = await this.$axios.put(`http://easybeauty.somee.com/v1/api/Appointment?id=${this.selectedEvent.id}&cookie=${this.cookie}`,objToSend);
         if(res.data.error){
           window.alert(res.data.error);
         }
         else{
+          this.eventHasChanges = false
           this.loadAppointmentsById(this.$store.state.user.id);
         }
       }
@@ -155,11 +162,12 @@ export default {
       },
       async onDecline(){
         try{
-         const res = await this.$axios.delete(`http://easybeauty.somee.com/v1/api/Appointment?id=${this.selectedEvent.id}&cookie=${this.cookie}`);
+          const res = await this.$axios.delete(`http://easybeauty.somee.com/v1/api/Appointment?id=${this.selectedEvent.id}&cookie=${this.cookie}`);
             if(res.data.error){
-          window.alert(res.data.error);
+              window.alert(res.data.error);
         }
         else{
+          this.eventHasChanges = false
           this.loadAppointmentsById(this.$store.state.user.id);
         }
         }

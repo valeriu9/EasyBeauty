@@ -21,7 +21,7 @@ import FullCalendar from '@fullcalendar/vue'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
-import { addMinutes, addMonths, format, parseISO } from 'date-fns'
+import { format, parseISO } from 'date-fns'
 import PopupTemplate from '~/components/PopupTemplate'
 export default {
   components: {
@@ -134,10 +134,12 @@ export default {
          if(event.event.start < new Date() || this.selectedEvent === null){
             event.revert();
           }
-          const startTime = event.event.startStr
-          const endTime = event.event.endStr
+          else{
+          const startTime = event.event.startStr.split('+')
+          const endTime = event.event.endStr.split('+')
           const newDates = {startTime : startTime[0], endTime : endTime[0] };
           this.$emit('newDatesForEvent',newDates)
+          }
     },
     handleEvents(events) {
       this.currentEvents = events
