@@ -2,7 +2,7 @@
   <div class='main-container'>
     <BaseLoader ref='loader' />
     <AddProduct ref='addProductPopup' :itemToEdit='itemToEdit' :enableOverlayClick='true' @loadServices='loadServices'
-                @loadProducts='loadProducts' @openLoader='openLoader' @closeLoader='closeLoader' />
+      @loadProducts='loadProducts' @openLoader='openLoader' @closeLoader='closeLoader' />
     <div class='services-container'>
       <div class='product-service-container'>
         <div class='service-navbar'>
@@ -13,8 +13,8 @@
           </button>
           <div class='search-wrapper'>
             <input name='search' id='searchField' :value='searchText' @input='e => searchText = e.target.value'
-                   placeholder='Search..'
-                   type='text'>
+              placeholder='Search..'
+              type='text'>
             <img @click='search()' src='~/assets/images/search-solid.svg'>
           </div>
         </div>
@@ -23,12 +23,12 @@
 
             <div class='image-container'>
               <button v-if="user.role === 'manager'" class='edit-item-button'
-                      @click='openAddProductModal(item)'>
+                @click='openAddProductModal(item)'>
                 <img
                   src='~/assets/images/edit-regular.svg'>
               </button>
               <button v-if="user.role === 'manager'" class='delete-item-button'
-                      @click='deleteItem(item, index)'>
+                @click='deleteItem(item, index)'>
                 <img
                   src='~/assets/images/trash-solid.svg'>
               </button>
@@ -45,23 +45,23 @@
       </div>
       <div class='tab'>
         <button id='defaultOpen' class='tablinks'
-                @click.prevent='setActive' :class="[isActive ? 'active' : '']"
-                @click="switchTab('services')">
+          @click.prevent='setActive' :class="[isActive ? 'active' : '']"
+          @click="switchTab('services')">
           <svg aria-hidden='true' focusable='false' data-prefix='fas' data-icon='cut'
-               class='svg-inline--fa fa-cut fa-w-14' role='img' xmlns='http://www.w3.org/2000/svg'
-               viewBox='0 0 448 512'>
+            class='svg-inline--fa fa-cut fa-w-14' role='img' xmlns='http://www.w3.org/2000/svg'
+            viewBox='0 0 448 512'>
             <path fill='currentColor'
-                  d='M278.06 256L444.48 89.57c4.69-4.69 4.69-12.29 0-16.97-32.8-32.8-85.99-32.8-118.79 0L210.18 188.12l-24.86-24.86c4.31-10.92 6.68-22.81 6.68-35.26 0-53.02-42.98-96-96-96S0 74.98 0 128s42.98 96 96 96c4.54 0 8.99-.32 13.36-.93L142.29 256l-32.93 32.93c-4.37-.61-8.83-.93-13.36-.93-53.02 0-96 42.98-96 96s42.98 96 96 96 96-42.98 96-96c0-12.45-2.37-24.34-6.68-35.26l24.86-24.86L325.69 439.4c32.8 32.8 85.99 32.8 118.79 0 4.69-4.68 4.69-12.28 0-16.97L278.06 256zM96 160c-17.64 0-32-14.36-32-32s14.36-32 32-32 32 14.36 32 32-14.36 32-32 32zm0 256c-17.64 0-32-14.36-32-32s14.36-32 32-32 32 14.36 32 32-14.36 32-32 32z'></path>
+              d='M278.06 256L444.48 89.57c4.69-4.69 4.69-12.29 0-16.97-32.8-32.8-85.99-32.8-118.79 0L210.18 188.12l-24.86-24.86c4.31-10.92 6.68-22.81 6.68-35.26 0-53.02-42.98-96-96-96S0 74.98 0 128s42.98 96 96 96c4.54 0 8.99-.32 13.36-.93L142.29 256l-32.93 32.93c-4.37-.61-8.83-.93-13.36-.93-53.02 0-96 42.98-96 96s42.98 96 96 96 96-42.98 96-96c0-12.45-2.37-24.34-6.68-35.26l24.86-24.86L325.69 439.4c32.8 32.8 85.99 32.8 118.79 0 4.69-4.68 4.69-12.28 0-16.97L278.06 256zM96 160c-17.64 0-32-14.36-32-32s14.36-32 32-32 32 14.36 32 32-14.36 32-32 32zm0 256c-17.64 0-32-14.36-32-32s14.36-32 32-32 32 14.36 32 32-14.36 32-32 32z'></path>
           </svg>
           <p> Services</p>
         </button>
         <button class='tablinks' @click.prevent='setActive' :class="[!isActive ? 'active' : '']"
-                @click="switchTab('products')">
+          @click="switchTab('products')">
           <svg aria-hidden='true' focusable='false' data-prefix='fas' data-icon='spray-can'
-               class='svg-inline--fa fa-spray-can fa-w-16' role='img' xmlns='http://www.w3.org/2000/svg'
-               viewBox='0 0 512 512'>
+            class='svg-inline--fa fa-spray-can fa-w-16' role='img' xmlns='http://www.w3.org/2000/svg'
+            viewBox='0 0 512 512'>
             <path fill='currentColor'
-                  d='M224 32c0-17.67-14.33-32-32-32h-64c-17.67 0-32 14.33-32 32v96h128V32zm256 96c-17.67 0-32 14.33-32 32s14.33 32 32 32 32-14.33 32-32-14.33-32-32-32zm-256 32H96c-53.02 0-96 42.98-96 96v224c0 17.67 14.33 32 32 32h256c17.67 0 32-14.33 32-32V256c0-53.02-42.98-96-96-96zm-64 256c-44.18 0-80-35.82-80-80s35.82-80 80-80 80 35.82 80 80-35.82 80-80 80zM480 96c17.67 0 32-14.33 32-32s-14.33-32-32-32-32 14.33-32 32 14.33 32 32 32zm-96 32c-17.67 0-32 14.33-32 32s14.33 32 32 32 32-14.33 32-32-14.33-32-32-32zm-96-96c-17.67 0-32 14.33-32 32s14.33 32 32 32 32-14.33 32-32-14.33-32-32-32zm96 0c-17.67 0-32 14.33-32 32s14.33 32 32 32 32-14.33 32-32-14.33-32-32-32zm96 192c-17.67 0-32 14.33-32 32s14.33 32 32 32 32-14.33 32-32-14.33-32-32-32z'></path>
+              d='M224 32c0-17.67-14.33-32-32-32h-64c-17.67 0-32 14.33-32 32v96h128V32zm256 96c-17.67 0-32 14.33-32 32s14.33 32 32 32 32-14.33 32-32-14.33-32-32-32zm-256 32H96c-53.02 0-96 42.98-96 96v224c0 17.67 14.33 32 32 32h256c17.67 0 32-14.33 32-32V256c0-53.02-42.98-96-96-96zm-64 256c-44.18 0-80-35.82-80-80s35.82-80 80-80 80 35.82 80 80-35.82 80-80 80zM480 96c17.67 0 32-14.33 32-32s-14.33-32-32-32-32 14.33-32 32 14.33 32 32 32zm-96 32c-17.67 0-32 14.33-32 32s14.33 32 32 32 32-14.33 32-32-14.33-32-32-32zm-96-96c-17.67 0-32 14.33-32 32s14.33 32 32 32 32-14.33 32-32-14.33-32-32-32zm96 0c-17.67 0-32 14.33-32 32s14.33 32 32 32 32-14.33 32-32-14.33-32-32-32zm96 192c-17.67 0-32 14.33-32 32s14.33 32 32 32 32-14.33 32-32-14.33-32-32-32z'></path>
           </svg>
           <p>
             Products
@@ -103,19 +103,19 @@
           <div class='price-wrapper'>
             <p>Discount (%)</p>
             <input name='discount' :value='discount' @input='e => discount = e.target.value' type='number' min='0'
-                   max='100'>
+              max='100'>
           </div>
           <div class='price-wrapper'>
             <p>Total without taxes</p>
-            <p>{{ totalBeforeTax }}dkk</p>
+            <p>{{ totalBeforeTax }}DKK</p>
           </div>
           <div class='price-wrapper'>
             <p>Tax</p>
-            <p>{{ taxes }}dkk</p>
+            <p>{{ taxes }}DKK</p>
           </div>
           <div class='total-price-wrapper'>
             <p class='total-price'>Total </p>
-            <p class='total-price-amount'>{{ total }}dkk</p>
+            <p class='total-price-amount'>{{ total }}DKK</p>
           </div>
         </div>
       </div>
@@ -133,7 +133,7 @@
 
 <script>
 import BaseLoader from '@/components/BaseLoader'
-import { getCookieDataUnparsed } from '~/helpers/cookies.js'
+import { getCookieDataUnparsed, deleteCookie } from '~/helpers/cookies.js'
 
 export default {
 
@@ -171,7 +171,6 @@ export default {
       } else {
         return (this.totalBeforeTax + this.taxes) * (1 - (this.discount / 100))
       }
-
     }
   },
   data() {
@@ -196,7 +195,6 @@ export default {
     setActive() {
       this.isActive = !this.isActive
     },
-
 
     openLoader() {
       this.$refs.loader.open()
@@ -226,8 +224,6 @@ export default {
         this.activeTab = 'products'
       }
     },
-
-
     increaseValue(index) {
 
       const temp = JSON.parse(JSON.stringify(this.saleList))
@@ -284,10 +280,13 @@ export default {
     async fetchData() {
       try {
         this.openLoader()
-
         const services = await this.$axios.get(`http://easybeauty.somee.com/v1/api/Service?cookie=${this.cookie}`)
         this.serviceList = services.data
         const products = await this.$axios.get(`http://easybeauty.somee.com/v1/api/Product?cookie=${this.cookie}`)
+        if(products.data.error){
+          deleteCookie('easybeauty_user');
+          window.location.href = '/login'
+        }
         this.productList = products.data
         this.filteredList = this.serviceList
         this.closeLoader()
@@ -424,7 +423,6 @@ export default {
 
 .image-container {
   position: relative;
-
 }
 
 .grid-item-name {
@@ -470,7 +468,6 @@ export default {
     cursor: pointer;
   }
 }
-
 
 .search-wrapper img {
   border-radius: 100%;
@@ -543,7 +540,7 @@ export default {
   justify-content: center;
   color: gray;
   position: relative;
-  img{
+  img {
     height: 12px;
     margin: 0 10px;
     position: absolute;
@@ -566,7 +563,7 @@ export default {
   width: 25%;
   color: lightseagreen;
   font-size: 0.8vw;
-  img{
+  img {
     height: 15px;
   }
 }
@@ -643,7 +640,7 @@ input[type='number']::-webkit-outer-spin-button {
   border: lightseagreen solid thick;
 }
 
-.tablinks svg{
+.tablinks svg {
   height: 20px;
 }
 

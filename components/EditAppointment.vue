@@ -78,7 +78,6 @@ export default {
       this.$refs.schedulePopUp.close()
     },
 
-
     formatTimeDisplay(date){
       if(date){
       return format(parseISO(date), 'HH:mm')
