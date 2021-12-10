@@ -1,7 +1,8 @@
 <template>
   <div class='main-container'>
     <BaseLoader ref='loader' />
-    <AddProduct ref='addProductPopup' :itemToEdit='itemToEdit' :activeTab="this.activeTab" :enableOverlayClick='true' @loadServices='loadServices' @closed="closedAddProduct"
+    <AddProduct ref='addProductPopup' :itemToEdit='itemToEdit' :activeTab='this.activeTab' :enableOverlayClick='true'
+      @loadServices='loadServices' @closed='closedAddProduct'
       @loadProducts='loadProducts' @openLoader='openLoader' @closeLoader='closeLoader' />
     <div class='services-container'>
       <div class='product-service-container'>
@@ -107,15 +108,15 @@
           </div>
           <div class='price-wrapper'>
             <p>Total without taxes</p>
-            <p>{{ totalBeforeTax }}DKK</p>
+            <p>{{ totalBeforeTax.toFixed(2) }}DKK</p>
           </div>
           <div class='price-wrapper'>
             <p>Tax</p>
-            <p>{{ taxes }}DKK</p>
+            <p>{{ taxes.toFixed(2) }}DKK</p>
           </div>
           <div class='total-price-wrapper'>
             <p class='total-price'>Total </p>
-            <p class='total-price-amount'>{{ total }}DKK</p>
+            <p class='total-price-amount'>{{ total.toFixed(2) }}DKK</p>
           </div>
         </div>
       </div>
@@ -124,7 +125,7 @@
           <p> Cancel Order </p>
         </button>
         <button class='pay-order' type='button' @click='pay()'>
-          <p> Pay ({{ total }} DKK) </p>
+          <p> Pay ({{ total.toFixed(2) }} DKK) </p>
         </button>
       </div>
     </div>
@@ -133,7 +134,7 @@
 
 <script>
 import BaseLoader from '@/components/BaseLoader'
-import { getCookieDataUnparsed, deleteCookie } from '~/helpers/cookies.js'
+import { deleteCookie, getCookieDataUnparsed } from '~/helpers/cookies.js'
 
 export default {
 
@@ -191,9 +192,9 @@ export default {
   },
   layout: 'default',
   methods: {
-closedAddProduct(){
-  this.itemToEdit = {}
-},
+    closedAddProduct(){
+      this.itemToEdit = {}
+    },
     setActive() {
       this.isActive = !this.isActive
     },
@@ -206,7 +207,7 @@ closedAddProduct(){
     },
     openAddProductModal(item = {}) {
       this.$refs.addProductPopup.open()
-        this.itemToEdit = item
+      this.itemToEdit = item
 
     },
     closeAddProductModal() {
@@ -282,8 +283,8 @@ closedAddProduct(){
         const services = await this.$axios.get(`http://easybeauty.somee.com/v1/api/Service?cookie=${this.cookie}`)
         this.serviceList = services.data
         const products = await this.$axios.get(`http://easybeauty.somee.com/v1/api/Product?cookie=${this.cookie}`)
-        if(products.data.error){
-          deleteCookie('easybeauty_user');
+        if (products.data.error) {
+          deleteCookie('easybeauty_user')
           window.location.href = '/login'
         }
         this.productList = products.data
@@ -539,6 +540,7 @@ closedAddProduct(){
   justify-content: center;
   color: gray;
   position: relative;
+
   img {
     height: 12px;
     margin: 0 10px;
@@ -562,6 +564,7 @@ closedAddProduct(){
   width: 25%;
   color: lightseagreen;
   font-size: 0.8vw;
+
   img {
     height: 15px;
   }

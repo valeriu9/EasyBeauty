@@ -74,7 +74,7 @@ export default {
   },
   components: {
     Calendar,
-    PopupTemplate: () => import('~/components/PopupTemplate')
+    PopupTemplate: () => import('@/components/PopupTemplate')
   },
   mounted() {
     this.loadServices();

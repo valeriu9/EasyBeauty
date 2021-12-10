@@ -34,7 +34,7 @@ import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import { createEventId } from '~/helpers/event-utils'
 import { addMinutes, addMonths, format, parseISO } from 'date-fns'
-import PopupTemplate from '~/components/PopupTemplate'
+import PopupTemplate from '@/components/PopupTemplate'
 export default {
   components: {
     FullCalendar,
