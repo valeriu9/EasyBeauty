@@ -45,7 +45,7 @@ import { getCookieDataUnparsed } from '~/helpers/cookies.js'
 export default {
   name: 'imageUpload',
   components: {
-    PopupTemplate: () => import('~/components/PopupTemplate')
+    PopupTemplate: () => import('@/components/PopupTemplate')
   },
 
   layout: 'default',

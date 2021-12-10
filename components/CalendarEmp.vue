@@ -22,7 +22,7 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import { addMinutes, addMonths, format, parseISO } from 'date-fns'
-import PopupTemplate from '~/components/PopupTemplate'
+import PopupTemplate from '@/components/PopupTemplate'
 export default {
   components: {
     FullCalendar,

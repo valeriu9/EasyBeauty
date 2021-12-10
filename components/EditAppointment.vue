@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import PopupTemplate from '~/components/PopupTemplate'
+import PopupTemplate from '@/components/PopupTemplate'
 import CalendarEmp from '~/components/CalendarEmp'
 import { format, parseISO, addMinutes } from 'date-fns'
 import { getCookieDataUnparsed } from '~/helpers/cookies.js'

@@ -35,7 +35,7 @@
 import {getCookieDataUnparsed} from '~/helpers/cookies.js'
 export default {
   components: {
-    PopupTemplate: () => import('~/components/PopupTemplate')
+    PopupTemplate: () => import('@/components/PopupTemplate')
   },
   layout: 'default',
   props: {
