@@ -37,6 +37,12 @@
           </div>
         </div>
         <div class='demo-app-main'>
+          <div v-if="$store.state.user.role === 'manager'" class="select-employee-wrapper">
+            Select an employee:
+            <select @change="selectEmployee($event)" class="select-employee">
+              <option v-for="(employee, index) in employeeList" :key="index" :value="index">{{employee.fullName}}</option>
+            </select>
+          </div>
           <CalendarEmp ref="calendar" :duration="serviceDuration" :eventHasChanges="eventHasChanges" :scheduleForEmployee="appointmentForCalendar" @selectedEvent="setEvent($event)" @newDatesForEvent="setNewDatesForEvent($event)">
           </CalendarEmp>
           <br>
@@ -58,13 +64,14 @@ export default {
   },
   mounted(){
         this.loadServices();
-        this.loadAppointmentsById(this.$store.state.user.id);
+        this.$store.state.user.role === 'manager' ? this.loadEmployees() : this.loadAppointmentsById(this.$store.state.user.id)
   },
   data() {
     return {
       serviceList: [],
       appointmentsFromServer:[],
       appointmentForCalendar: [],
+      employeeList:[],
       serviceDuration: 30,
       eventHasChanges: false,
       cookie: getCookieDataUnparsed('session'),
@@ -115,6 +122,15 @@ export default {
         console.log(e);
       }
     },
+    async loadEmployees() {
+      try {
+        const employees = await this.$axios.get(`http://easybeauty.somee.com/v1/api/Employee`);
+        this.employeeList = employees.data;
+        this.loadAppointmentsById(employees.data[0].id);
+      } catch (e) {
+        console.log(e);
+      }
+    },
     async loadAppointmentsById(userId) {
       try {
         this.appointmentForCalendar.splice(0, this.appointmentForCalendar.length);
@@ -143,6 +159,11 @@ export default {
         }
       });
        this.eventHasChanges = true;
+    },
+      selectEmployee(event){
+      this.appointmentForCalendar.splice(0, this.appointmentForCalendar.length)
+      const selectedEmployee = this.employeeList[event.target.value];
+      this.loadAppointmentsById(selectedEmployee.id);
     },
       async onSubmit(){
      try {
@@ -270,7 +291,31 @@ b {
   display: flex;
   align-items: center;
 }
+.select-employee-wrapper {
+  margin-left: 40px;
+}
+.select-employee {
+  background: transparent;
+  cursor: pointer;
+  color: #000;
+  transition: all 0.4s ease;
+  border: none;
+  border-bottom: 1px solid black;
+  padding: 12px;
+  font-size: 16px;
+  margin: 2px -4px;
+  margin-left: 10px;
+}
 
+.select-employee:focus {
+  color: #000;
+}
+.select-employee:focus-visible {
+  outline: none;
+}
+.select-employee option {
+  color: #000;
+}
 .form-card {
   background: black;
   border-radius: 10px;
