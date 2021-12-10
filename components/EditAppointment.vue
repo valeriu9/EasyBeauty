@@ -37,7 +37,6 @@
         <div class='demo-app-main'>
           <CalendarEmp ref="calendar" :scheduleForEmployee="appointmentForCalendar" @selectedEvent="setEvent($event)">
           </CalendarEmp>
-          <p>*Drag and drop your event for changing date and time</p>
           <p>*Click on your event in order to delete it</p>
           <br>
         </div>
