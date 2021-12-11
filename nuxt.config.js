@@ -12,7 +12,7 @@ export default {
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
   },
-  mode: 'static',
+  target: 'static',
   router: {
     base: '/EasyBeauty/'
   },

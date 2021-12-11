@@ -47,6 +47,7 @@
     "gh-pages": "^3.2.3",
     "node-sass": "^6.0.0",
     "prettier": "^2.2.1",
+    "push-dir": "^0.4.1",
     "sass": "^1.32.13",
     "sass-loader": "^10.2.0"
   }
