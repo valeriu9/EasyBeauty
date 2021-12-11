@@ -1,9 +1,7 @@
 <template>
   <div>
     <client-only>
-      <AddEmployee />
-      <AddProduct />
-      <Navbar />
+
       <nuxt />
     </client-only>
   </div>
@@ -13,9 +11,7 @@
 
 export default {
   components: {
-    Navbar: () => import('~/components/Navbar'),
-    AddEmployee: () => import('~/components/AddEmployee'),
-    AddProduct: () => import('~/components/AddProduct'),
+
   }
 }
 </script>

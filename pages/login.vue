@@ -74,7 +74,7 @@
     layout: 'default',
     beforeMount(){
     if(this.$store.state.user.id){
-      this.$router.push('/');
+      this.$router.push('/employee');
     }
     },
     data() {
@@ -148,11 +148,10 @@
             else{
             setCookieUnparsed('session', res.data.cookie)
              const decodeCookie = JSON.parse(crypto.enc.Base64.parse(res.data.cookie).toString(crypto.enc.Utf8));
-             const user = {email: this.email, name: decodeCookie.FullName, id: decodeCookie.Id, token: decodeCookie.Token, role: decodeCookie.Role}
+             const user = {email: this.email, name: decodeCookie.Name, id: decodeCookie.Id, token: decodeCookie.Token, role: decodeCookie.Role}
              setCookie('easybeauty_user', user);
              this.$store.dispatch('user/userLoggedIn', user);
-            //  this.$router.push('/')
-            window.location.href ='/'
+            window.location.href ='/employee'
             }
           }
         } catch (e) {

@@ -19,7 +19,8 @@ export default {
     design: {
       validator: prop => [
         '',
-        'editAppointment'
+        'editAppointment',
+        'confirmation'
       ].includes(prop),
       default: ''
     },
@@ -119,6 +120,12 @@ export default {
 .wrapper[design='editAppointment'] {
   .popup-window {
     width: 90%;
+  }
+}
+.wrapper[design='confirmation'] {
+  .popup-window {
+    width: fit-content;
+    height: max-content;
   }
 }
 </style>

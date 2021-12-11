@@ -19,7 +19,7 @@
           <p>*If you want to make more than one appointment, contact salon employees</p>
           <br>
           <p>Your time:</p>
-          <p v-if="selectedEvent.length !== 0">{{formatDateDisplay(selectedEvent[0].startStr)}} from {{formatTimeDisplay(selectedEvent[0].startStr)}} to {{formatTimeDisplay(selectedEvent[0].endStr)}}</p>
+          <p v-if="selectedEvent.id">{{formatDateDisplay(selectedEvent.startStr)}} from {{formatTimeDisplay(selectedEvent.startStr)}} to {{formatTimeDisplay(selectedEvent.endStr)}}</p>
           <div class="button" @click="$emit('selectedEvent', selectedEvent), close()">Choose</div>
         </div>
       </div>
@@ -66,7 +66,7 @@ export default {
     const stringDuration = '0'+hours+':'+minutes+":00";
     return {
       stringDuration,
-      selectedEvent: [],
+      selectedEvent: {},
       isDateSelected: false,
       calendarOptions: {
         plugins: [
@@ -155,7 +155,8 @@ export default {
           end: endTime,
           constraint: 'businessHours'
         })
-        this.selectedEvent = this.currentEvents.filter(x => x.groupId === '2')
+        this.selectedEvent = this.currentEvents.find(x => {return x.groupId === '2'})
+        console.log(this.selectedEvent);
       }
     },
 
@@ -164,7 +165,7 @@ export default {
         return
       }
       if (confirm(`Are you sure you want to delete the appointment?`)) {
-        this.selectedEvent = []
+        this.selectedEvent = {}
         clickInfo.event.remove()
       }
     },

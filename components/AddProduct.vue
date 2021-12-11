@@ -86,9 +86,6 @@ export default {
       cookie: getCookieDataUnparsed('session')
     }
   },
-  beforeDestroy() {
-    this.close()
-  },
   methods: {
     open() {
       this.$refs.popupOpen.open()

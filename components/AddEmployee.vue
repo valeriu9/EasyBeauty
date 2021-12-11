@@ -4,7 +4,7 @@
       <div class='user-input-wrp'>
         <div class='employee-details'>
           <div class='employee'>
-            <input type='text' v-model='fullName' class='inputText' required />
+            <input type='text' v-model='name' class='inputText' required />
             <p class='floating-label'>Full Name</p>
           </div>
           <div class='employee'>
@@ -52,7 +52,7 @@ export default {
   data() {
     return {
       showModal: false,
-      fullName: '',
+      name: '',
       phoneNr: null,
       email: '',
       role: 'employee',
@@ -62,8 +62,8 @@ export default {
   },
   watch: {
     employeeToEdit() {
-      if (this.employeeToEdit.fullName) {
-        this.fullName = this.employeeToEdit.fullName
+      if (this.employeeToEdit.name) {
+        this.name = this.employeeToEdit.name
         this.role = this.employeeToEdit.role
         this.email = this.employeeToEdit.email
         this.phoneNr = this.employeeToEdit.phoneNr
@@ -82,14 +82,14 @@ export default {
       this.$refs.popupOpen.close()
     },
     async save() {
-      if (this.fullName === '', this.phoneNr === 0, this.email === '', this.role === '') {
+      if (this.name === '', this.phoneNr === 0, this.email === '', this.role === '') {
         window.alert('Complete all the fields before saving')
         return
       }
       try {
-        if (this.employeeToEdit.fullName) {
+        if (this.employeeToEdit.name) {
           this.$axios.put(`http://easybeauty.somee.com/v1/api/Employee?id=${this.id}&cookie=${this.cookie} `, {
-            fullName: this.fullName,
+            name: this.name,
             phoneNr: this.phoneNr,
             email: this.email,
             role: this.role
@@ -99,8 +99,8 @@ export default {
           }, 1000)
           this.close()
         } else {
-          this.$axios.post(`http://easybeauty.somee.com/v1/api/Employee?&cookie=${this.cookie}`, {
-            fullName: this.fullName,
+          this.$axios.post(`http://easybeauty.somee.com/v1/api/Employee?id=${this.id}&cookie=${this.cookie}`, {
+            name: this.name,
             phoneNr: this.phoneNr,
             email: this.email,
             role: this.role
@@ -115,7 +115,7 @@ export default {
       }
     },
     cancel() {
-      this.fullName = '',
+      this.name = '',
         this.phoneNr = null,
         this.email = '',
         this.role = 'employee',
@@ -126,7 +126,6 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-
 .save-button {
   cursor: pointer;
   padding: 10px;
@@ -237,8 +236,7 @@ input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
-input[type=number] {
+input[type='number'] {
   -moz-appearance: textfield;
 }
-
 </style>

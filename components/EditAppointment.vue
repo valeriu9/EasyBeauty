@@ -28,7 +28,7 @@
             </div>
           </div>
           <div class='input-group'>
-            <input placeholder='Note (optional)' :value="selectedEvent.note">
+            <input placeholder='Note (optional)' :value="selectedEvent.notes" @input="e => selectedEvent.notes = e.target.value">
           </div>
           <div class="buttons-form" v-if="selectedEvent.phoneNr">
             <button v-if="selectedEvent.isAccepted" @click="onSubmit()">Save changes</button>
@@ -40,10 +40,10 @@
           <div v-if="$store.state.user.role === 'manager'" class="select-employee-wrapper">
             Select an employee:
             <select @change="selectEmployee($event)" class="select-employee">
-              <option v-for="(employee, index) in employeeList" :key="index" :value="index">{{employee.fullName}}</option>
+              <option v-for="(employee, index) in employeeList" :key="index" :value="index">{{employee.name}}</option>
             </select>
           </div>
-          <CalendarEmp ref="calendar" :duration="serviceDuration" :eventHasChanges="eventHasChanges" :scheduleForEmployee="appointmentForCalendar" @selectedEvent="setEvent($event)" @newDatesForEvent="setNewDatesForEvent($event)">
+          <CalendarEmp ref="calendar" :eventHasChanges="eventHasChanges" :scheduleForEmployee="appointmentForCalendar" @selectedEvent="setEvent($event)" @newDatesForEvent="setNewDatesForEvent($event)">
           </CalendarEmp>
           <br>
         </div>
@@ -62,18 +62,26 @@ export default {
     CalendarEmp,
     PopupTemplate
   },
-  mounted(){
-        this.loadServices();
-        this.$store.state.user.role === 'manager' ? this.loadEmployees() : this.loadAppointmentsById(this.$store.state.user.id)
+  props:{
+    serviceList :{
+    type: Array,
+    default: () => []
+    },
+    employeeList :{
+    type: Array,
+    default: () => []
+    }
+  },
+  mounted() {
+      this.$store.state.user.role === 'manager' ? this.loadAppointmentsById(this.employeeList[0].id) : this.loadAppointmentsById(this.$store.state.user.id)
+        this.selectedEmployee = this.employeeList[0];
   },
   data() {
     return {
-      serviceList: [],
       appointmentsFromServer:[],
       appointmentForCalendar: [],
-      employeeList:[],
-      serviceDuration: 30,
       eventHasChanges: false,
+      selectedEmployee: {},
       cookie: getCookieDataUnparsed('session'),
       selectedEvent: {customerName:'', phoneNr:null, customerEmail: '', serviceId: null}
     }
@@ -114,23 +122,6 @@ export default {
       this.selectedEvent.startTime = eventDates.startTime;
       this.eventHasChanges = true;
     },
-    async loadServices() {
-      try {
-        const services = await this.$axios.get(`http://easybeauty.somee.com/v1/api/Service`);
-        this.serviceList = services.data;
-      } catch (e) {
-        console.log(e);
-      }
-    },
-    async loadEmployees() {
-      try {
-        const employees = await this.$axios.get(`http://easybeauty.somee.com/v1/api/Employee`);
-        this.employeeList = employees.data;
-        this.loadAppointmentsById(employees.data[0].id);
-      } catch (e) {
-        console.log(e);
-      }
-    },
     async loadAppointmentsById(userId) {
       try {
         this.appointmentForCalendar.splice(0, this.appointmentForCalendar.length);
@@ -162,8 +153,9 @@ export default {
     },
       selectEmployee(event){
       this.appointmentForCalendar.splice(0, this.appointmentForCalendar.length)
-      const selectedEmployee = this.employeeList[event.target.value];
-      this.loadAppointmentsById(selectedEmployee.id);
+      this.selectedEmployee = this.employeeList[event.target.value];
+      this.selectedEvent= {customerName:'', phoneNr:null, customerEmail: '', serviceId: null}
+      this.loadAppointmentsById(this.selectedEmployee.id);
     },
       async onSubmit(){
      try {
@@ -174,7 +166,7 @@ export default {
         }
         else{
           this.eventHasChanges = false
-          this.loadAppointmentsById(this.$store.state.user.id);
+          this.loadAppointmentsById(this.$store.state.user.role === 'manager' ? this.selectedEmployee.id : this.$store.state.user.id);
         }
       }
       catch (e) {
@@ -189,7 +181,7 @@ export default {
         }
         else{
           this.eventHasChanges = false
-          this.loadAppointmentsById(this.$store.state.user.id);
+          this.loadAppointmentsById(this.$store.state.user.role === 'manager' ? this.selectedEmployee.id : this.$store.state.user.role);
         }
         }
         catch(e){

@@ -1,7 +1,7 @@
 <template>
   <PopupTemplate ref='popupOpen'>
     <template #body>
-      <AddEmployee ref='AddEmployeePopup' :enableOverlayClick='true' @loadEmployees='loadEmployees()' :employeeToEdit='employeeToEdit' />
+      <AddEmployee ref='AddEmployeePopup' :enableOverlayClick='true' @loadEmployees="$emit('loadEmployees')" :employeeToEdit='employeeToEdit' />
       <div class='edit-employee-navbar'>
         <button class='add-employee-button' type='button' @click='openAddEmployeeModal()'><img
             src='~/assets/images/plus-solid.svg'>
@@ -20,7 +20,7 @@
             src='~/assets/images/trash-solid.svg'>
 
           <div class='employee-details'>
-            <p class='employee-name'>{{ employee.fullName }}</p>
+            <p class='employee-name'>{{ employee.name }}</p>
             <p class='employee-email'> {{ employee.email }} </p>
             <p class='employee-phone'> {{ employee.phoneNr }} </p>
             <p class='employee-role'> {{ employee.role }} </p>
@@ -39,14 +39,18 @@ export default {
     AddEmployee: () => import('~/components/AddEmployee'),
     PopupTemplate: () => import('@/components/PopupTemplate')
   },
-  mounted() {
-    this.loadEmployees()
+  mounted (){
+    this.filteredList = this.employeeList
   },
   layout: 'default',
   props: {
     enableOverlayClick: {
       type: Boolean,
       default: true
+    },
+    employeeList :{
+      type: Array,
+      default: () => []
     }
   },
   data() {
@@ -54,7 +58,6 @@ export default {
       showModal: false,
       searchText: '',
       filteredList: [],
-      employeeList: [],
       employeeToEdit: {},
       cookie: getCookieDataUnparsed('session')
     }
@@ -86,19 +89,8 @@ export default {
       }
       this.$emit('closed')
     },
-    async loadEmployees() {
-      try {
-        this.filteredList = []
-        this.employeeList = []
-        const employees = await this.$axios.get(`http://easybeauty.somee.com/v1/api/Employee`)
-        this.employeeList = employees.data
-        this.filteredList = this.employeeList
-      } catch (e) {
-        console.log(e)
-      }
-    },
+
     overlayClick() {
-      console.log('overlayclijc')
       if (this.enableOverlayClick) {
         this.close()
       }
