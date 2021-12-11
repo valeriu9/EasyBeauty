@@ -3,11 +3,10 @@
     <!-- Modals -->
     <BaseLoader ref='loader' />
     <AddProduct ref='addProductPopup' :itemToEdit='itemToEdit' :activeTab='this.activeTab' :enableOverlayClick='true'
-      @loadServices='loadServices' @closed='closedAddProduct'
+      @loadServices='loadServices' @closed='resetItemToEdit'
       @loadProducts='loadProducts' @openLoader='openLoader' @closeLoader='closeLoader' />
     <EditEmployee v-if="isEmployeeListFetched && user.role === 'manager'" ref='employeePopup' @loadEmployees='loadEmployees' :employeeList='employeeList' :enableOverlayClick='true' />
     <EditAppointment ref='appointmentPopup' :employeeList='employeeList' :isEmployeeListFetched="isEmployeeListFetched" :serviceList='serviceList' :enableOverlayClick='true' />
-
     <!-- End Modals -->
     <Navbar @openAppointmentsModal='openAppointmentsModal' @openEmployeeModal='openEmployeeModal' />
     <div class="content-container">
@@ -152,20 +151,15 @@ export default {
     AddEmployee: () => import('~/components/AddEmployee'),
     AddProduct: () => import('~/components/AddProduct'),
     EditEmployee: () => import('~/components/EditEmployee'),
-    EditAppointment: () => import('~/components/EditAppointment')
+    EditAppointment: () => import('~/components/EditAppointment'),
   },
   beforeMount(){
-  if (this.$cookies.get('easybeauty_user') !== null) {
-    this.$store.dispatch('user/userLoggedIn', this.$cookies.get('easybeauty_user'));
-  }
-  else {
-      window.location.href = '/login'
-  }
+  this.$cookies.get('easybeauty_user') !== null ? this.$store.dispatch('user/userLoggedIn', this.$cookies.get('easybeauty_user')) : window.location.href = '/login'
   },
   mounted() {
-      this.loadServices()
-      this.loadProducts()
-     this.$store.state.user.role === 'manager' ? this.loadEmployees(): ''
+    this.loadServices()
+    this.loadProducts()
+    this.$store.state.user.role === 'manager' ? this.loadEmployees(): ''
   },
   watch: {
     searchText() {
@@ -190,11 +184,7 @@ export default {
       return result
     },
     total() {
-      if (this.discount === 0 || this.discount === '') {
-        return this.totalBeforeTax + this.taxes
-      } else {
-        return (this.totalBeforeTax + this.taxes) * (1 - (this.discount / 100))
-      }
+      return this.discount === 0 || this.discount === '' ? this.totalBeforeTax + this.taxes : (this.totalBeforeTax + this.taxes) * (1 - (this.discount / 100))
     }
   },
   data() {
@@ -202,28 +192,25 @@ export default {
       productList: [],
       serviceList: [],
       employeeList:[],
+      filteredList: [],
+      saleList: [],
+      itemToEdit: {},
       searchText: '',
       activeTab: 'services',
       isActive: true,
-      filteredList: [],
-      saleList: [],
       isEmployeeListFetched: false,
       discount: null,
-      itemToEdit: {},
       user: this.$store.state.user,
       cookie: getCookieDataUnparsed('session')
     }
-
   },
-  layout: 'default',
   methods: {
-    closedAddProduct(){
+    resetItemToEdit(){
       this.itemToEdit = {}
     },
     setActive() {
       this.isActive = !this.isActive
     },
-
     openLoader() {
       this.$refs.loader.open()
     },
@@ -233,12 +220,7 @@ export default {
     openAddProductModal(item = {}) {
       this.$refs.addProductPopup.open()
       this.itemToEdit = item
-
     },
-    closeAddProductModal() {
-      this.$refs.addProductPopup.close()
-    },
-
     switchTab(name) {
       if (name === 'services') {
         this.filteredList = this.serviceList
@@ -250,10 +232,8 @@ export default {
       }
     },
     increaseValue(index) {
-
       const temp = JSON.parse(JSON.stringify(this.saleList))
       temp[index].price = temp[index].price + this.saleList[index].initialPrice
-      console.log(temp[index].price + 'and ' + this.saleList[index].initialPrice)
       temp[index].quantity++
       this.saleList = []
       this.saleList = temp
@@ -305,7 +285,6 @@ export default {
     async loadProducts() {
       try {
         this.openLoader()
-        this.filteredList = []
         const products = await this.$axios.get(`http://easybeauty.somee.com/v1/api/Product?cookie=${this.cookie}`)
         if (products.data.error) {
           deleteCookie('easybeauty_user')
@@ -322,7 +301,6 @@ export default {
      async loadEmployees() {
       try {
         this.openLoader()
-        this.employeeList = []
         const employees = await this.$axios.get(`http://easybeauty.somee.com/v1/api/Employee`)
         this.employeeList = employees.data
         this.isEmployeeListFetched = true
@@ -335,7 +313,6 @@ export default {
     async loadServices() {
       try {
         this.openLoader()
-        this.filteredList = []
         const services = await this.$axios.get(`http://easybeauty.somee.com/v1/api/Service`)
         this.serviceList = services.data
         this.filteredList = this.serviceList

@@ -78,11 +78,8 @@ export default {
       this.$refs.popupOpen.open()
     },
     openAddEmployeeModal(employee = {}) {
-      this.employeeToEdit = {}
       this.$refs.AddEmployeePopup.open()
-      if (Object.keys(employee).length !== 0) {
-        this.employeeToEdit = employee
-      }
+      this.employeeToEdit = employee
     },
     closeAddEmployeeModal() {
       this.$refs.AddEmployeePopup.close()

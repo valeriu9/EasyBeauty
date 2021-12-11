@@ -12,6 +12,10 @@ export default {
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
   },
+  mode: 'static',
+  router: {
+    base: '/EasyBeauty/'
+  },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: ['~assets/styles/_style-global.scss'],

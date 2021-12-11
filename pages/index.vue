@@ -73,7 +73,7 @@ import Calendar from '@/components/Calendar'
 import {createEventId } from '~/helpers/event-utils'
 import {parseISO, format } from 'date-fns'
 export default {
-  layout: 'empty',
+  layout: 'default',
   props: {
     enableOverlayClick: {
       type: Boolean,
