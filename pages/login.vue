@@ -265,7 +265,7 @@
 
 .login-wrapper > .submit-button {
   margin: 10px auto auto auto;
-  background-color: #18b576;
+  background-color: lightseagreen;
   padding: 15px 40px;
   display: flex;
   justify-content: center;
