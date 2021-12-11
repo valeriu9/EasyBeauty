@@ -1,7 +1,7 @@
 <template>
   <PopupTemplate ref='popupOpen'>
     <template #body>
-      <AddEmployee ref='AddEmployeePopup' :enableOverlayClick='true' @loadEmployees="$emit('loadEmployees')" :employeeToEdit='employeeToEdit' />
+      <AddEmployee ref='AddEmployeePopup' :enableOverlayClick='true' @loadEmployees="loadEmployees" :employeeToEdit='employeeToEdit' />
       <div class='edit-employee-navbar'>
         <button class='add-employee-button' type='button' @click='openAddEmployeeModal()'><img
             src='~/assets/images/plus-solid.svg'>
@@ -53,6 +53,14 @@ export default {
       default: () => []
     }
   },
+  watch:{
+    employeeList(){
+      this.filteredList = this.employeeList
+    },
+    searchText(){
+      this.search()
+    }
+  },
   data() {
     return {
       showModal: false,
@@ -83,6 +91,9 @@ export default {
       this.$emit('close-button-clicked')
       this.close()
     },
+    loadEmployees(){
+      this.$emit('loadEmployees')
+    },
     close() {
       this.showModal = false
       window.onscroll = function() {
@@ -105,7 +116,7 @@ export default {
       }
     },
     search() {
-      this.filteredList = this.employeeList.filter(employee => employee.fullName.toLowerCase().includes(this.searchText.toLowerCase()))
+      this.filteredList = this.employeeList.filter(employee => employee.name.toLowerCase().includes(this.searchText.toLowerCase()))
     }
   }
 }

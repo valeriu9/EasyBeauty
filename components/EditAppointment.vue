@@ -70,11 +70,15 @@ export default {
     employeeList :{
     type: Array,
     default: () => []
+    },
+    isEmployeeListFetched :{
+    type: Boolean,
+    default: false
     }
   },
   mounted() {
-      this.$store.state.user.role === 'manager' ? this.loadAppointmentsById(this.employeeList[0].id) : this.loadAppointmentsById(this.$store.state.user.id)
-        this.selectedEmployee = this.employeeList[0];
+      this.$store.state.user.role === 'manager' && this.isEmployeeListFetched ? this.loadAppointmentsById(this.employeeList[0].id) : this.loadAppointmentsById(this.$store.state.user.id)
+      this.selectedEmployee =  this.$store.state.user.role === 'manager' && this.isEmployeeListFetched ? this.employeeList[0] : {id: this.$store.state.user.id};
   },
   data() {
     return {

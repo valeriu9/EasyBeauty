@@ -62,13 +62,11 @@ export default {
   },
   watch: {
     employeeToEdit() {
-      if (this.employeeToEdit.name) {
         this.name = this.employeeToEdit.name
-        this.role = this.employeeToEdit.role
+        this.role = this.employeeToEdit.role ? this.employeeToEdit.role : 'employee'
         this.email = this.employeeToEdit.email
         this.phoneNr = this.employeeToEdit.phoneNr
         this.id = this.employeeToEdit.id
-      }
     }
   },
   beforeDestroy() {

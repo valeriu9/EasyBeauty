@@ -47,7 +47,7 @@
         <div class='buttons-wrapper'>
           <div class='button'>
             <div class='active' @click='goToAppointment()'><img
-                src='~/assets/images/calendar-regular.svg'>Create Appointment
+                src='~/assets/images/calendar-regular.svg'> Create Appointment
             </div>
           </div>
           <div class='button'>

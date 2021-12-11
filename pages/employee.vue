@@ -6,7 +6,7 @@
       @loadServices='loadServices' @closed='closedAddProduct'
       @loadProducts='loadProducts' @openLoader='openLoader' @closeLoader='closeLoader' />
     <EditEmployee v-if="isEmployeeListFetched && user.role === 'manager'" ref='employeePopup' @loadEmployees='loadEmployees' :employeeList='employeeList' :enableOverlayClick='true' />
-    <EditAppointment v-if="isEmployeeListFetched" ref='appointmentPopup' :employeeList='employeeList' :serviceList='serviceList' :enableOverlayClick='true' />
+    <EditAppointment ref='appointmentPopup' :employeeList='employeeList' :isEmployeeListFetched="isEmployeeListFetched" :serviceList='serviceList' :enableOverlayClick='true' />
 
     <!-- End Modals -->
     <Navbar @openAppointmentsModal='openAppointmentsModal' @openEmployeeModal='openEmployeeModal' />
@@ -165,7 +165,7 @@ export default {
   mounted() {
       this.loadServices()
       this.loadProducts()
-      this.loadEmployees()
+     this.$store.state.user.role === 'manager' ? this.loadEmployees(): ''
   },
   watch: {
     searchText() {
@@ -304,6 +304,7 @@ export default {
     },
     async loadProducts() {
       try {
+        this.openLoader()
         this.filteredList = []
         const products = await this.$axios.get(`http://easybeauty.somee.com/v1/api/Product?cookie=${this.cookie}`)
         if (products.data.error) {
@@ -311,28 +312,38 @@ export default {
           window.location.href = '/login'
         }
         this.productList = products.data
-        this.filteredList = this.productList
+        this.activeTab === 'products' ? this.filteredList = this.productList: ''
+        this.closeLoader()
       } catch (e) {
         console.log(e)
+        this.closeLoader()
       }
     },
      async loadEmployees() {
       try {
+        this.openLoader()
+        this.employeeList = []
         const employees = await this.$axios.get(`http://easybeauty.somee.com/v1/api/Employee`)
         this.employeeList = employees.data
         this.isEmployeeListFetched = true
+        this.closeLoader()
       } catch (e) {
+        this.closeLoader()
         console.log(e)
       }
     },
     async loadServices() {
       try {
+        this.openLoader()
         this.filteredList = []
         const services = await this.$axios.get(`http://easybeauty.somee.com/v1/api/Service`)
         this.serviceList = services.data
         this.filteredList = this.serviceList
+        this.$store.state.user.role === 'employee' ? this.closeLoader(): ''
+        this.closeLoader()
       } catch (e) {
         console.log(e)
+        this.closeLoader()
       }
     },
     async deleteItem(item, index) {
