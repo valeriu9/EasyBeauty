@@ -1,18 +1,12 @@
-runtime: nodejs10
-
-instance_class: F2
-
-handlers:
-  - url: /_nuxt
-    static_dir: .nuxt/dist/client
-    secure: always
-
-  - url: /(.*\.(gif|png|jpg|ico|txt))$
-    static_files: static/\1
-    upload: static/.*\.(gif|png|jpg|ico|txt)$
-    secure: always
-
-  - url: /.*
-    script: auto
-    secure: always
-
+steps:
+ # build the container
+ - name: 'gcr.io/cloud-builders/docker'
+   args: ['build', '--network=cloudbuild','-t', 'gcr.io/easybeauty/server', '.']
+ # push the container image to Container Registry
+ - name: 'gcr.io/cloud-builders/docker'
+   args: ['push', 'gcr.io/easybeauty/server']
+ # Deploy container image to Cloud Run
+ - name: 'gcr.io/cloud-builders/gcloud'
+   args: ['run', 'deploy', 'easybeauty-server', '--image', 'gcr.io/easybeauty/server', '--region', 'us-central1', '--platform', 'managed', '--allow-unauthenticated']
+images:
+- 'gcr.io/easybeauty/server'
