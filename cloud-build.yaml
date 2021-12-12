@@ -1,23 +1,12 @@
 steps:
-  - name: 'gcr.io/cloud-builders/docker'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        docker pull gcr.io/easybeauty/easybeauty-test:latest || exit 0
-  - name: gcr.io/cloud-builders/docker
-    timeout: 1200s
-    args:
-      [
-        'build',
-        '-f',
-        'Dockerfile',
-        '-t',
-        'gcr.io/easybeauty/easybeauty-test',
-        '--cache-from',
-        'gcr.io/easybeauty/easybeauty-test:latest',
-        '.',
-      ]
-timeout: 1200s
+ # build the container
+ - name: 'gcr.io/cloud-builders/docker'
+   args: ['build', '--network=cloudbuild','-t', 'gcr.io/easybeauty/easybeauty', '.']
+ # push the container image to Container Registry
+ - name: 'gcr.io/cloud-builders/docker'
+   args: ['push', 'gcr.io/easybeauty/easybeauty']
+ # Deploy container image to Cloud Run
+ - name: 'gcr.io/cloud-builders/gcloud'
+   args: ['run', 'deploy', 'easybeauty', '--image', 'gcr.io/easybeauty/easybeauty', '--region', 'us-central1', '--platform', 'managed', '--allow-unauthenticated']
 images:
-  - gcr.io/easybeauty/easybeauty-test
+- 'gcr.io/easybeauty/easybeauty'
