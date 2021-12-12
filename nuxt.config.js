@@ -62,6 +62,11 @@ export default {
       // ....
     }
   },
+  server: {
+    port: process.env.PORT || 3000,
+    host: "0.0.0.0",
+    timing: false
+  },
   extend (config, { isDev, isClient, loaders: { vue } }) {
     if (isClient) {
       vue.transformAssetUrls.img = ['data-src', 'src']

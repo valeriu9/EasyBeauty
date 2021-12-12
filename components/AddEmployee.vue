@@ -86,7 +86,7 @@ export default {
       }
       try {
         if (this.employeeToEdit.name) {
-          this.$axios.put(`http://easybeauty.somee.com/v1/api/Employee?id=${this.id}&cookie=${this.cookie} `, {
+          this.$axios.put(`//easybeauty.somee.com/v1/api/Employee?id=${this.id}&cookie=${this.cookie} `, {
             name: this.name,
             phoneNr: this.phoneNr,
             email: this.email,
@@ -97,7 +97,7 @@ export default {
           }, 1000)
           this.close()
         } else {
-          this.$axios.post(`http://easybeauty.somee.com/v1/api/Employee?id=${this.id}&cookie=${this.cookie}`, {
+          this.$axios.post(`//easybeauty.somee.com/v1/api/Employee?id=${this.id}&cookie=${this.cookie}`, {
             name: this.name,
             phoneNr: this.phoneNr,
             email: this.email,

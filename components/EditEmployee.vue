@@ -105,7 +105,7 @@ export default {
     },
     async removeEmployee(index, id) {
       try {
-        await this.$axios.delete(`http://easybeauty.somee.com/v1/api/Employee?id=${id}&cookie=${this.cookie}`)
+        await this.$axios.delete(`//easybeauty.somee.com/v1/api/Employee?id=${id}&cookie=${this.cookie}`)
         this.employeeList.splice(index, 1)
         this.filteredList = this.employeeList
       } catch (e) {
