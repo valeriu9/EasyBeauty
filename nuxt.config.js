@@ -12,11 +12,6 @@ export default {
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
   },
-  target: 'static',
-  router: {
-    base: '/EasyBeauty/'
-  },
-
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: ['~assets/styles/_style-global.scss'],
 
@@ -29,20 +24,10 @@ export default {
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
 
-  // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
-  buildModules: [
-    // https://go.nuxtjs.dev/eslint
-    '@nuxtjs/eslint-module'
-  ],
-  styleResources: {
-    scss: ['~assets/styles/_style-resources.scss'],
-  },
-
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
-    '@nuxtjs/style-resources',
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
@@ -53,24 +38,10 @@ export default {
     loaders: {
       scss: { sourceMap: false },
     },
-    extend (config, { isDev, isClient }) {
-
+    extend (config) {
       config.node = {
         fs: 'empty'
       }
-
-      // ....
-    }
-  },
-  server: {
-    port: process.env.PORT || 3000,
-    host: "0.0.0.0",
-    timing: false
-  },
-  extend (config, { isDev, isClient, loaders: { vue } }) {
-    if (isClient) {
-      vue.transformAssetUrls.img = ['data-src', 'src']
-      vue.transformAssetUrls.source = ['data-srcset', 'srcset']
     }
   }
 }

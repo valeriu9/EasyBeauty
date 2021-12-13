@@ -3,12 +3,10 @@
     <template #body>
       <div class='user-input-wrapper'>
         <div class='image-upload'>
-
           <div class='image-preview' id='preview'>
             <input type='file' accept='image/jpeg, image/png' @change='onChange' />
             <img v-if='image' :src='image' />
           </div>
-
         </div>
         <div class='productService-details'>
           <input type='text' class='inputText' v-model='name' required maxlength='25' />
@@ -28,7 +26,6 @@
             <p class='floating-label'>Duration</p>
             <br />
           </div>
-
         </div>
         <div class='button-container'>
           <button class='save-button' @click='saveProduct()'>Save</button>
@@ -43,17 +40,12 @@
 import { getCookieDataUnparsed } from '~/helpers/cookies.js'
 
 export default {
-  name: 'imageUpload',
   components: {
     PopupTemplate: () => import('@/components/PopupTemplate')
   },
 
   layout: 'default',
   props: {
-    enableOverlayClick: {
-      type: Boolean,
-      default: true
-    },
     itemToEdit: {
       type: Object,
       default: () => {

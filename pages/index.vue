@@ -92,9 +92,9 @@ export default {
     return {
       employeeList: [],
       serviceList:[],
+      scheduleForEmployee: [],
       selectedService:{},
       selectedEmployee:{},
-      scheduleForEmployee: [],
       email:'',
       fullName: '',
       notes:'',
@@ -160,9 +160,7 @@ export default {
     setEvent(event){
       this.selectedEvent = event;
       this.errorList[3].active = false;
-      console.log(this.selectedEvent);
       this.scheduleForEmployee.push(JSON.parse(JSON.stringify(this.selectedEvent)));
-      console.log(this.scheduleForEmployee);
     },
     selectEmployee(event){
       this.scheduleForEmployee.splice(0, this.scheduleForEmployee.length)
@@ -244,7 +242,6 @@ export default {
         return
       }
       else{
-
         const objToSend = {customerName: this.fullName, phoneNr: this.phoneNr, serviceId: this.selectedService.id, employeeId: this.selectedEmployee.id, startTime: format(this.selectedEvent.start, "yyyy-MM-dd'T'HH:mm:ss"), endTime: format(this.selectedEvent.end, "yyyy-MM-dd'T'HH:mm:ss"), notes: this.notes, customerEmail: this.email }
         const res = await this.$axios.post(`//easybeauty.somee.com/v1/api/Appointment`,objToSend);
         this.$refs.success.open()

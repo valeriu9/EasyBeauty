@@ -9,14 +9,11 @@
             class='demo-app-calendar'
             :options='calendarOptions'>
             <template v-slot:eventContent='arg'>
-              <p>{{arg.endTime}}</p>
               <p>{{ arg.timeText }}</p>
             </template>
           </FullCalendar>
           <p>*Drag and drop your event for changing date and time</p>
           <p>*Click on your event in order to delete it</p>
-          <br>
-          <p>*If you want to make more than one appointment, contact salon employees</p>
           <br>
           <p>Your time:</p>
           <p v-if="selectedEvent.id">{{formatDateDisplay(selectedEvent.startStr)}} from {{formatTimeDisplay(selectedEvent.startStr)}} to {{formatTimeDisplay(selectedEvent.endStr)}}</p>
@@ -34,11 +31,10 @@ import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import { createEventId } from '~/helpers/event-utils'
 import { addMinutes, addMonths, format, parseISO } from 'date-fns'
-import PopupTemplate from '@/components/PopupTemplate'
 export default {
   components: {
     FullCalendar,
-    PopupTemplate
+   PopupTemplate: () => import('@/components/PopupTemplate')
   },
   props:{
     duration:{
@@ -156,7 +152,6 @@ export default {
           constraint: 'businessHours'
         })
         this.selectedEvent = this.currentEvents.find(x => {return x.groupId === '2'})
-        console.log(this.selectedEvent);
       }
     },
 

@@ -15,7 +15,6 @@
             <input type='number' v-model='phoneNr' class='inputText' required />
             <p class='floating-label'>Phone Number</p>
           </div>
-
         </div>
         <select class='employee-role' v-model='role' name='employee role'>
           <option value='employee'>Employee</option>
@@ -25,7 +24,6 @@
           <button @click='save()' class='save-button'>Save</button>
           <button @click='cancel()' class='cancel-button'>Cancel</button>
         </div>
-
       </div>
     </template>
   </PopupTemplate>
@@ -37,12 +35,7 @@ export default {
   components: {
     PopupTemplate: () => import('@/components/PopupTemplate')
   },
-  layout: 'default',
   props: {
-    enableOverlayClick: {
-      type: Boolean,
-      default: true
-    },
     employeeToEdit: {
       type: Object,
       default: () => {
@@ -51,7 +44,6 @@ export default {
   },
   data() {
     return {
-      showModal: false,
       name: '',
       phoneNr: null,
       email: '',

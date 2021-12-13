@@ -41,10 +41,6 @@ export default {
       }
       this.$emit('opened')
     },
-    closeButtonClicked() {
-      this.$emit('close-button-clicked')
-      this.close()
-    },
     close() {
       this.showModal = false
       window.onscroll = function() {

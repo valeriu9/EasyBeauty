@@ -1,7 +1,7 @@
 <template>
   <PopupTemplate ref='popupOpen'>
     <template #body>
-      <AddEmployee ref='AddEmployeePopup' :enableOverlayClick='true' @loadEmployees="loadEmployees" :employeeToEdit='employeeToEdit' />
+      <AddEmployee ref='AddEmployeePopup' @loadEmployees="loadEmployees" :employeeToEdit='employeeToEdit' />
       <div class='edit-employee-navbar'>
         <button class='add-employee-button' type='button' @click='openAddEmployeeModal()'><img
             src='~/assets/images/plus-solid.svg'>
@@ -18,7 +18,6 @@
           <img class='edit-employee' @click='openAddEmployeeModal(employee)' src='~/assets/images/edit-regular.svg'>
           <img class='delete-employee' @click='removeEmployee(index, employee.id)'
             src='~/assets/images/trash-solid.svg'>
-
           <div class='employee-details'>
             <p class='employee-name'>{{ employee.name }}</p>
             <p class='employee-email'> {{ employee.email }} </p>
@@ -42,12 +41,7 @@ export default {
   mounted (){
     this.filteredList = this.employeeList
   },
-  layout: 'default',
   props: {
-    enableOverlayClick: {
-      type: Boolean,
-      default: true
-    },
     employeeList :{
       type: Array,
       default: () => []
@@ -81,13 +75,6 @@ export default {
       this.$refs.AddEmployeePopup.open()
       this.employeeToEdit = employee
     },
-    closeAddEmployeeModal() {
-      this.$refs.AddEmployeePopup.close()
-    },
-    closeButtonClicked() {
-      this.$emit('close-button-clicked')
-      this.close()
-    },
     loadEmployees(){
       this.$emit('loadEmployees')
     },
@@ -96,12 +83,6 @@ export default {
       window.onscroll = function() {
       }
       this.$emit('closed')
-    },
-
-    overlayClick() {
-      if (this.enableOverlayClick) {
-        this.close()
-      }
     },
     async removeEmployee(index, id) {
       try {

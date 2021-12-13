@@ -71,7 +71,6 @@
   import {setCookie, setCookieUnparsed} from '~/helpers/cookies.js'
   import backgroundImage from '~/assets/images/loginBackground.jpg';
   export default {
-    layout: 'default',
     beforeMount(){
     if(this.$store.state.user.id){
       this.$router.push('/employee');
@@ -131,7 +130,6 @@
               return
            }
             this.state = res.data.hasLogin ? this.stateTypes.PASSWORD : this.stateTypes.NEWPASSWORD
-
           }
         } catch (e) {
           console.log(e)
@@ -163,7 +161,6 @@
        try{
         if (this.validatePassword(newPassword) && this.validateRepeatPassword(repeatedPassword)) {
           const res = await this.$axios.put(`//easybeauty.somee.com/v1/api/Login/create-password?email=`+this.email+`&password=`+newPassword+`&repeatedPassword=`+repeatedPassword);
-          console.log(res);
           if(res.data.success){
           this.state = this.stateTypes.PASSWORD
           }

@@ -7,7 +7,6 @@
         class='demo-app-calendar'
         :options='calendarOptions'>
         <template v-slot:eventContent='arg'>
-          <p>{{arg.endTime}}</p>
           <p>{{ arg.timeText }}</p>
         </template>
       </FullCalendar>
@@ -29,32 +28,18 @@ export default {
     PopupTemplate
   },
   props:{
-    duration:{
-      type: Number,
-      default: 30
-    },
     scheduleForEmployee:{
       type: Array,
       default:[]
     }
   },
   watch:{
-    duration(){
-    const hours = Math.floor(this.duration / 60);
-    const minutes = this.duration % 60;
-    this.stringDuration = '0'+hours+':'+minutes+":00";
-    },
     currentEvents(){
       this.isDateSelected = this.currentEvents.some(x => x.groupId === '2');
     }
   },
   data() {
-    const hours = Math.floor(this.duration / 60);
-    const minutes = this.duration % 60;
-
-    const stringDuration = '0'+hours+':'+minutes+":00";
     return {
-      stringDuration,
       selectedEvent: null,
       error: '',
       isDateSelected: false,
@@ -89,7 +74,7 @@ export default {
         slotMinTime: "10:00:00",
         slotMaxTime: "18:00:00",
         forceEventDuration: true,
-        duration: stringDuration,
+        duration: 30,
         weekends: false,
         allDaySlot: false,
         select: this.handleDateSelect,
@@ -119,12 +104,7 @@ export default {
     },
     checkIfEventSelected(){
       this.error = ''
-      if(this.selectedEvent){
-      return
-      }
-      else{
-        this.error = '*Select appointment first';
-      }
+      this.selectedEvent ? '' : this.error = '*Select appointment first';
     },
     handleDateSelect(){
        this.$emit('selectedEvent', 0);

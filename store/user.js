@@ -1,10 +1,10 @@
-export const state = {
+export const state = () => ({
   email: '',
   name: '',
   id: 0,
   token: '',
   role: ''
-};
+});
 
 export const actions = {
   userLoggedIn ({ commit }, userData) {

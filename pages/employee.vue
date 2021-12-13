@@ -211,16 +211,6 @@ export default {
     setActive() {
       this.isActive = !this.isActive
     },
-    openLoader() {
-      this.$refs.loader.open()
-    },
-    closeLoader() {
-      this.$refs.loader.close()
-    },
-    openAddProductModal(item = {}) {
-      this.$refs.addProductPopup.open()
-      this.itemToEdit = item
-    },
     switchTab(name) {
       if (name === 'services') {
         this.filteredList = this.serviceList
@@ -316,7 +306,6 @@ export default {
         const services = await this.$axios.get(`//easybeauty.somee.com/v1/api/Service`)
         this.serviceList = services.data
         this.filteredList = this.serviceList
-        this.$store.state.user.role === 'employee' ? this.closeLoader(): ''
         this.closeLoader()
       } catch (e) {
         console.log(e)
@@ -350,7 +339,17 @@ export default {
     },
     closeAppointmentsModal() {
       this.$refs.appointmentPopup.close()
-    }
+    },
+      openLoader() {
+      this.$refs.loader.open()
+    },
+    closeLoader() {
+      this.$refs.loader.close()
+    },
+    openAddProductModal(item = {}) {
+      this.$refs.addProductPopup.open()
+      this.itemToEdit = item
+    },
   }
 }
 </script>

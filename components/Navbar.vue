@@ -42,7 +42,6 @@
               </g>
             </svg>
           </a>
-
         </div>
         <div class='buttons-wrapper'>
           <div class='button'>
@@ -59,7 +58,6 @@
             <div class='active' @click="$emit('openEmployeeModal')"><img
                 src='~/assets/images/users-solid.svg'> Employees</div>
           </div>
-
         </div>
         <div class='extras'>
           <p>{{ userInfo.name }}</p>
@@ -83,7 +81,6 @@ export default {
     return {
       userInfo
     }
-
   },
   methods: {
     async logout() {
