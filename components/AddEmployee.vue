@@ -1,28 +1,28 @@
 <template>
-  <PopupTemplate ref='popupOpen'>
+  <PopupTemplate ref="popupOpen">
     <template #body>
-      <div class='user-input-wrp'>
-        <div class='employee-details'>
-          <div class='employee'>
-            <input type='text' v-model='name' class='inputText' required />
-            <p class='floating-label'>Full Name</p>
+      <div class="user-input-wrp">
+        <div class="employee-details">
+          <div class="employee">
+            <input type="text" v-model="name" class="inputText" required />
+            <p class="floating-label">Full Name</p>
           </div>
-          <div class='employee'>
-            <input type='email' v-model='email' class='inputText' required />
-            <p class='floating-label'>Email Address</p>
+          <div class="employee">
+            <input type="email" v-model="email" class="inputText" required />
+            <p class="floating-label">Email Address</p>
           </div>
-          <div class='employee'>
-            <input type='number' v-model='phoneNr' class='inputText' required />
-            <p class='floating-label'>Phone Number</p>
+          <div class="employee">
+            <input type="number" v-model="phoneNr" class="inputText" required />
+            <p class="floating-label">Phone Number</p>
           </div>
         </div>
-        <select class='employee-role' v-model='role' name='employee role'>
-          <option value='employee'>Employee</option>
-          <option value='manager'>Manager</option>
+        <select class="employee-role" v-model="role" name="employee role">
+          <option value="employee">Employee</option>
+          <option value="manager">Manager</option>
         </select>
-        <div class='button-container'>
-          <button @click='save()' class='save-button'>Save</button>
-          <button @click='cancel()' class='cancel-button'>Cancel</button>
+        <div class="button-container">
+          <button @click="save()" class="save-button">Save</button>
+          <button @click="cancel()" class="cancel-button">Cancel</button>
         </div>
       </div>
     </template>
@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import {getCookieDataUnparsed} from '~/helpers/cookies.js'
+import { getCookieDataUnparsed } from '~/helpers/cookies.js';
 export default {
   components: {
     PopupTemplate: () => import('@/components/PopupTemplate')
@@ -42,7 +42,7 @@ export default {
       }
     }
   },
-  data() {
+  data () {
     return {
       name: '',
       phoneNr: null,
@@ -50,69 +50,69 @@ export default {
       role: 'employee',
       id: null,
       cookie: getCookieDataUnparsed('session')
-    }
+    };
   },
   watch: {
-    employeeToEdit() {
-        this.name = this.employeeToEdit.name
-        this.role = this.employeeToEdit.role ? this.employeeToEdit.role : 'employee'
-        this.email = this.employeeToEdit.email
-        this.phoneNr = this.employeeToEdit.phoneNr
-        this.id = this.employeeToEdit.id
+    employeeToEdit () {
+      this.name = this.employeeToEdit.name;
+      this.role = this.employeeToEdit.role ? this.employeeToEdit.role : 'employee';
+      this.email = this.employeeToEdit.email;
+      this.phoneNr = this.employeeToEdit.phoneNr;
+      this.id = this.employeeToEdit.id;
     }
   },
-  beforeDestroy() {
-    this.close()
+  beforeDestroy () {
+    this.close();
   },
   methods: {
-    open() {
-      this.$refs.popupOpen.open()
+    open () {
+      this.$refs.popupOpen.open();
     },
-    close() {
-      this.$refs.popupOpen.close()
+    close () {
+      this.$refs.popupOpen.close();
     },
-    async save() {
-      if (this.name === '', this.phoneNr === 0, this.email === '', this.role === '') {
-        window.alert('Complete all the fields before saving')
-        return
+    async save () {
+      if (this.name === '' || this.phoneNr === 0 || this.email === '' || this.role === '') {
+        window.alert('Complete all the fields before saving');
+        return;
       }
       try {
         if (this.employeeToEdit.name) {
-          this.$axios.put(`//easybeauty.somee.com/v1/api/Employee?id=${this.id}&cookie=${this.cookie} `, {
+          await this.$axios.put(`//easybeauty.somee.com/v1/api/Employee?id=${this.id}&cookie=${this.cookie} `, {
             name: this.name,
             phoneNr: this.phoneNr,
             email: this.email,
             role: this.role
-          })
+          });
           setTimeout(() => {
-            this.$emit('loadEmployees')
-          }, 1000)
-          this.close()
+            this.$emit('loadEmployees');
+          }, 1000);
+          this.close();
         } else {
-          this.$axios.post(`//easybeauty.somee.com/v1/api/Employee?id=${this.id}&cookie=${this.cookie}`, {
+          await this.$axios.post(`//easybeauty.somee.com/v1/api/Employee?id=${this.id}&cookie=${this.cookie}`, {
             name: this.name,
             phoneNr: this.phoneNr,
             email: this.email,
             role: this.role
-          })
+          });
           setTimeout(() => {
-            this.$emit('loadEmployees')
-          }, 1000)
-          this.close()
+            this.$emit('loadEmployees');
+          }, 1000);
+          this.close();
         }
       } catch (e) {
-        console.log(e)
+        console.log(e);
       }
     },
-    cancel() {
-      this.name = '',
-        this.phoneNr = null,
-        this.email = '',
-        this.role = 'employee',
-        this.close()
+    cancel () {
+      this.name = '';
+      this.phoneNr = null;
+      this.email = '';
+      this.role = 'employee';
+      this.close();
     }
   }
-}
+};
 </script>
 
 <style lang='scss' scoped>
@@ -226,7 +226,7 @@ input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
-input[type='number'] {
+input[type="number"] {
   -moz-appearance: textfield;
 }
 </style>

@@ -1,28 +1,35 @@
 <template>
-  <PopupTemplate ref='popupOpen'>
+  <PopupTemplate ref="popupOpen">
     <template #body>
-      <AddEmployee ref='AddEmployeePopup' @loadEmployees="loadEmployees" :employeeToEdit='employeeToEdit' />
-      <div class='edit-employee-navbar'>
-        <button class='add-employee-button' type='button' @click='openAddEmployeeModal()'><img
-            src='~/assets/images/plus-solid.svg'>
+      <AddEmployee ref="AddEmployeePopup" @loadEmployees="loadEmployees" :employeeToEdit="employeeToEdit" />
+      <div class="edit-employee-navbar">
+        <button class="add-employee-button" type="button" @click="openAddEmployeeModal()">
+          <img
+            src="~/assets/images/plus-solid.svg">
           <p>Add employee</p>
         </button>
-        <div class='search-wrapper'>
-          <input name='search' :value='searchText' @input='e => searchText = e.target.value' placeholder='Search..'
-            type='text'>
-          <img @click='search()' src='~/assets/images/search-solid.svg'>
+        <div class="search-wrapper">
+          <input
+            name="search"
+            :value="searchText"
+            @input="e => searchText = e.target.value"
+            placeholder="Search.."
+            type="text">
+          <img @click="search()" src="~/assets/images/search-solid.svg">
         </div>
       </div>
-      <div class='employee-list-container'>
-        <div v-for='(employee, index) in filteredList' :key='employee.index' class='existing-employee'>
-          <img class='edit-employee' @click='openAddEmployeeModal(employee)' src='~/assets/images/edit-regular.svg'>
-          <img class='delete-employee' @click='removeEmployee(index, employee.id)'
-            src='~/assets/images/trash-solid.svg'>
-          <div class='employee-details'>
-            <p class='employee-name'>{{ employee.name }}</p>
-            <p class='employee-email'> {{ employee.email }} </p>
-            <p class='employee-phone'> {{ employee.phoneNr }} </p>
-            <p class='employee-role'> {{ employee.role }} </p>
+      <div class="employee-list-container">
+        <div v-for="(employee, index) in filteredList" :key="employee.index" class="existing-employee">
+          <img class="edit-employee" @click="openAddEmployeeModal(employee)" src="~/assets/images/edit-regular.svg">
+          <img
+            class="delete-employee"
+            @click="removeEmployee(index, employee.id)"
+            src="~/assets/images/trash-solid.svg">
+          <div class="employee-details">
+            <p class="employee-name">{{ employee.name }}</p>
+            <p class="employee-email"> {{ employee.email }} </p>
+            <p class="employee-phone"> {{ employee.phoneNr }} </p>
+            <p class="employee-role"> {{ employee.role }} </p>
           </div>
         </div>
       </div>
@@ -31,73 +38,73 @@
 </template>
 
 <script>
-import { getCookieDataUnparsed } from '~/helpers/cookies.js'
+import { getCookieDataUnparsed } from '~/helpers/cookies.js';
 
 export default {
   components: {
     AddEmployee: () => import('~/components/AddEmployee'),
     PopupTemplate: () => import('@/components/PopupTemplate')
   },
-  mounted (){
-    this.filteredList = this.employeeList
-  },
   props: {
-    employeeList :{
+    employeeList: {
       type: Array,
       default: () => []
     }
   },
-  watch:{
-    employeeList(){
-      this.filteredList = this.employeeList
-    },
-    searchText(){
-      this.search()
-    }
-  },
-  data() {
+  data () {
     return {
       showModal: false,
       searchText: '',
       filteredList: [],
       employeeToEdit: {},
       cookie: getCookieDataUnparsed('session')
+    };
+  },
+  watch: {
+    employeeList () {
+      this.filteredList = this.employeeList;
+    },
+    searchText () {
+      this.search();
     }
   },
-  beforeDestroy() {
-    this.close()
+  mounted () {
+    this.filteredList = this.employeeList;
+  },
+  beforeDestroy () {
+    this.close();
   },
   methods: {
-    open() {
-      this.$refs.popupOpen.open()
+    open () {
+      this.$refs.popupOpen.open();
     },
-    openAddEmployeeModal(employee = {}) {
-      this.$refs.AddEmployeePopup.open()
-      this.employeeToEdit = employee
+    openAddEmployeeModal (employee = {}) {
+      this.$refs.AddEmployeePopup.open();
+      this.employeeToEdit = employee;
     },
-    loadEmployees(){
-      this.$emit('loadEmployees')
+    loadEmployees () {
+      this.$emit('loadEmployees');
     },
-    close() {
-      this.showModal = false
-      window.onscroll = function() {
-      }
-      this.$emit('closed')
+    close () {
+      this.showModal = false;
+      window.onscroll = function () {
+      };
+      this.$emit('closed');
     },
-    async removeEmployee(index, id) {
+    async removeEmployee (index, id) {
       try {
-        await this.$axios.delete(`//easybeauty.somee.com/v1/api/Employee?id=${id}&cookie=${this.cookie}`)
-        this.employeeList.splice(index, 1)
-        this.filteredList = this.employeeList
+        await this.$axios.delete(`//easybeauty.somee.com/v1/api/Employee?id=${id}&cookie=${this.cookie}`);
+        this.employeeList.splice(index, 1);
+        this.filteredList = this.employeeList;
       } catch (e) {
-        console.log(e)
+        console.log(e);
       }
     },
-    search() {
-      this.filteredList = this.employeeList.filter(employee => employee.name.toLowerCase().includes(this.searchText.toLowerCase()))
+    search () {
+      this.filteredList = this.employeeList.filter(employee => employee.name.toLowerCase().includes(this.searchText.toLowerCase()));
     }
   }
-}
+};
 </script>
 
 <style lang='scss' scoped>
@@ -185,7 +192,7 @@ export default {
   color: black;
 }
 
-.edit-employee-navbar input[type='text'] {
+.edit-employee-navbar input[type="text"] {
   padding: 5px;
   font-size: 14px;
   border: none;

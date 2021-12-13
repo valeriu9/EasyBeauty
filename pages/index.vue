@@ -1,59 +1,73 @@
 <template>
-  <div class='main-container'>
-    <div class='form-card'>
-      <div class='form-picture'></div>
-      <div class='form-details'>
-        <div class='form-title'>
+  <div class="main-container">
+    <div class="form-card">
+      <div class="form-picture"></div>
+      <div class="form-details">
+        <div class="form-title">
           <h2> Book Appointment</h2>
         </div>
         <div v-if="!isPhoneChecked">
-          <div class='input-group'>
-            <input placeholder='Phone number'
-              :value="phoneNr" @input="e => phoneNr = e.target.value"
-              @blur="validatePhoneNr(phoneNr)" type="tel">
+          <div class="input-group">
+            <input
+              placeholder="Phone number"
+              :value="phoneNr"
+              @input="e => phoneNr = e.target.value"
+              @blur="validatePhoneNr(phoneNr)"
+              type="tel">
           </div>
           <button @click="checkPhone">Start appointment</button>
         </div>
-        <form v-if="isPhoneChecked" class='user-form' @submit="onSubmit($event)">
+        <form v-if="isPhoneChecked" class="user-form" @submit="onSubmit($event)">
           <div v-for="(error, index) in errorList" :key="index" class="error-message">
             <p v-if="error.active" class="error-color">
-              {{error.message}}
+              {{ error.message }}
             </p>
           </div>
-          <div class='input-group'>
-            <input :value="fullName" @input="e => fullName = e.target.value"
-              @blur="validateFullName(fullName)" placeholder='Full Name' type="name">
+          <div class="input-group">
+            <input
+              :value="fullName"
+              @input="e => fullName = e.target.value"
+              @blur="validateFullName(fullName)"
+              placeholder="Full Name"
+              type="name">
           </div>
-          <div class='input-group'>
-            <input placeholder='Phone number'
-              :value="phoneNr" @input="e => phoneNr = e.target.value"
-              @blur="validatePhoneNr(phoneNr)" type="tel">
+          <div class="input-group">
+            <input
+              placeholder="Phone number"
+              :value="phoneNr"
+              @input="e => phoneNr = e.target.value"
+              @blur="validatePhoneNr(phoneNr)"
+              type="tel">
           </div>
-          <div class='input-group'>
-            <input :value="email" @input="e => email = e.target.value"
-              @blur="validateEmail(email)" type="text" placeholder="Email (optional)">
+          <div class="input-group">
+            <input
+              :value="email"
+              @input="e => email = e.target.value"
+              @blur="validateEmail(email)"
+              type="text"
+              placeholder="Email (optional)">
           </div>
-          <div class='input-group'>
-            <select @change="selectService($event)" class='selection'>
-              <option v-for="(service, index) in serviceList" :key="index" :value="index">{{service.name}} - {{service.duration}} minutes</option>
+          <div class="input-group">
+            <select @change="selectService($event)" class="selection">
+              <option v-for="(service, index) in serviceList" :key="index" :value="index">{{ service.name }} - {{ service.duration }} minutes</option>
             </select>
           </div>
-          <div class='input-group'>
-            <select @change="selectEmployee($event)" class='selection'>
-              <option v-for="(employee, index) in employeeList" :key="index" :value="index">{{employee.name}}</option>
+          <div class="input-group">
+            <select @change="selectEmployee($event)" class="selection">
+              <option v-for="(employee, index) in employeeList" :key="index" :value="index">{{ employee.name }}</option>
             </select>
           </div>
           <div class="input-group date">
             <div v-if="selectedEvent.id">
-              <p>{{formatDateDisplay(selectedEvent.startStr)}} {{formatTimeDisplay(selectedEvent.startStr)}} - {{formatTimeDisplay(selectedEvent.endStr)}}</p>
+              <p>{{ formatDateDisplay(selectedEvent.startStr) }} {{ formatTimeDisplay(selectedEvent.startStr) }} - {{ formatTimeDisplay(selectedEvent.endStr) }}</p>
             </div>
             <div v-else>
               <p>Choose a date and time</p>
             </div>
-            <img class='date-button' type="button" @click="$refs.calendar.open()" src='~/assets/images/calendar-regular.svg'>
+            <img class="date-button" type="button" @click="$refs.calendar.open()" src="~/assets/images/calendar-regular.svg">
           </div>
-          <div class='input-group'>
-            <input :value="notes" @input="e => notes = e.target.value" placeholder='Note (optional)'>
+          <div class="input-group">
+            <input :value="notes" @input="e => notes = e.target.value" placeholder="Note (optional)">
           </div>
           <button>Send Appointment</button>
         </form>
@@ -61,18 +75,22 @@
     </div>
     <PopupTemplate ref="success" design="confirmation">
       <template #body>
-        <h1>{{displayMessage}}</h1>
+        <h1>{{ displayMessage }}</h1>
       </template>
     </PopupTemplate>
-    <Calendar ref="calendar" :duration="selectedService.duration" :scheduleForEmployee="this.scheduleForEmployee" @selectedEvent="setEvent($event)" />
+    <Calendar ref="calendar" :duration="selectedService.duration" :scheduleForEmployee="scheduleForEmployee" @selectedEvent="setEvent($event)" />
   </div>
 </template>
 <script>
 
-import Calendar from '@/components/Calendar'
-import {createEventId } from '~/helpers/event-utils'
-import {parseISO, format } from 'date-fns'
+import Calendar from '@/components/Calendar';
+import { createEventId } from '~/helpers/event-utils';
+import { parseISO, format } from 'date-fns';
 export default {
+  components: {
+    Calendar,
+    PopupTemplate: () => import('@/components/PopupTemplate')
+  },
   layout: 'default',
   props: {
     enableOverlayClick: {
@@ -80,29 +98,21 @@ export default {
       default: true
     }
   },
-  components: {
-    Calendar,
-    PopupTemplate: () => import('@/components/PopupTemplate')
-  },
-  mounted() {
-    this.loadServices();
-    this.loadEmployees();
-  },
-  data(){
+  data () {
     return {
       employeeList: [],
-      serviceList:[],
+      serviceList: [],
       scheduleForEmployee: [],
-      selectedService:{},
-      selectedEmployee:{},
-      email:'',
+      selectedService: {},
+      selectedEmployee: {},
+      email: '',
       fullName: '',
-      notes:'',
+      notes: '',
       phoneNr: null,
       selectedEvent: {},
       isPhoneChecked: false,
-      displayMessage:'',
-      errorList:[
+      displayMessage: '',
+      errorList: [
         {
           message: '*Invalid Email',
           active: false
@@ -115,63 +125,68 @@ export default {
           message: '*Name is required',
           active: false
         },
-         {
+        {
           message: '*Select a time for appointment',
           active: false
         }
-      ]}
+      ]
+    };
   },
-  methods:{
-      async loadServices() {
+  mounted () {
+    this.loadServices();
+    this.loadEmployees();
+  },
+  methods: {
+    async loadServices () {
       try {
-        const services = await this.$axios.get(`//easybeauty.somee.com/v1/api/Service`);
+        const services = await this.$axios.get('//easybeauty.somee.com/v1/api/Service');
         this.serviceList = services.data;
-        this.selectedService = services.data[1]
+        this.selectedService = services.data[1];
       } catch (e) {
         console.log(e);
       }
     },
-      async loadEmployees() {
+    async loadEmployees () {
       try {
-        const employees = await this.$axios.get(`//easybeauty.somee.com/v1/api/Employee`);
+        const employees = await this.$axios.get('//easybeauty.somee.com/v1/api/Employee');
         this.employeeList = employees.data;
-        this.selectedEmployee = employees.data[0]
+        this.selectedEmployee = employees.data[0];
         this.getAppointmentsByEmployee(employees.data[0].id);
       } catch (e) {
         console.log(e);
       }
     },
-     async checkPhone() {
+    async checkPhone () {
       try {
         const customer = await this.$axios.get(`//easybeauty.somee.com/v1/api/Appointment/CheckCustomer?phoneNr=${this.phoneNr}`);
-        if(!customer.data.isCustomer){
-          this.fullName = customer.data.name
-          this.email = customer.data.email
+        if (!customer.data.isCustomer) {
+          this.fullName = customer.data.name;
+          this.email = customer.data.email;
           this.isPhoneChecked = true;
-          }
+        }
       } catch (e) {
         console.log(e);
         this.isPhoneChecked = true;
       }
     },
-    selectService(event){
+    selectService (event) {
       this.selectedService = this.serviceList[event.target.value];
     },
-    setEvent(event){
+    setEvent (event) {
       this.selectedEvent = event;
       this.errorList[3].active = false;
       this.scheduleForEmployee.push(JSON.parse(JSON.stringify(this.selectedEvent)));
     },
-    selectEmployee(event){
-      this.scheduleForEmployee.splice(0, this.scheduleForEmployee.length)
+    selectEmployee (event) {
+      this.scheduleForEmployee.splice(0, this.scheduleForEmployee.length);
       this.selectedEmployee = this.employeeList[event.target.value];
-      this.selectedEvent = {}
+      this.selectedEvent = {};
       this.getAppointmentsByEmployee(this.selectedEmployee.id);
     },
-    async getAppointmentsByEmployee(employeeId) {
+    async getAppointmentsByEmployee (employeeId) {
       try {
-        var startDay = new Date();
-        startDay.setUTCHours(0,0,0,0);
+        const startDay = new Date();
+        startDay.setUTCHours(0, 0, 0, 0);
         this.scheduleForEmployee.push({
           start: startDay.toISOString(),
           end: '2021-12-02T17:00:00',
@@ -179,87 +194,86 @@ export default {
           constraint: 'businessHours',
           groupId: 1,
           display: 'background'
-        })
+        });
         const appointments = await this.$axios.get(`//easybeauty.somee.com/v1/api/Appointment/GetEmployeeSchedule?employeeId=${employeeId}`);
-        if(appointments.data.length > 0 ){
-          appointments.data.forEach(appointment => {
-            this.scheduleForEmployee.push({id: createEventId(), groupId: 1, 'start':appointment.startTime, 'end': appointment.endTime, 'editable': false, color:'#ddd',  constraint: 'businessHours'});
+        if (appointments.data.length > 0) {
+          appointments.data.forEach((appointment) => {
+            this.scheduleForEmployee.push({ id: createEventId(), groupId: 1, start: appointment.startTime, end: appointment.endTime, editable: false, color: '#ddd', constraint: 'businessHours' });
           });
         }
       } catch (e) {
         console.log(e);
       }
     },
-    validateFullName(fullName){
+    validateFullName (fullName) {
       this.errorList[2].active = false;
-      if(fullName.length === 0){
+      if (fullName.length === 0) {
         this.errorList[2].active = true;
       }
     },
-    validatePhoneNr(phoneNr){
+    validatePhoneNr (phoneNr) {
       this.errorList[1].active = false;
-      if(phoneNr === null || phoneNr.length < 6 || phoneNr.length > 12){
+      if (phoneNr === null || phoneNr.length < 6 || phoneNr.length > 12) {
         this.errorList[1].active = true;
       }
     },
-    validateEmail(email){
+    validateEmail (email) {
       this.errorList[0].active = false;
       if (!email.match(
-          /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-          )) {
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      )) {
         this.errorList[0].active = true;
       } else {
         this.errorList[0].active = false;
       }
-      if(email === '' ){
+      if (email === '') {
         this.errorList[0].active = false;
       }
     },
-    validateEvent(selectedEvent){
+    validateEvent (selectedEvent) {
       this.errorList[3].active = false;
-      if(!selectedEvent.id){
-        this.errorList[3].active = true
+      if (!selectedEvent.id) {
+        this.errorList[3].active = true;
       }
     },
-    formatTimeDisplay(date){
-      if(date){
-      return format(parseISO(date), 'HH:mm')
+    formatTimeDisplay (date) {
+      if (date) {
+        return format(parseISO(date), 'HH:mm');
       }
     },
-    formatDateDisplay(date){
-      if(date){
-      return format(parseISO(date), 'dd/MM/yyyy')
+    formatDateDisplay (date) {
+      if (date) {
+        return format(parseISO(date), 'dd/MM/yyyy');
       }
     },
-   async onSubmit(event){
-     event.preventDefault()
-     try {
-      this.validateFullName(this.fullName)
-      this.validateEmail(this.email)
-      this.validatePhoneNr(this.phoneNr)
-      this.validateEvent(this.selectedEvent)
-      if(this.errorList.find(x => x.active === true)){
-        return
-      }
-      else{
-        const objToSend = {customerName: this.fullName, phoneNr: this.phoneNr, serviceId: this.selectedService.id, employeeId: this.selectedEmployee.id, startTime: format(this.selectedEvent.start, "yyyy-MM-dd'T'HH:mm:ss"), endTime: format(this.selectedEvent.end, "yyyy-MM-dd'T'HH:mm:ss"), notes: this.notes, customerEmail: this.email }
-        const res = await this.$axios.post(`//easybeauty.somee.com/v1/api/Appointment`,objToSend);
-        this.$refs.success.open()
-        this.displayMessage = res.data.error ? res.data.error : res.data.success
-        res.data.error? ''  : this.cleanForm()
-      }
+    async onSubmit (event) {
+      event.preventDefault();
+      try {
+        this.validateFullName(this.fullName);
+        this.validateEmail(this.email);
+        this.validatePhoneNr(this.phoneNr);
+        this.validateEvent(this.selectedEvent);
+        if (this.errorList.find(x => x.active === true)) {
+          return;
+        } else {
+          const objToSend = { customerName: this.fullName, phoneNr: this.phoneNr, serviceId: this.selectedService.id, employeeId: this.selectedEmployee.id, startTime: format(this.selectedEvent.start, "yyyy-MM-dd'T'HH:mm:ss"), endTime: format(this.selectedEvent.end, "yyyy-MM-dd'T'HH:mm:ss"), notes: this.notes, customerEmail: this.email };
+          const res = await this.$axios.post('//easybeauty.somee.com/v1/api/Appointment', objToSend);
+          this.$refs.success.open();
+          this.displayMessage = res.data.error ? res.data.error : res.data.success;
+          res.data.error ? '' : this.cleanForm();
+        }
       } catch (e) {
         console.log(e);
       }
-      },
-      cleanForm(){
-        this.email='',
-        this.fullName= '',
-        this.phoneNr= null,
-        this.selectedEvent={}
-      }
+    },
+    cleanForm () {
+      this.email = '';
+      this.fullName = '';
+      this.phoneNr = null;
+      this.selectedEvent = {};
+    }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
@@ -300,7 +314,7 @@ export default {
 .form-picture {
   width: 50%;
   display: table-cell;
-  background-image: url('assets/images/hairsalon.jpg');
+  background-image: url("assets/images/hairsalon.jpg");
 }
 
 .form-details {
@@ -378,7 +392,7 @@ input::-webkit-inner-spin-button {
 }
 
 /* Firefox */
-input[type='number'] {
+input[type="number"] {
   -moz-appearance: textfield;
 }
 .error-color {

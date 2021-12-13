@@ -2,13 +2,13 @@
 <template>
   <PopupTemplate ref="schedulePopUp">
     <template #body>
-      <div class='demo-app'>
-        <div class='demo-app-main'>
+      <div class="demo-app">
+        <div class="demo-app-main">
           <FullCalendar
             ref="calendarData"
-            class='demo-app-calendar'
-            :options='calendarOptions'>
-            <template v-slot:eventContent='arg'>
+            class="demo-app-calendar"
+            :options="calendarOptions">
+            <template #eventContent="arg">
               <p>{{ arg.timeText }}</p>
             </template>
           </FullCalendar>
@@ -16,7 +16,7 @@
           <p>*Click on your event in order to delete it</p>
           <br>
           <p>Your time:</p>
-          <p v-if="selectedEvent.id">{{formatDateDisplay(selectedEvent.startStr)}} from {{formatTimeDisplay(selectedEvent.startStr)}} to {{formatTimeDisplay(selectedEvent.endStr)}}</p>
+          <p v-if="selectedEvent.id">{{ formatDateDisplay(selectedEvent.startStr) }} from {{ formatTimeDisplay(selectedEvent.startStr) }} to {{ formatTimeDisplay(selectedEvent.endStr) }}</p>
           <div class="button" @click="$emit('selectedEvent', selectedEvent), close()">Choose</div>
         </div>
       </div>
@@ -25,41 +25,31 @@
 </template>
 
 <script>
-import FullCalendar from '@fullcalendar/vue'
-import dayGridPlugin from '@fullcalendar/daygrid'
-import timeGridPlugin from '@fullcalendar/timegrid'
-import interactionPlugin from '@fullcalendar/interaction'
-import { createEventId } from '~/helpers/event-utils'
-import { addMinutes, addMonths, format, parseISO } from 'date-fns'
+import FullCalendar from '@fullcalendar/vue';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import interactionPlugin from '@fullcalendar/interaction';
+import { createEventId } from '~/helpers/event-utils';
+import { addMinutes, addMonths, format, parseISO } from 'date-fns';
 export default {
   components: {
     FullCalendar,
-   PopupTemplate: () => import('@/components/PopupTemplate')
+    PopupTemplate: () => import('@/components/PopupTemplate')
   },
-  props:{
-    duration:{
+  props: {
+    duration: {
       type: Number,
       default: null
     },
-    scheduleForEmployee:{
+    scheduleForEmployee: {
       type: Array,
-      default:[]
+      default: () => []
     }
   },
-  watch:{
-    duration(){
+  data () {
     const hours = Math.floor(this.duration / 60);
     const minutes = this.duration % 60;
-    this.stringDuration = '0'+hours+':'+minutes+":00";
-    },
-    currentEvents(){
-      this.isDateSelected = this.currentEvents.some(x => x.groupId === '2');
-    }
-  },
-  data() {
-    const hours = Math.floor(this.duration / 60);
-    const minutes = this.duration % 60;
-    const stringDuration = '0'+hours+':'+minutes+":00";
+    const stringDuration = '0' + hours + ':' + minutes + ':00';
     return {
       stringDuration,
       selectedEvent: {},
@@ -77,20 +67,20 @@ export default {
         },
         businessHours: {
         // days of week. an array of zero-based day of week integers (0=Sunday)
-        daysOfWeek: [ 1, 2, 3, 4, 5 ],
-        startTime: '10:00', // a start time (10am in this example)
-        endTime: '18:00', // an end time (6pm in this example)
-      },
-      validRange: function(nowDate) {
+          daysOfWeek: [1, 2, 3, 4, 5],
+          startTime: '10:00', // a start time (10am in this example)
+          endTime: '18:00' // an end time (6pm in this example)
+        },
+        validRange (nowDate) {
           return {
             start: nowDate,
             // user json to flatten an observable
             end: JSON.parse(JSON.stringify(addMonths(nowDate, 1)))
           };
         },
-        eventConstraint:{
-        start: '10:00', // a start time
-        end: '18:00', // an end time
+        eventConstraint: {
+          start: '10:00', // a start time
+          end: '18:00' // an end time
         },
         initialView: 'timeGridWeek',
         nowIndicator: true,
@@ -99,8 +89,8 @@ export default {
         selectable: true,
         selectMirror: false,
         dayMaxEvents: false,
-        slotMinTime: "10:00:00",
-        slotMaxTime: "18:00:00",
+        slotMinTime: '10:00:00',
+        slotMaxTime: '18:00:00',
         forceEventDuration: true,
         duration: stringDuration,
         weekends: false,
@@ -109,77 +99,87 @@ export default {
         eventClick: this.handleEventClick,
         eventsSet: this.handleEvents,
         eventDurationEditable: false,
-        contentHeight: "auto",
-        eventDrop: function( eventDropInfo ) {
-          if(eventDropInfo.event.start < new Date() ){
+        contentHeight: 'auto',
+        eventDrop (eventDropInfo) {
+          if (eventDropInfo.event.start < new Date()) {
             eventDropInfo.revert();
           }
         },
-        eventOverlap:  function(stillEvent, movingEvent) {
-         return stillEvent.allDay && movingEvent.allDay;
-        },
+        eventOverlap (stillEvent, movingEvent) {
+          return stillEvent.allDay && movingEvent.allDay;
+        }
       },
       currentEvents: []
+    };
+  },
+  watch: {
+    duration () {
+      const hours = Math.floor(this.duration / 60);
+      const minutes = this.duration % 60;
+      this.stringDuration = '0' + hours + ':' + minutes + ':00';
+    },
+    currentEvents () {
+      this.isDateSelected = this.currentEvents.some(x => x.groupId === '2');
     }
   },
 
   methods: {
-    open() {
-      this.$refs.schedulePopUp.open()
+    open () {
+      this.$refs.schedulePopUp.open();
     },
-    close() {
-      this.$refs.schedulePopUp.close()
+    close () {
+      this.$refs.schedulePopUp.close();
     },
-    handleDateSelect(selectInfo) {
+    handleDateSelect (selectInfo) {
       const startTime = JSON.parse(JSON.stringify(selectInfo.startStr));
       const endTime = JSON.parse(JSON.stringify(addMinutes(parseISO(selectInfo.startStr), this.duration)));
-        let calendarApi = selectInfo.view.calendar
-        calendarApi.unselect() // clear date selection
-      if(format(parseISO(endTime),'HH') > 18){
-        window.alert('Expected end time is out of business hours')
-        return
+      const calendarApi = selectInfo.view.calendar;
+      calendarApi.unselect(); // clear date selection
+      if (format(parseISO(endTime), 'HH') > 18) {
+        window.alert('Expected end time is out of business hours');
+        return;
       }
-      if(parseInt(format(parseISO(endTime),'HH')) === 18 && parseInt(format(parseISO(endTime),'mm')) > 0){
-        window.alert('Expected end time is out of business hours')
-        return
+      if (parseInt(format(parseISO(endTime), 'HH')) === 18 && parseInt(format(parseISO(endTime), 'mm')) > 0) {
+        window.alert('Expected end time is out of business hours');
+        return;
       }
-      if(selectInfo.start > new Date && !this.isDateSelected){
+      if (selectInfo.start > new Date() && !this.isDateSelected) {
         calendarApi.addEvent({
           id: createEventId(),
           groupId: 2,
           start: startTime,
           end: endTime,
           constraint: 'businessHours'
-        })
-        this.selectedEvent = this.currentEvents.find(x => {return x.groupId === '2'})
+        });
+        this.selectedEvent = this.currentEvents.find((x) => { return x.groupId === '2'; });
       }
     },
 
-    handleEventClick(clickInfo) {
-      if(clickInfo.event.groupId === '1'){
-        return
+    handleEventClick (clickInfo) {
+      if (clickInfo.event.groupId === '1') {
+        return;
       }
-      if (confirm(`Are you sure you want to delete the appointment?`)) {
-        this.selectedEvent = {}
-        clickInfo.event.remove()
+      if (confirm('Are you sure you want to delete the appointment?')) {
+        this.selectedEvent = {};
+        clickInfo.event.remove();
       }
     },
 
-    handleEvents(events) {
-      this.currentEvents = events
+    handleEvents (events) {
+      this.currentEvents = events;
     },
-    formatTimeDisplay(date){
-      if(date){
-      return format(parseISO(date), 'HH:mm')
+    formatTimeDisplay (date) {
+      if (date) {
+        return format(parseISO(date), 'HH:mm');
       }
     },
-    formatDateDisplay(date){
-      if(date){
-      return format(parseISO(date), 'dd/MM/yyyy')
+    formatDateDisplay (date) {
+      if (date) {
+        return format(parseISO(date), 'dd/MM/yyyy');
       }
     }
   }
-}
+};
 </script>
 
 <style lang='scss' scoped>

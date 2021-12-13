@@ -1,34 +1,36 @@
 
 <template>
-  <PopupTemplate ref="schedulePopUp" design='editAppointment'>
+  <PopupTemplate ref="schedulePopUp" design="editAppointment">
     <template #body>
-      <div class='demo-app'>
-        <div class='user-form'>
-          <div class='input-group'>
-            <input :value="selectedEvent.customerName" placeholder='Full Name' disabled>
+      <div class="demo-app">
+        <div class="user-form">
+          <div class="input-group">
+            <input :value="selectedEvent.customerName" placeholder="Full Name" disabled>
           </div>
-          <div class='input-group'>
-            <input placeholder='Phone number'
-              :value="selectedEvent.phoneNr" disabled>
+          <div class="input-group">
+            <input
+              placeholder="Phone number"
+              :value="selectedEvent.phoneNr"
+              disabled>
           </div>
-          <div class='input-group'>
+          <div class="input-group">
             <input :value="selectedEvent.customerEmail" placeholder="Email (optional)" disabled>
           </div>
-          <div class='input-group'>
-            <select @change="selectService($event)" class='selection'>
-              <option v-for="(service, index) in serviceList" :key="index" :selected="service.id === selectedEvent.serviceId" :value="index">{{service.name}} - {{service.duration}} minutes</option>
+          <div class="input-group">
+            <select @change="selectService($event)" class="selection">
+              <option v-for="(service, index) in serviceList" :key="index" :selected="service.id === selectedEvent.serviceId" :value="index">{{ service.name }} - {{ service.duration }} minutes</option>
             </select>
           </div>
           <div class="input-group date">
             <div v-if="selectedEvent.startTime">
-              <p>{{formatDateDisplay(selectedEvent.startTime)}} {{formatTimeDisplay(selectedEvent.startTime)}} - {{formatTimeDisplay(selectedEvent.endTime)}}</p>
+              <p>{{ formatDateDisplay(selectedEvent.startTime) }} {{ formatTimeDisplay(selectedEvent.startTime) }} - {{ formatTimeDisplay(selectedEvent.endTime) }}</p>
             </div>
             <div v-else>
               <p>Choose an event</p>
             </div>
           </div>
-          <div class='input-group'>
-            <input placeholder='Note (optional)' :value="selectedEvent.notes" @input="e => selectedEvent.notes = e.target.value">
+          <div class="input-group">
+            <input placeholder="Note (optional)" :value="selectedEvent.notes" @input="e => selectedEvent.notes = e.target.value">
           </div>
           <div class="buttons-form" v-if="selectedEvent.phoneNr">
             <button v-if="selectedEvent.isAccepted" @click="onSubmit()">Save changes</button>
@@ -36,11 +38,11 @@
             <button class="red" @click="onDecline()">Decline & remove</button>
           </div>
         </div>
-        <div class='demo-app-main'>
+        <div class="demo-app-main">
           <div v-if="$store.state.user.role === 'manager'" class="select-employee-wrapper">
             Select an employee:
             <select @change="selectEmployee($event)" class="select-employee">
-              <option v-for="(employee, index) in employeeList" :key="index" :value="index">{{employee.name}}</option>
+              <option v-for="(employee, index) in employeeList" :key="index" :value="index">{{ employee.name }}</option>
             </select>
           </div>
           <CalendarEmp ref="calendar" :eventHasChanges="eventHasChanges" :scheduleForEmployee="appointmentForCalendar" @selectedEvent="setEvent($event)" @newDatesForEvent="setNewDatesForEvent($event)">
@@ -53,146 +55,142 @@
 </template>
 
 <script>
-import CalendarEmp from '~/components/CalendarEmp'
-import { format, parseISO, addMinutes } from 'date-fns'
-import { getCookieDataUnparsed } from '~/helpers/cookies.js'
+import CalendarEmp from '~/components/CalendarEmp';
+import { format, parseISO, addMinutes } from 'date-fns';
+import { getCookieDataUnparsed } from '~/helpers/cookies.js';
 export default {
   components: {
     CalendarEmp,
     PopupTemplate: () => import('@/components/PopupTemplate')
   },
-  props:{
-    serviceList :{
-    type: Array,
-    default: () => []
+  props: {
+    serviceList: {
+      type: Array,
+      default: () => []
     },
-    employeeList :{
-    type: Array,
-    default: () => []
+    employeeList: {
+      type: Array,
+      default: () => []
     },
-    isEmployeeListFetched :{
-    type: Boolean,
-    default: false
+    isEmployeeListFetched: {
+      type: Boolean,
+      default: false
     }
   },
-  mounted() {
-      this.$store.state.user.role === 'manager' && this.isEmployeeListFetched ? this.loadAppointmentsById(this.employeeList[0].id) : this.loadAppointmentsById(this.$store.state.user.id)
-      this.selectedEmployee =  this.$store.state.user.role === 'manager' && this.isEmployeeListFetched ? this.employeeList[0] : {id: this.$store.state.user.id};
-  },
-  data() {
+  data () {
     return {
-      appointmentsFromServer:[],
+      appointmentsFromServer: [],
       appointmentForCalendar: [],
       eventHasChanges: false,
       selectedEmployee: {},
       cookie: getCookieDataUnparsed('session'),
-      selectedEvent: {customerName:'', phoneNr:null, customerEmail: '', serviceId: null}
-    }
+      selectedEvent: { customerName: '', phoneNr: null, customerEmail: '', serviceId: null }
+    };
+  },
+  mounted () {
+    this.$store.state.user.role === 'manager' && this.isEmployeeListFetched ? this.loadAppointmentsById(this.employeeList[0].id) : this.loadAppointmentsById(this.$store.state.user.id);
+    this.selectedEmployee = this.$store.state.user.role === 'manager' && this.isEmployeeListFetched ? this.employeeList[0] : { id: this.$store.state.user.id };
   },
 
   methods: {
-    open() {
-      this.$refs.schedulePopUp.open()
+    open () {
+      this.$refs.schedulePopUp.open();
     },
-    close() {
-      this.$refs.schedulePopUp.close()
+    close () {
+      this.$refs.schedulePopUp.close();
     },
 
-    formatTimeDisplay(date){
-      if(date){
-      return format(parseISO(date), 'HH:mm')
+    formatTimeDisplay (date) {
+      if (date) {
+        return format(parseISO(date), 'HH:mm');
       }
     },
-    formatDateDisplay(date){
-      if(date){
-      return format(parseISO(date), 'dd/MM/yyyy')
+    formatDateDisplay (date) {
+      if (date) {
+        return format(parseISO(date), 'dd/MM/yyyy');
       }
     },
-    setEvent(eventId){
-      if(this.eventHasChanges){
-        window.alert('Save changes before selecting another appointment')
-        return
-         }
-      this.selectedEvent = this.appointmentsFromServer.find(obj => {
-        return obj.id.toString() === eventId.toString()
+    setEvent (eventId) {
+      if (this.eventHasChanges) {
+        window.alert('Save changes before selecting another appointment');
+        return;
+      }
+      this.selectedEvent = this.appointmentsFromServer.find((obj) => {
+        return obj.id.toString() === eventId.toString();
       });
-      if(!this.selectedEvent){
-        this.selectedEvent = {customerName:'', phoneNr:null, customerEmail: '', serviceId: null}
+      if (!this.selectedEvent) {
+        this.selectedEvent = { customerName: '', phoneNr: null, customerEmail: '', serviceId: null };
       }
     },
-    setNewDatesForEvent(eventDates){
+    setNewDatesForEvent (eventDates) {
       this.selectedEvent.endTime = eventDates.endTime;
       this.selectedEvent.startTime = eventDates.startTime;
       this.eventHasChanges = true;
     },
-    async loadAppointmentsById(userId) {
+    async loadAppointmentsById (userId) {
       try {
         this.appointmentForCalendar.splice(0, this.appointmentForCalendar.length);
         const appointments = await this.$axios.get(`//easybeauty.somee.com/v1/api/Appointment?employeeId=${userId}`);
-          if(appointments.data.length > 0 ){
-            this.appointmentsFromServer = appointments.data;
-          appointments.data.forEach(appointment => {
-            this.appointmentForCalendar.push({id: appointment.id, title: appointment.customerFullName ,'start': appointment.startTime, 'end': appointment.endTime, color: appointment.isAccepted? '': '#ccc',  constraint: 'businessHours'});
+        if (appointments.data.length > 0) {
+          this.appointmentsFromServer = appointments.data;
+          appointments.data.forEach((appointment) => {
+            this.appointmentForCalendar.push({ id: appointment.id, title: appointment.customerFullName, start: appointment.startTime, end: appointment.endTime, color: appointment.isAccepted ? '' : '#ccc', constraint: 'businessHours' });
           });
         }
       } catch (e) {
         console.log(e);
       }
     },
-    selectService(event){
+    selectService (event) {
       this.selectedEvent.serviceId = this.serviceList[event.target.value].id;
-      const selectedService = this.serviceList.find(x =>{return x.id.toString() === this.selectedEvent.serviceId.toString()})
-      let tempEndTime = addMinutes(parseISO(this.selectedEvent.startTime), selectedService.duration)
-      this.appointmentForCalendar.forEach(appointment => {
-        if(appointment.id === this.selectedEvent.id){
-          appointment.serviceId = this.selectedEvent.serviceId
-          appointment.start = this.selectedEvent.startTime
-          appointment.end = format(tempEndTime, "yyyy-MM-dd'T'HH:mm:ss")
-          this.selectedEvent.startTime = appointment.start
-          this.selectedEvent.endTime = appointment.end
+      const selectedService = this.serviceList.find((x) => { return x.id.toString() === this.selectedEvent.serviceId.toString(); });
+      const tempEndTime = addMinutes(parseISO(this.selectedEvent.startTime), selectedService.duration);
+      this.appointmentForCalendar.forEach((appointment) => {
+        if (appointment.id === this.selectedEvent.id) {
+          appointment.serviceId = this.selectedEvent.serviceId;
+          appointment.start = this.selectedEvent.startTime;
+          appointment.end = format(tempEndTime, "yyyy-MM-dd'T'HH:mm:ss");
+          this.selectedEvent.startTime = appointment.start;
+          this.selectedEvent.endTime = appointment.end;
         }
       });
-       this.eventHasChanges = true;
+      this.eventHasChanges = true;
     },
-      selectEmployee(event){
-      this.appointmentForCalendar.splice(0, this.appointmentForCalendar.length)
+    selectEmployee (event) {
+      this.appointmentForCalendar.splice(0, this.appointmentForCalendar.length);
       this.selectedEmployee = this.employeeList[event.target.value];
-      this.selectedEvent= {customerName:'', phoneNr:null, customerEmail: '', serviceId: null}
+      this.selectedEvent = { customerName: '', phoneNr: null, customerEmail: '', serviceId: null };
       this.loadAppointmentsById(this.selectedEmployee.id);
     },
-      async onSubmit(){
-     try {
-       const objToSend = {startTime: this.selectedEvent.startTime,  endTime: this.selectedEvent.endTime, customerName: this.selectedEvent.customerName, phoneNr: this.selectedEvent.phoneNr, serviceId: this.selectedEvent.serviceId, employeeId: this.selectedEvent.employeeId, notes: this.selectedEvent.notes, customerEmail: this.selectedEvent.customerEmail, isAccepted: true }
-        const res = await this.$axios.put(`//easybeauty.somee.com/v1/api/Appointment?id=${this.selectedEvent.id}&cookie=${this.cookie}`,objToSend);
-        if(res.data.error){
+    async onSubmit () {
+      try {
+        const objToSend = { startTime: this.selectedEvent.startTime, endTime: this.selectedEvent.endTime, customerName: this.selectedEvent.customerName, phoneNr: this.selectedEvent.phoneNr, serviceId: this.selectedEvent.serviceId, employeeId: this.selectedEvent.employeeId, notes: this.selectedEvent.notes, customerEmail: this.selectedEvent.customerEmail, isAccepted: true };
+        const res = await this.$axios.put(`//easybeauty.somee.com/v1/api/Appointment?id=${this.selectedEvent.id}&cookie=${this.cookie}`, objToSend);
+        if (res.data.error) {
           window.alert(res.data.error);
-        }
-        else{
-          this.eventHasChanges = false
+        } else {
+          this.eventHasChanges = false;
           this.loadAppointmentsById(this.$store.state.user.role === 'manager' ? this.selectedEmployee.id : this.$store.state.user.id);
         }
-      }
-      catch (e) {
+      } catch (e) {
         console.log(e);
       }
-      },
-      async onDecline(){
-        try{
-          const res = await this.$axios.delete(`//easybeauty.somee.com/v1/api/Appointment?id=${this.selectedEvent.id}&cookie=${this.cookie}`);
-            if(res.data.error){
-              window.alert(res.data.error);
-        }
-        else{
-          this.eventHasChanges = false
+    },
+    async onDecline () {
+      try {
+        const res = await this.$axios.delete(`//easybeauty.somee.com/v1/api/Appointment?id=${this.selectedEvent.id}&cookie=${this.cookie}`);
+        if (res.data.error) {
+          window.alert(res.data.error);
+        } else {
+          this.eventHasChanges = false;
           this.loadAppointmentsById(this.$store.state.user.role === 'manager' ? this.selectedEmployee.id : this.$store.state.user.role);
         }
-        }
-        catch(e){
-          console.log(e);
-        }
+      } catch (e) {
+        console.log(e);
       }
+    }
   }
-}
+};
 </script>
 
 <style lang='scss' scoped>
@@ -324,7 +322,7 @@ b {
 .form-picture {
   width: 50%;
   display: table-cell;
-  background-image: url('assets/images/hairsalon.jpg');
+  background-image: url("assets/images/hairsalon.jpg");
 }
 
 .form-details {
@@ -407,7 +405,7 @@ input::-webkit-inner-spin-button {
 }
 
 /* Firefox */
-input[type='number'] {
+input[type="number"] {
   -moz-appearance: textfield;
 }
 .buttons-form {

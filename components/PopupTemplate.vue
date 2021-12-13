@@ -1,8 +1,8 @@
 <template>
   <div class="wrapper" :design="design">
-    <div class='normal-window' :class="showModal ? 'is-active' : ''" @click='overlayClick' />
-    <div class='popup-window' :class="showModal ? 'is-active' : ''">
-      <slot v-if='showModal' name='body'></slot>
+    <div class="normal-window" :class="showModal ? 'is-active' : ''" @click="overlayClick" />
+    <div class="popup-window" :class="showModal ? 'is-active' : ''">
+      <slot v-if="showModal" name="body"></slot>
     </div>
   </div>
 </template>
@@ -10,7 +10,7 @@
 <script>
 
 export default {
-    layout: 'default',
+  layout: 'default',
   props: {
     enableOverlayClick: {
       type: Boolean,
@@ -23,39 +23,38 @@ export default {
         'confirmation'
       ].includes(prop),
       default: ''
-    },
+    }
   },
-  data() {
-    return { showModal: false }
+  data () {
+    return { showModal: false };
   },
-  beforeDestroy() {
-    this.close()
+  beforeDestroy () {
+    this.close();
   },
   methods: {
-    open() {
-      this.showModal = true
-      const x = window.scrollX
-      const y = window.scrollY
-      window.onscroll = function() {
-        window.scrollTo(x, y)
-      }
-      this.$emit('opened')
+    open () {
+      this.showModal = true;
+      const x = window.scrollX;
+      const y = window.scrollY;
+      window.onscroll = function () {
+        window.scrollTo(x, y);
+      };
+      this.$emit('opened');
     },
-    close() {
-      this.showModal = false
-      window.onscroll = function() {
-      }
-      this.$emit('closed')
+    close () {
+      this.showModal = false;
+      window.onscroll = function () {
+      };
+      this.$emit('closed');
     },
-    overlayClick() {
+    overlayClick () {
       if (this.enableOverlayClick) {
-        this.close()
+        this.close();
       }
     }
   }
-}
+};
 </script>
-
 
 <style lang='scss' scoped>
 .normal-window {
@@ -113,16 +112,15 @@ export default {
     display: none;
   }
 }
-.wrapper[design='editAppointment'] {
+.wrapper[design="editAppointment"] {
   .popup-window {
     width: 90%;
   }
 }
-.wrapper[design='confirmation'] {
+.wrapper[design="confirmation"] {
   .popup-window {
     width: fit-content;
     height: max-content;
   }
 }
 </style>
-

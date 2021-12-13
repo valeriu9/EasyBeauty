@@ -1,74 +1,108 @@
 <template>
-  <div class='main-container'>
+  <div class="main-container">
     <!-- Modals -->
-    <BaseLoader ref='loader' />
-    <AddProduct ref='addProductPopup' :itemToEdit='itemToEdit' :activeTab='this.activeTab' :enableOverlayClick='true'
-      @loadServices='loadServices' @closed='resetItemToEdit'
-      @loadProducts='loadProducts' @openLoader='openLoader' @closeLoader='closeLoader' />
-    <EditEmployee v-if="isEmployeeListFetched && user.role === 'manager'" ref='employeePopup' @loadEmployees='loadEmployees' :employeeList='employeeList' :enableOverlayClick='true' />
-    <EditAppointment ref='appointmentPopup' :employeeList='employeeList' :isEmployeeListFetched="isEmployeeListFetched" :serviceList='serviceList' :enableOverlayClick='true' />
+    <BaseLoader ref="loader" />
+    <AddProduct
+      ref="addProductPopup"
+      :itemToEdit="itemToEdit"
+      :activeTab="activeTab"
+      :enableOverlayClick="true"
+      @loadServices="loadServices"
+      @closed="resetItemToEdit"
+      @loadProducts="loadProducts"
+      @openLoader="openLoader"
+      @closeLoader="closeLoader" />
+    <EditEmployee v-if="isEmployeeListFetched && user.role === 'manager'" ref="employeePopup" @loadEmployees="loadEmployees" :employeeList="employeeList" :enableOverlayClick="true" />
+    <EditAppointment ref="appointmentPopup" :employeeList="employeeList" :isEmployeeListFetched="isEmployeeListFetched" :serviceList="serviceList" :enableOverlayClick="true" />
     <!-- End Modals -->
-    <Navbar @openAppointmentsModal='openAppointmentsModal' @openEmployeeModal='openEmployeeModal' />
+    <Navbar @openAppointmentsModal="openAppointmentsModal" @openEmployeeModal="openEmployeeModal" />
     <div class="content-container">
-      <div class='services-container'>
-        <div class='product-service-container'>
-          <div class='service-navbar'>
-            <button v-if="user.role === 'manager'" class='add-item-button' type='button' @click='openAddProductModal()'>
+      <div class="services-container">
+        <div class="product-service-container">
+          <div class="service-navbar">
+            <button v-if="user.role === 'manager'" class="add-item-button" type="button" @click="openAddProductModal()">
               <img
-                src='~/assets/images/plus-solid.svg'>
+                src="~/assets/images/plus-solid.svg">
               <p>Add new Item</p>
             </button>
-            <div class='search-wrapper'>
-              <input name='search' id='searchField' :value='searchText' @input='e => searchText = e.target.value'
-                placeholder='Search..'
-                type='text'>
-              <img @click='search()' src='~/assets/images/search-solid.svg'>
+            <div class="search-wrapper">
+              <input
+                name="search"
+                id="searchField"
+                :value="searchText"
+                @input="e => searchText = e.target.value"
+                placeholder="Search.."
+                type="text">
+              <img @click="search()" src="~/assets/images/search-solid.svg">
             </div>
           </div>
-          <div class='items-grid-container'>
-            <div v-for='(item, index) in filteredList' :key='index' class='items-grid'>
-
-              <div class='image-container'>
-                <button v-if="user.role === 'manager'" class='edit-item-button'
-                  @click='openAddProductModal(item)'>
+          <div class="items-grid-container">
+            <div v-for="(item, index) in filteredList" :key="index" class="items-grid">
+              <div class="image-container">
+                <button
+                  v-if="user.role === 'manager'"
+                  class="edit-item-button"
+                  @click="openAddProductModal(item)">
                   <img
-                    src='~/assets/images/edit-regular.svg'>
+                    src="~/assets/images/edit-regular.svg">
                 </button>
-                <button v-if="user.role === 'manager'" class='delete-item-button'
-                  @click='deleteItem(item, index)'>
+                <button
+                  v-if="user.role === 'manager'"
+                  class="delete-item-button"
+                  @click="deleteItem(item, index)">
                   <img
-                    src='~/assets/images/trash-solid.svg'>
+                    src="~/assets/images/trash-solid.svg">
                 </button>
-                <img :src='item.image' class='grid-item-pic' @click='addToSaleList(item)'>
+                <img :src="item.image" class="grid-item-pic" @click="addToSaleList(item)">
               </div>
-              <div class='item-container'>
-                <p class='grid-item-name'>{{ item.name }}</p>
-                <p class='grid-item-description'>{{ item.description }}</p>
-                <p v-if='item.duration' class='grid-item-duration'>Duration: {{ item.duration }} min</p>
-                <p class='grid-item-price'>{{ item.price }}DKK</p>
+              <div class="item-container">
+                <p class="grid-item-name">{{ item.name }}</p>
+                <p class="grid-item-description">{{ item.description }}</p>
+                <p v-if="item.duration" class="grid-item-duration">Duration: {{ item.duration }} min</p>
+                <p class="grid-item-price">{{ item.price }}DKK</p>
               </div>
             </div>
           </div>
         </div>
-        <div class='tab'>
-          <button id='defaultOpen' class='tablinks'
-            @click.prevent='setActive' :class="[isActive ? 'active' : '']"
+        <div class="tab">
+          <button
+            id="defaultOpen"
+            class="tablinks"
+            @click.prevent="setActive"
+            :class="[isActive ? 'active' : '']"
             @click="switchTab('services')">
-            <svg aria-hidden='true' focusable='false' data-prefix='fas' data-icon='cut'
-              class='svg-inline--fa fa-cut fa-w-14' role='img' xmlns='http://www.w3.org/2000/svg'
-              viewBox='0 0 448 512'>
-              <path fill='currentColor'
-                d='M278.06 256L444.48 89.57c4.69-4.69 4.69-12.29 0-16.97-32.8-32.8-85.99-32.8-118.79 0L210.18 188.12l-24.86-24.86c4.31-10.92 6.68-22.81 6.68-35.26 0-53.02-42.98-96-96-96S0 74.98 0 128s42.98 96 96 96c4.54 0 8.99-.32 13.36-.93L142.29 256l-32.93 32.93c-4.37-.61-8.83-.93-13.36-.93-53.02 0-96 42.98-96 96s42.98 96 96 96 96-42.98 96-96c0-12.45-2.37-24.34-6.68-35.26l24.86-24.86L325.69 439.4c32.8 32.8 85.99 32.8 118.79 0 4.69-4.68 4.69-12.28 0-16.97L278.06 256zM96 160c-17.64 0-32-14.36-32-32s14.36-32 32-32 32 14.36 32 32-14.36 32-32 32zm0 256c-17.64 0-32-14.36-32-32s14.36-32 32-32 32 14.36 32 32-14.36 32-32 32z'></path>
+            <svg
+              aria-hidden="true"
+              focusable="false"
+              data-prefix="fas"
+              data-icon="cut"
+              class="svg-inline--fa fa-cut fa-w-14"
+              role="img"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 448 512">
+              <path
+                fill="currentColor"
+                d="M278.06 256L444.48 89.57c4.69-4.69 4.69-12.29 0-16.97-32.8-32.8-85.99-32.8-118.79 0L210.18 188.12l-24.86-24.86c4.31-10.92 6.68-22.81 6.68-35.26 0-53.02-42.98-96-96-96S0 74.98 0 128s42.98 96 96 96c4.54 0 8.99-.32 13.36-.93L142.29 256l-32.93 32.93c-4.37-.61-8.83-.93-13.36-.93-53.02 0-96 42.98-96 96s42.98 96 96 96 96-42.98 96-96c0-12.45-2.37-24.34-6.68-35.26l24.86-24.86L325.69 439.4c32.8 32.8 85.99 32.8 118.79 0 4.69-4.68 4.69-12.28 0-16.97L278.06 256zM96 160c-17.64 0-32-14.36-32-32s14.36-32 32-32 32 14.36 32 32-14.36 32-32 32zm0 256c-17.64 0-32-14.36-32-32s14.36-32 32-32 32 14.36 32 32-14.36 32-32 32z"></path>
             </svg>
             <p> Services</p>
           </button>
-          <button class='tablinks' @click.prevent='setActive' :class="[!isActive ? 'active' : '']"
+          <button
+            class="tablinks"
+            @click.prevent="setActive"
+            :class="[!isActive ? 'active' : '']"
             @click="switchTab('products')">
-            <svg aria-hidden='true' focusable='false' data-prefix='fas' data-icon='spray-can'
-              class='svg-inline--fa fa-spray-can fa-w-16' role='img' xmlns='http://www.w3.org/2000/svg'
-              viewBox='0 0 512 512'>
-              <path fill='currentColor'
-                d='M224 32c0-17.67-14.33-32-32-32h-64c-17.67 0-32 14.33-32 32v96h128V32zm256 96c-17.67 0-32 14.33-32 32s14.33 32 32 32 32-14.33 32-32-14.33-32-32-32zm-256 32H96c-53.02 0-96 42.98-96 96v224c0 17.67 14.33 32 32 32h256c17.67 0 32-14.33 32-32V256c0-53.02-42.98-96-96-96zm-64 256c-44.18 0-80-35.82-80-80s35.82-80 80-80 80 35.82 80 80-35.82 80-80 80zM480 96c17.67 0 32-14.33 32-32s-14.33-32-32-32-32 14.33-32 32 14.33 32 32 32zm-96 32c-17.67 0-32 14.33-32 32s14.33 32 32 32 32-14.33 32-32-14.33-32-32-32zm-96-96c-17.67 0-32 14.33-32 32s14.33 32 32 32 32-14.33 32-32-14.33-32-32-32zm96 0c-17.67 0-32 14.33-32 32s14.33 32 32 32 32-14.33 32-32-14.33-32-32-32zm96 192c-17.67 0-32 14.33-32 32s14.33 32 32 32 32-14.33 32-32-14.33-32-32-32z'></path>
+            <svg
+              aria-hidden="true"
+              focusable="false"
+              data-prefix="fas"
+              data-icon="spray-can"
+              class="svg-inline--fa fa-spray-can fa-w-16"
+              role="img"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 512 512">
+              <path
+                fill="currentColor"
+                d="M224 32c0-17.67-14.33-32-32-32h-64c-17.67 0-32 14.33-32 32v96h128V32zm256 96c-17.67 0-32 14.33-32 32s14.33 32 32 32 32-14.33 32-32-14.33-32-32-32zm-256 32H96c-53.02 0-96 42.98-96 96v224c0 17.67 14.33 32 32 32h256c17.67 0 32-14.33 32-32V256c0-53.02-42.98-96-96-96zm-64 256c-44.18 0-80-35.82-80-80s35.82-80 80-80 80 35.82 80 80-35.82 80-80 80zM480 96c17.67 0 32-14.33 32-32s-14.33-32-32-32-32 14.33-32 32 14.33 32 32 32zm-96 32c-17.67 0-32 14.33-32 32s14.33 32 32 32 32-14.33 32-32-14.33-32-32-32zm-96-96c-17.67 0-32 14.33-32 32s14.33 32 32 32 32-14.33 32-32-14.33-32-32-32zm96 0c-17.67 0-32 14.33-32 32s14.33 32 32 32 32-14.33 32-32-14.33-32-32-32zm96 192c-17.67 0-32 14.33-32 32s14.33 32 32 32 32-14.33 32-32-14.33-32-32-32z"></path>
             </svg>
             <p>
               Products
@@ -76,61 +110,66 @@
           </button>
         </div>
       </div>
-      <div class='checkout-container'>
-        <div class='cart-container'>
-          <div class='cart-item-nav'>
+      <div class="checkout-container">
+        <div class="cart-container">
+          <div class="cart-item-nav">
             <h2>Checkout</h2>
-            <div class='cart-nav-wrapper'>
-              <p class='cart-item-name'>Name</p>
-              <p class='cart-item-quantity'>Quantity</p>
-              <p class='cart-item-price'>Price</p>
+            <div class="cart-nav-wrapper">
+              <p class="cart-item-name">Name</p>
+              <p class="cart-item-quantity">Quantity</p>
+              <p class="cart-item-price">Price</p>
             </div>
           </div>
-          <div class='item-list'>
-            <div v-for='(item, index) in saleList' :key='index' class='cart-item'>
-              <div class='item-name'>
-                <img src='~/assets/images/trash-solid.svg' @click='removeItemFromSaleList(index)'>
+          <div class="item-list">
+            <div v-for="(item, index) in saleList" :key="index" class="cart-item">
+              <div class="item-name">
+                <img src="~/assets/images/trash-solid.svg" @click="removeItemFromSaleList(index)">
                 <p>{{ item.name }}</p>
               </div>
-              <div class='item-quantity'>
-                <div id='decrease' class='value-button' value='Decrease Value' @click='decreaseValue(index)'>
+              <div class="item-quantity">
+                <div id="decrease" class="value-button" value="Decrease Value" @click="decreaseValue(index)">
                   <img
-                    src='~/assets/images/minus-solid.svg'>
+                    src="~/assets/images/minus-solid.svg">
                 </div>
-                <input id='number' :value='item.quantity' />
-                <div id='increase' class='value-button' value='Increase Value' @click='increaseValue(index)'>
+                <input id="number" :value="item.quantity" />
+                <div id="increase" class="value-button" value="Increase Value" @click="increaseValue(index)">
                   <img
-                    src='~/assets/images/plus-solid.svg'>
+                    src="~/assets/images/plus-solid.svg">
                 </div>
               </div>
-              <p class='item-price'>{{ item.price }} DKK</p>
+              <p class="item-price">{{ item.price }} DKK</p>
             </div>
           </div>
-          <div class='cart-price-container'>
-            <div class='price-wrapper'>
+          <div class="cart-price-container">
+            <div class="price-wrapper">
               <p>Discount (%)</p>
-              <input name='discount' :value='discount' @input='e => discount = e.target.value' type='number' min='0'
-                max='100'>
+              <input
+                name="discount"
+                :value="discount"
+                @input="e => discount = e.target.value"
+                type="number"
+                min="0"
+                max="100">
             </div>
-            <div class='price-wrapper'>
+            <div class="price-wrapper">
               <p>Total without taxes</p>
               <p>{{ totalBeforeTax.toFixed(2) }}DKK</p>
             </div>
-            <div class='price-wrapper'>
+            <div class="price-wrapper">
               <p>Tax</p>
               <p>{{ taxes.toFixed(2) }}DKK</p>
             </div>
-            <div class='total-price-wrapper'>
-              <p class='total-price'>Total </p>
-              <p class='total-price-amount'>{{ total.toFixed(2) }}DKK</p>
+            <div class="total-price-wrapper">
+              <p class="total-price">Total </p>
+              <p class="total-price-amount">{{ total.toFixed(2) }}DKK</p>
             </div>
           </div>
         </div>
-        <div class='checkout-buttons'>
-          <button class='cancel-order' type='button' @click='resetSalesList()'>
+        <div class="checkout-buttons">
+          <button class="cancel-order" type="button" @click="resetSalesList()">
             <p> Cancel Order </p>
           </button>
-          <button class='pay-order' type='button' @click='pay()'>
+          <button class="pay-order" type="button" @click="pay()">
             <p> Pay ({{ total.toFixed(2) }} DKK) </p>
           </button>
         </div>
@@ -140,8 +179,8 @@
 </template>
 
 <script>
-import BaseLoader from '@/components/BaseLoader'
-import { deleteCookie, getCookieDataUnparsed } from '~/helpers/cookies.js'
+import BaseLoader from '@/components/BaseLoader';
+import { deleteCookie, getCookieDataUnparsed } from '~/helpers/cookies.js';
 
 export default {
 
@@ -151,47 +190,13 @@ export default {
     AddEmployee: () => import('~/components/AddEmployee'),
     AddProduct: () => import('~/components/AddProduct'),
     EditEmployee: () => import('~/components/EditEmployee'),
-    EditAppointment: () => import('~/components/EditAppointment'),
+    EditAppointment: () => import('~/components/EditAppointment')
   },
-  beforeMount(){
-  this.$cookies.get('easybeauty_user') !== null ? this.$store.dispatch('user/userLoggedIn', this.$cookies.get('easybeauty_user')) : window.location.href = '/login'
-  },
-  mounted() {
-    this.loadServices()
-    this.loadProducts()
-    this.$store.state.user.role === 'manager' ? this.loadEmployees(): ''
-  },
-  watch: {
-    searchText() {
-      this.search()
-    }
-  },
-  computed: {
-    totalBeforeTax() {
-      let result = 0
-      this.saleList.forEach(element => {
-        result += element.price
-      })
-      result = result * 0.75
-      return result
-    },
-    taxes() {
-      let result = 0
-      this.saleList.forEach(element => {
-        result += element.price
-      })
-      result = result * 0.25
-      return result
-    },
-    total() {
-      return this.discount === 0 || this.discount === '' ? this.totalBeforeTax + this.taxes : (this.totalBeforeTax + this.taxes) * (1 - (this.discount / 100))
-    }
-  },
-  data() {
+  data () {
     return {
       productList: [],
       serviceList: [],
-      employeeList:[],
+      employeeList: [],
       filteredList: [],
       saleList: [],
       itemToEdit: {},
@@ -202,156 +207,190 @@ export default {
       discount: null,
       user: this.$store.state.user,
       cookie: getCookieDataUnparsed('session')
+    };
+  },
+  computed: {
+    totalBeforeTax () {
+      let result = 0;
+      this.saleList.forEach((element) => {
+        result += element.price;
+      });
+      result = result * 0.75;
+      return result;
+    },
+    taxes () {
+      let result = 0;
+      this.saleList.forEach((element) => {
+        result += element.price;
+      });
+      result = result * 0.25;
+      return result;
+    },
+    total () {
+      return this.discount === 0 || this.discount === '' ? this.totalBeforeTax + this.taxes : (this.totalBeforeTax + this.taxes) * (1 - (this.discount / 100));
     }
   },
+  watch: {
+    searchText () {
+      this.search();
+    }
+  },
+  beforeMount () {
+    this.$cookies.get('easybeauty_user') !== null ? this.$store.dispatch('user/userLoggedIn', this.$cookies.get('easybeauty_user')) : window.location.href = '/login';
+  },
+  mounted () {
+    this.loadServices();
+    this.loadProducts();
+    this.$store.state.user.role === 'manager' ? this.loadEmployees() : '';
+  },
   methods: {
-    resetItemToEdit(){
-      this.itemToEdit = {}
+    resetItemToEdit () {
+      this.itemToEdit = {};
     },
-    setActive() {
-      this.isActive = !this.isActive
+    setActive () {
+      this.isActive = !this.isActive;
     },
-    switchTab(name) {
+    switchTab (name) {
       if (name === 'services') {
-        this.filteredList = this.serviceList
-        this.activeTab = 'services'
+        this.filteredList = this.serviceList;
+        this.activeTab = 'services';
       }
       if (name === 'products') {
-        this.filteredList = this.productList
-        this.activeTab = 'products'
+        this.filteredList = this.productList;
+        this.activeTab = 'products';
       }
     },
-    increaseValue(index) {
-      const temp = JSON.parse(JSON.stringify(this.saleList))
-      temp[index].price = temp[index].price + this.saleList[index].initialPrice
-      temp[index].quantity++
-      this.saleList = []
-      this.saleList = temp
+    increaseValue (index) {
+      const temp = JSON.parse(JSON.stringify(this.saleList));
+      temp[index].price = temp[index].price + this.saleList[index].initialPrice;
+      temp[index].quantity++;
+      this.saleList = [];
+      this.saleList = temp;
     },
-    decreaseValue(index) {
+    decreaseValue (index) {
       if (this.saleList[index].quantity !== 1) {
-        const temp = JSON.parse(JSON.stringify(this.saleList))
-        temp[index].price = temp[index].price - this.saleList[index].initialPrice
-        temp[index].quantity--
-        this.saleList = []
-        this.saleList = temp
+        const temp = JSON.parse(JSON.stringify(this.saleList));
+        temp[index].price = temp[index].price - this.saleList[index].initialPrice;
+        temp[index].quantity--;
+        this.saleList = [];
+        this.saleList = temp;
       }
     },
-    search() {
+    search () {
       if (this.activeTab === 'products') {
-        this.filteredList = this.productList.filter(item => item.name.toLowerCase().includes(this.searchText.toLowerCase()))
+        this.filteredList = this.productList.filter(item => item.name.toLowerCase().includes(this.searchText.toLowerCase()));
       }
       if (this.activeTab === 'services') {
-        this.filteredList = this.serviceList.filter(item => item.name.toLowerCase().includes(this.searchText.toLowerCase()))
+        this.filteredList = this.serviceList.filter(item => item.name.toLowerCase().includes(this.searchText.toLowerCase()));
       }
     },
-    addToSaleList(item) {
-      item.quantity = 1
-      item.initialPrice = item.price
-      this.saleList.push(item)
+    addToSaleList (item) {
+      item.quantity = 1;
+      item.initialPrice = item.price;
+      this.saleList.push(item);
     },
-    removeItemFromSaleList(index) {
-      this.saleList.splice(index, 1)
+    removeItemFromSaleList (index) {
+      this.saleList.splice(index, 1);
     },
-    async pay() {
+    async pay () {
       try {
-        if (this.total === 0) return
+        if (this.total === 0) { return; };
         const res = await this.$axios.post('//easybeauty.somee.com/v1/api/Payment', {
-          'amount': this.total
-        })
+          amount: this.total
+        });
         if (res.data.error) {
-          window.alert(res.data.error)
+          window.alert(res.data.error);
         } else {
-          this.saleList = []
-          window.alert(res.data.succes)
+          this.saleList = [];
+          window.alert(res.data.succes);
         }
       } catch (e) {
-        console.log(e)
+        console.log(e);
       }
     },
-    resetSalesList() {
-      this.saleList = []
+    resetSalesList () {
+      this.saleList = [];
     },
-    async loadProducts() {
+    async loadProducts () {
       try {
-        this.openLoader()
-        const products = await this.$axios.get(`//easybeauty.somee.com/v1/api/Product?cookie=${this.cookie}`)
+        this.openLoader();
+        const products = await this.$axios.get(`//easybeauty.somee.com/v1/api/Product?cookie=${this.cookie}`);
         if (products.data.error) {
-          deleteCookie('easybeauty_user')
-          window.location.href = '/login'
+          deleteCookie('easybeauty_user');
+          window.location.href = '/login';
         }
-        this.productList = products.data
-        this.activeTab === 'products' ? this.filteredList = this.productList: ''
-        this.closeLoader()
+        this.productList = products.data;
+        this.filteredList = this.activeTab === 'products' ? this.productList : '';
+        this.closeLoader();
       } catch (e) {
-        console.log(e)
-        this.closeLoader()
+        console.log(e);
+        this.closeLoader();
       }
     },
-     async loadEmployees() {
+    async loadEmployees () {
       try {
-        this.openLoader()
-        const employees = await this.$axios.get(`//easybeauty.somee.com/v1/api/Employee`)
-        this.employeeList = employees.data
-        this.isEmployeeListFetched = true
-        this.closeLoader()
+        this.openLoader();
+        const employees = await this.$axios.get('//easybeauty.somee.com/v1/api/Employee');
+        this.employeeList = employees.data;
+        this.isEmployeeListFetched = true;
+        this.closeLoader();
       } catch (e) {
-        this.closeLoader()
-        console.log(e)
+        this.closeLoader();
+        console.log(e);
       }
     },
-    async loadServices() {
+    async loadServices () {
       try {
-        this.openLoader()
-        const services = await this.$axios.get(`//easybeauty.somee.com/v1/api/Service`)
-        this.serviceList = services.data
-        this.filteredList = this.serviceList
-        this.closeLoader()
+        this.openLoader();
+        const services = await this.$axios.get('//easybeauty.somee.com/v1/api/Service');
+        this.serviceList = services.data;
+        this.filteredList = this.serviceList;
+        this.closeLoader();
       } catch (e) {
-        console.log(e)
-        this.closeLoader()
+        console.log(e);
+        this.closeLoader();
       }
     },
-    async deleteItem(item, index) {
+    async deleteItem (item, index) {
       try {
         if (this.activeTab === 'services') {
-          await this.$axios.delete(`//easybeauty.somee.com/v1/api/Service?id=${item.id}&cookie=${this.cookie}`)
-          this.serviceList.splice(index, 1)
-          this.filteredList = this.serviceList
+          await this.$axios.delete(`//easybeauty.somee.com/v1/api/Service?id=${item.id}&cookie=${this.cookie}`);
+          this.serviceList.splice(index, 1);
+          this.filteredList = this.serviceList;
         }
         if (this.activeTab === 'products') {
-          await this.$axios.delete(`//easybeauty.somee.com/v1/api/Product?id=${item.id}&cookie=${this.cookie}`)
-          this.productList.splice(index, 1)
-          this.filteredList = this.productList
+          await this.$axios.delete(`//easybeauty.somee.com/v1/api/Product?id=${item.id}&cookie=${this.cookie}`);
+          this.productList.splice(index, 1);
+          this.filteredList = this.productList;
         }
       } catch (e) {
-        console.log(e)
+        console.log(e);
       }
     },
-    openEmployeeModal() {
-      this.$refs.employeePopup.open()
+    openEmployeeModal () {
+      this.$refs.employeePopup.open();
     },
-    closeEmployeeModal() {
-      this.$refs.employeePopup.close()
+    closeEmployeeModal () {
+      this.$refs.employeePopup.close();
     },
-    openAppointmentsModal() {
-      this.$refs.appointmentPopup.open()
+    openAppointmentsModal () {
+      this.$refs.appointmentPopup.open();
     },
-    closeAppointmentsModal() {
-      this.$refs.appointmentPopup.close()
+    closeAppointmentsModal () {
+      this.$refs.appointmentPopup.close();
     },
-      openLoader() {
-      this.$refs.loader.open()
+    openLoader () {
+      this.$refs.loader.open();
     },
-    closeLoader() {
-      this.$refs.loader.close()
+    closeLoader () {
+      this.$refs.loader.close();
     },
-    openAddProductModal(item = {}) {
-      this.$refs.addProductPopup.open()
-      this.itemToEdit = item
-    },
+    openAddProductModal (item = {}) {
+      this.$refs.addProductPopup.open();
+      this.itemToEdit = item;
+    }
   }
-}
+};
 </script>
 
 <style lang='scss' scoped>
@@ -523,7 +562,7 @@ export default {
   color: black;
 }
 
-.service-navbar input[type='text'] {
+.service-navbar input[type="text"] {
   padding: 6px;
   font-size: 17px;
   border: none;
@@ -623,8 +662,8 @@ input#number {
   font-size: 0.8vw;
 }
 
-input[type='number']::-webkit-inner-spin-button,
-input[type='number']::-webkit-outer-spin-button {
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }

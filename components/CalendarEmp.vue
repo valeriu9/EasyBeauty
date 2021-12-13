@@ -1,44 +1,37 @@
 
 <template>
-  <div class='demo-app'>
-    <div class='demo-app-main'>
+  <div class="demo-app">
+    <div class="demo-app-main">
       <FullCalendar
         ref="calendarData"
-        class='demo-app-calendar'
-        :options='calendarOptions'>
-        <template v-slot:eventContent='arg'>
+        class="demo-app-calendar"
+        :options="calendarOptions">
+        <template #eventContent="arg">
           <p>{{ arg.timeText }}</p>
         </template>
       </FullCalendar>
-      <p v-if="error" class="red">{{error}}</p>
+      <p v-if="error" class="red">{{ error }}</p>
     </div>
   </div>
 </template>
 
 <script>
-import FullCalendar from '@fullcalendar/vue'
-import dayGridPlugin from '@fullcalendar/daygrid'
-import timeGridPlugin from '@fullcalendar/timegrid'
-import interactionPlugin from '@fullcalendar/interaction'
-import { format, parseISO } from 'date-fns'
-import PopupTemplate from '@/components/PopupTemplate'
+import FullCalendar from '@fullcalendar/vue';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import interactionPlugin from '@fullcalendar/interaction';
+import { format, parseISO } from 'date-fns';
 export default {
   components: {
-    FullCalendar,
-    PopupTemplate
+    FullCalendar
   },
-  props:{
-    scheduleForEmployee:{
+  props: {
+    scheduleForEmployee: {
       type: Array,
-      default:[]
+      default: () => []
     }
   },
-  watch:{
-    currentEvents(){
-      this.isDateSelected = this.currentEvents.some(x => x.groupId === '2');
-    }
-  },
-  data() {
+  data () {
     return {
       selectedEvent: null,
       error: '',
@@ -56,13 +49,13 @@ export default {
         },
         businessHours: {
         // days of week. an array of zero-based day of week integers (0=Sunday)
-        daysOfWeek: [ 1, 2, 3, 4, 5 ],
-        startTime: '10:00', // a start time (10am in this example)
-        endTime: '18:00', // an end time (6pm in this example)
-      },
-        eventConstraint:{
-        start: '10:00', // a start time
-        end: '18:00', // an end time
+          daysOfWeek: [1, 2, 3, 4, 5],
+          startTime: '10:00', // a start time (10am in this example)
+          endTime: '18:00' // an end time (6pm in this example)
+        },
+        eventConstraint: {
+          start: '10:00', // a start time
+          end: '18:00' // an end time
         },
         initialView: 'timeGridWeek',
         nowIndicator: true,
@@ -71,8 +64,8 @@ export default {
         selectable: true,
         selectMirror: false,
         dayMaxEvents: false,
-        slotMinTime: "10:00:00",
-        slotMaxTime: "18:00:00",
+        slotMinTime: '10:00:00',
+        slotMaxTime: '18:00:00',
         forceEventDuration: true,
         duration: 30,
         weekends: false,
@@ -80,62 +73,66 @@ export default {
         select: this.handleDateSelect,
         eventClick: this.handleEventClick,
         eventDurationEditable: false,
-        contentHeight: "auto",
+        contentHeight: 'auto',
         eventDrop: this.eventChanged,
         eventDragStart: this.checkIfEventSelected,
-        eventOverlap:  function(stillEvent, movingEvent) {
-         return stillEvent.allDay && movingEvent.allDay;
-        },
+        eventOverlap (stillEvent, movingEvent) {
+          return stillEvent.allDay && movingEvent.allDay;
+        }
       },
       currentEvents: []
+    };
+  },
+  watch: {
+    currentEvents () {
+      this.isDateSelected = this.currentEvents.some(x => x.groupId === '2');
     }
   },
 
   methods: {
-    open() {
-      this.$refs.schedulePopUp.open()
+    open () {
+      this.$refs.schedulePopUp.open();
     },
-    close() {
-      this.$refs.schedulePopUp.close()
+    close () {
+      this.$refs.schedulePopUp.close();
     },
-    handleEventClick(clickInfo) {
+    handleEventClick (clickInfo) {
       this.$emit('selectedEvent', clickInfo.event.id);
       this.selectedEvent = clickInfo.event.id;
     },
-    checkIfEventSelected(){
-      this.error = ''
-      this.selectedEvent ? '' : this.error = '*Select appointment first';
+    checkIfEventSelected () {
+      this.error = '';
+      this.error = this.selectedEvent ? '' : '*Select appointment first';
     },
-    handleDateSelect(){
-       this.$emit('selectedEvent', 0);
+    handleDateSelect () {
+      this.$emit('selectedEvent', 0);
       this.selectedEvent = null;
     },
-    eventChanged(event){
-         if(event.event.start < new Date() || this.selectedEvent === null){
-            event.revert();
-          }
-          else{
-          const startTime = event.event.startStr.split('+')
-          const endTime = event.event.endStr.split('+')
-          const newDates = {startTime : startTime[0], endTime : endTime[0] };
-          this.$emit('newDatesForEvent',newDates)
-          }
-    },
-    handleEvents(events) {
-      this.currentEvents = events
-    },
-    formatTimeDisplay(date){
-      if(date){
-      return format(parseISO(date), 'HH:mm')
+    eventChanged (event) {
+      if (event.event.start < new Date() || this.selectedEvent === null) {
+        event.revert();
+      } else {
+        const startTime = event.event.startStr.split('+');
+        const endTime = event.event.endStr.split('+');
+        const newDates = { startTime: startTime[0], endTime: endTime[0] };
+        this.$emit('newDatesForEvent', newDates);
       }
     },
-    formatDateDisplay(date){
-      if(date){
-      return format(parseISO(date), 'dd/MM/yyyy')
+    handleEvents (events) {
+      this.currentEvents = events;
+    },
+    formatTimeDisplay (date) {
+      if (date) {
+        return format(parseISO(date), 'HH:mm');
+      }
+    },
+    formatDateDisplay (date) {
+      if (date) {
+        return format(parseISO(date), 'dd/MM/yyyy');
       }
     }
   }
-}
+};
 </script>
 
 <style lang='scss' scoped>

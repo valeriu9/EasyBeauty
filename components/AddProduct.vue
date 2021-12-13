@@ -1,35 +1,36 @@
 <template>
-  <PopupTemplate ref='popupOpen'>
+  <PopupTemplate ref="popupOpen">
     <template #body>
-      <div class='user-input-wrapper'>
-        <div class='image-upload'>
-          <div class='image-preview' id='preview'>
-            <input type='file' accept='image/jpeg, image/png' @change='onChange' />
-            <img v-if='image' :src='image' />
+      <div class="user-input-wrapper">
+        <div class="image-upload">
+          <div class="image-preview" id="preview">
+            <input type="file" accept="image/jpeg, image/png" @change="onChange" />
+            <img v-if="image" :src="image" />
           </div>
         </div>
-        <div class='productService-details'>
-          <input type='text' class='inputText' v-model='name' required maxlength='25' />
-          <p class='floating-label'>Product Name</p>
+        <div class="productService-details">
+          <input type="text" class="inputText" v-model="name" required maxlength="25" />
+          <p class="floating-label">Product Name</p>
           <br />
-          <input type='text' class='inputText' v-model='description' required maxlength='40' />
-          <p class='floating-label'>Product Description</p>
+          <input type="text" class="inputText" v-model="description" required maxlength="40" />
+          <p class="floating-label">Product Description</p>
           <br />
-          <div class='product-price'>
-            <span class='currency-input'>
-              <input type='number' class='inputText' v-model='price' required />
-              <p class='floating-label'>Price </p>
+          <div class="product-price">
+            <span class="currency-input">
+              <input type="number" class="inputText" v-model="price" required />
+              <p class="floating-label">Price </p>
             </span>
           </div>
           <br />
-          <div v-if="activeTab === 'services'"><input type='text' class='inputText' v-model='duration' required />
-            <p class='floating-label'>Duration</p>
+          <div v-if="activeTab === 'services'">
+            <input type="text" class="inputText" v-model="duration" required />
+            <p class="floating-label">Duration</p>
             <br />
           </div>
         </div>
-        <div class='button-container'>
-          <button class='save-button' @click='saveProduct()'>Save</button>
-          <button class='cancel-button' @click='close()'>Cancel</button>
+        <div class="button-container">
+          <button class="save-button" @click="saveProduct()">Save</button>
+          <button class="cancel-button" @click="close()">Cancel</button>
         </div>
       </div>
     </template>
@@ -37,7 +38,7 @@
 </template>
 
 <script>
-import { getCookieDataUnparsed } from '~/helpers/cookies.js'
+import { getCookieDataUnparsed } from '~/helpers/cookies.js';
 
 export default {
   components: {
@@ -51,23 +52,12 @@ export default {
       default: () => {
       }
     },
-    activeTab:{
+    activeTab: {
       type: String,
       default: 'Service'
     }
   },
-  watch: {
-    itemToEdit() {
-        this.name = this.itemToEdit.name
-        this.type = this.itemToEdit.type
-        this.description = this.itemToEdit.description
-        this.price = this.itemToEdit.price
-        this.image = this.itemToEdit.image
-        this.duration = this.itemToEdit.duration
-        this.id = this.itemToEdit.id
-    }
-  },
-  data() {
+  data () {
     return {
       image: '',
       name: '',
@@ -76,46 +66,57 @@ export default {
       duration: null,
       id: 0,
       cookie: getCookieDataUnparsed('session')
+    };
+  },
+  watch: {
+    itemToEdit () {
+      this.name = this.itemToEdit.name;
+      this.type = this.itemToEdit.type;
+      this.description = this.itemToEdit.description;
+      this.price = this.itemToEdit.price;
+      this.image = this.itemToEdit.image;
+      this.duration = this.itemToEdit.duration;
+      this.id = this.itemToEdit.id;
     }
   },
   methods: {
-    open() {
-      this.$refs.popupOpen.open()
+    open () {
+      this.$refs.popupOpen.open();
     },
-    close() {
-      this.$emit('closed')
-      this.$refs.popupOpen.close()
+    close () {
+      this.$emit('closed');
+      this.$refs.popupOpen.close();
     },
-    async saveProduct() {
+    saveProduct () {
       if (this.activeTab === 'services' && (this.name === '', this.price === 0, this.image === '', this.duration === 0)) {
-        window.alert('Complete all the fields before saving')
-        return
+        window.alert('Complete all the fields before saving');
+        return;
       } else if (this.activeTab === 'products' && (this.name === '', this.price === 0, this.image === '')) {
-        window.alert('Complete all the fields before saving')
-        return
+        window.alert('Complete all the fields before saving');
+        return;
       }
       if (!this.itemToEdit.name) {
-        const imgbbUploader = require('imgbb-uploader')
+        const imgbbUploader = require('imgbb-uploader');
         const options = {
           apiKey: '44be07cc6bc3fb0585b6e9f1b2cce6b6',
           base64string: this.image.replace('data:', '').replace(/^.+,/, '')
-        }
+        };
         imgbbUploader(options)
           .then((response) => {
-            this.image = response.image.url
+            this.image = response.image.url;
             try {
-               this.$emit('openLoader')
+              this.$emit('openLoader');
               if (this.activeTab === 'products') {
                 this.$axios.post(`//easybeauty.somee.com/v1/api/Product?cookie=${this.cookie}`, {
                   name: this.name,
                   description: this.description,
                   price: this.price,
                   image: this.image
-                })
-                this.close()
+                });
+                this.close();
                 setTimeout(() => {
-                  this.$emit('loadProducts')
-                }, 1000)
+                  this.$emit('loadProducts');
+                }, 1000);
               } else {
                 this.$axios.post(`//easybeauty.somee.com/v1/api/Service?cookie=${this.cookie}`, {
                   name: this.name,
@@ -123,31 +124,31 @@ export default {
                   price: this.price,
                   duration: this.duration,
                   image: this.image
-                })
-                this.close()
+                });
+                this.close();
                 setTimeout(() => {
-                  this.$emit('loadServices')
-                }, 1000)
+                  this.$emit('loadServices');
+                }, 1000);
               }
             } catch (e) {
-              console.log(e)
+              console.log(e);
             }
-          }).catch((error) => console.error(error),
-        )
+          }).catch(error => console.error(error)
+          );
       } else {
         try {
-          this.$emit('openLoader')
+          this.$emit('openLoader');
           if (this.activeTab === 'products') {
             this.$axios.put(`//easybeauty.somee.com/v1/api/Product?id=${this.itemToEdit.id}&cookie=${this.cookie}`, {
               name: this.name,
               description: this.description,
               price: this.price,
               image: this.image
-            })
-            this.close()
+            });
+            this.close();
             setTimeout(() => {
-              this.$emit('loadProducts')
-            }, 1000)
+              this.$emit('loadProducts');
+            }, 1000);
           } else {
             this.$axios.put(`//easybeauty.somee.com/v1/api/Service?id=${this.itemToEdit.id}&cookie=${this.cookie}`, {
               name: this.name,
@@ -155,33 +156,33 @@ export default {
               price: this.price,
               duration: this.duration,
               image: this.image
-            })
-            this.close()
+            });
+            this.close();
             setTimeout(() => {
-              this.$emit('loadServices')
-            }, 1000)
+              this.$emit('loadServices');
+            }, 1000);
           }
         } catch (e) {
-          console.log(e)
+          console.log(e);
         }
       }
     },
-    onChange(e) {
-      document.getElementById('preview').style.backgroundImage = 'none'
-      var file = e.target.files[0]
-      var reader = new FileReader()
-      reader.readAsDataURL(file)
+    onChange (e) {
+      document.getElementById('preview').style.backgroundImage = 'none';
+      const file = e.target.files[0];
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
       setTimeout(() => {
-        this.image = reader.result
-      }, 1000)
+        this.image = reader.result;
+      }, 1000);
     }
   }
 
-}
+};
 </script>
 
 <style lang='scss' scoped>
-input[type='file'] {
+input[type="file"] {
   opacity: 0;
   cursor: pointer;
 }
@@ -219,7 +220,7 @@ input[type='file'] {
   left: 60px;
   top: 38%;
   font-size: 13px;
-  content: 'DKK';
+  content: "DKK";
 }
 
 .productService-details {
@@ -266,7 +267,7 @@ input[type='file'] {
   height: 55%;
   justify-content: center;
   display: flex;
-  background-image: url('assets/images/image-upload.png');
+  background-image: url("assets/images/image-upload.png");
   background-position: center;
   background-size: 50%;
   background-repeat: no-repeat;
@@ -324,7 +325,7 @@ input::-webkit-inner-spin-button {
   margin: 0;
 }
 
-input[type='number'] {
+input[type="number"] {
   -moz-appearance: textfield;
 }
 </style>
