@@ -240,7 +240,6 @@ export default {
   },
   mounted () {
     this.loadServices();
-    this.loadProducts();
     this.$store.state.user.role === 'manager' ? this.loadEmployees() : '';
   },
   methods: {
@@ -256,7 +255,10 @@ export default {
         this.activeTab = 'services';
       }
       if (name === 'products') {
-        this.filteredList = this.productList;
+        this.loadProducts();
+        setTimeout(() => {
+          this.filteredList = this.productList;
+        }, 500);
         this.activeTab = 'products';
       }
     },
