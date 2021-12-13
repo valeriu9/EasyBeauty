@@ -130,7 +130,7 @@ export default {
     async loadAppointmentsById (userId) {
       try {
         this.appointmentForCalendar.splice(0, this.appointmentForCalendar.length);
-        const appointments = await this.$axios.get(`//easybeauty.somee.com/v1/api/Appointment?employeeId=${userId}`);
+        const appointments = await this.$axios.get(`http//easybeauty.somee.com/v1/api/Appointment?employeeId=${userId}`);
         if (appointments.data.length > 0) {
           this.appointmentsFromServer = appointments.data;
           appointments.data.forEach((appointment) => {
@@ -165,7 +165,7 @@ export default {
     async onSubmit () {
       try {
         const objToSend = { startTime: this.selectedEvent.startTime, endTime: this.selectedEvent.endTime, customerName: this.selectedEvent.customerName, phoneNr: this.selectedEvent.phoneNr, serviceId: this.selectedEvent.serviceId, employeeId: this.selectedEvent.employeeId, notes: this.selectedEvent.notes, customerEmail: this.selectedEvent.customerEmail, isAccepted: true };
-        const res = await this.$axios.put(`//easybeauty.somee.com/v1/api/Appointment?id=${this.selectedEvent.id}&cookie=${this.cookie}`, objToSend);
+        const res = await this.$axios.put(`http//easybeauty.somee.com/v1/api/Appointment?id=${this.selectedEvent.id}&cookie=${this.cookie}`, objToSend);
         if (res.data.error) {
           window.alert(res.data.error);
         } else {
@@ -178,7 +178,7 @@ export default {
     },
     async onDecline () {
       try {
-        const res = await this.$axios.delete(`//easybeauty.somee.com/v1/api/Appointment?id=${this.selectedEvent.id}&cookie=${this.cookie}`);
+        const res = await this.$axios.delete(`http//easybeauty.somee.com/v1/api/Appointment?id=${this.selectedEvent.id}&cookie=${this.cookie}`);
         if (res.data.error) {
           window.alert(res.data.error);
         } else {

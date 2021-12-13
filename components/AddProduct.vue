@@ -107,7 +107,7 @@ export default {
             try {
               this.$emit('openLoader');
               if (this.activeTab === 'products') {
-                this.$axios.post(`//easybeauty.somee.com/v1/api/Product?cookie=${this.cookie}`, {
+                this.$axios.post(`http//easybeauty.somee.com/v1/api/Product?cookie=${this.cookie}`, {
                   name: this.name,
                   description: this.description,
                   price: this.price,
@@ -118,7 +118,7 @@ export default {
                   this.$emit('loadProducts');
                 }, 1000);
               } else {
-                this.$axios.post(`//easybeauty.somee.com/v1/api/Service?cookie=${this.cookie}`, {
+                this.$axios.post(`http//easybeauty.somee.com/v1/api/Service?cookie=${this.cookie}`, {
                   name: this.name,
                   description: this.description,
                   price: this.price,
@@ -139,7 +139,7 @@ export default {
         try {
           this.$emit('openLoader');
           if (this.activeTab === 'products') {
-            this.$axios.put(`//easybeauty.somee.com/v1/api/Product?id=${this.itemToEdit.id}&cookie=${this.cookie}`, {
+            this.$axios.put(`http//easybeauty.somee.com/v1/api/Product?id=${this.itemToEdit.id}&cookie=${this.cookie}`, {
               name: this.name,
               description: this.description,
               price: this.price,
@@ -150,7 +150,7 @@ export default {
               this.$emit('loadProducts');
             }, 1000);
           } else {
-            this.$axios.put(`//easybeauty.somee.com/v1/api/Service?id=${this.itemToEdit.id}&cookie=${this.cookie}`, {
+            this.$axios.put(`http//easybeauty.somee.com/v1/api/Service?id=${this.itemToEdit.id}&cookie=${this.cookie}`, {
               name: this.name,
               description: this.description,
               price: this.price,
