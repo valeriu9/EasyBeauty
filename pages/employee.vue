@@ -315,12 +315,14 @@ export default {
       try {
         this.openLoader();
         const products = await this.$axios.get(`//easybeauty.somee.com/v1/api/Product?cookie=${this.cookie}`);
+          this.productList = products.data;
         if (products.data.error) {
           deleteCookie('easybeauty_user');
           window.location.href = '/login';
         }
-        this.productList = products.data;
-        this.filteredList = this.activeTab === 'products' ? this.productList : '';
+        if(this.activeTab === 'products'){
+          this.filteredList = this.productList;
+        }
         this.closeLoader();
       } catch (e) {
         console.log(e);
