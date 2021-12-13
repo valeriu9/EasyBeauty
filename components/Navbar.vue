@@ -126,6 +126,7 @@ export default {
     async logout () {
       try {
         const cookie = getCookieDataUnparsed('session');
+        if (!cookie) {window.location.href = '/login';}
         await this.$axios.delete(`${process.env.BASE_URL}/Login/logout?cookie=${cookie}`);
         this.$cookies.remove('easybeauty_user');
         this.$store.dispatch('user/userLoggedOut');

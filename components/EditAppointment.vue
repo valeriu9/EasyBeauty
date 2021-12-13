@@ -183,7 +183,7 @@ export default {
           window.alert(res.data.error);
         } else {
           this.eventHasChanges = false;
-          this.loadAppointmentsById(this.$store.state.user.role === 'manager' ? this.selectedEmployee.id : this.$store.state.user.role);
+          this.loadAppointmentsById(this.$store.state.user.role === 'manager' ? this.selectedEmployee.id : this.$store.state.user.id);
         }
       } catch (e) {
         console.log(e);
