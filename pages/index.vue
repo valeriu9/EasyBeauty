@@ -139,7 +139,7 @@ export default {
   methods: {
     async loadServices () {
       try {
-        const services = await this.$axios.get('http://easybeauty.somee.com/v1/api/Service');
+        const services = await this.$axios.get('https://easybeauty.somee.com/v1/api/Service');
         this.serviceList = services.data;
         this.selectedService = services.data[1];
       } catch (e) {
@@ -148,7 +148,7 @@ export default {
     },
     async loadEmployees () {
       try {
-        const employees = await this.$axios.get('http://easybeauty.somee.com/v1/api/Employee');
+        const employees = await this.$axios.get('https://easybeauty.somee.com/v1/api/Employee');
         this.employeeList = employees.data;
         this.selectedEmployee = employees.data[0];
         this.getAppointmentsByEmployee(employees.data[0].id);
@@ -158,7 +158,7 @@ export default {
     },
     async checkPhone () {
       try {
-        const customer = await this.$axios.get(`http://easybeauty.somee.com/v1/api/Appointment/CheckCustomer?phoneNr=${this.phoneNr}`);
+        const customer = await this.$axios.get(`https://easybeauty.somee.com/v1/api/Appointment/CheckCustomer?phoneNr=${this.phoneNr}`);
         if (!customer.data.isCustomer) {
           this.fullName = customer.data.name;
           this.email = customer.data.email;
@@ -195,7 +195,7 @@ export default {
           groupId: 1,
           display: 'background'
         });
-        const appointments = await this.$axios.get(`http://easybeauty.somee.com/v1/api/Appointment/GetEmployeeSchedule?employeeId=${employeeId}`);
+        const appointments = await this.$axios.get(`https://easybeauty.somee.com/v1/api/Appointment/GetEmployeeSchedule?employeeId=${employeeId}`);
         if (appointments.data.length > 0) {
           appointments.data.forEach((appointment) => {
             this.scheduleForEmployee.push({ id: createEventId(), groupId: 1, start: appointment.startTime, end: appointment.endTime, editable: false, color: '#ddd', constraint: 'businessHours' });
@@ -257,7 +257,7 @@ export default {
           return;
         } else {
           const objToSend = { customerName: this.fullName, phoneNr: this.phoneNr, serviceId: this.selectedService.id, employeeId: this.selectedEmployee.id, startTime: format(this.selectedEvent.start, "yyyy-MM-dd'T'HH:mm:ss"), endTime: format(this.selectedEvent.end, "yyyy-MM-dd'T'HH:mm:ss"), notes: this.notes, customerEmail: this.email };
-          const res = await this.$axios.post('http://easybeauty.somee.com/v1/api/Appointment', objToSend);
+          const res = await this.$axios.post('https://easybeauty.somee.com/v1/api/Appointment', objToSend);
           this.$refs.success.open();
           this.displayMessage = res.data.error ? res.data.error : res.data.success;
           res.data.error ? '' : this.cleanForm();

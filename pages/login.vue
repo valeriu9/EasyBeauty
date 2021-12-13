@@ -182,7 +182,7 @@ export default {
       this.errorList[5].active = false;
       try {
         if (this.validateEmail(this.email)) {
-          const res = await this.$axios.get('http://easybeauty.somee.com/v1/api/Login/check-email?email=' + this.email);
+          const res = await this.$axios.get('https://easybeauty.somee.com/v1/api/Login/check-email?email=' + this.email);
           if (res.data.error) {
             this.errorList[5].active = true;
             return;
@@ -197,7 +197,7 @@ export default {
       this.errorList[3].active = false;
       try {
         if (this.validatePassword(password) && this.email) {
-          const res = await this.$axios.get('http://easybeauty.somee.com/v1/api/Login/login?password=' + this.password + '&email=' + this.email);
+          const res = await this.$axios.get('https://easybeauty.somee.com/v1/api/Login/login?password=' + this.password + '&email=' + this.email);
           if (res.data.error) {
             this.errorList[3].active = true;
           } else {
@@ -216,7 +216,7 @@ export default {
     async createPassword (newPassword, repeatedPassword) {
       try {
         if (this.validatePassword(newPassword) && this.validateRepeatPassword(repeatedPassword)) {
-          const res = await this.$axios.put('http://easybeauty.somee.com/v1/api/Login/create-password?email=' + this.email + '&password=' + newPassword + '&repeatedPassword=' + repeatedPassword);
+          const res = await this.$axios.put('https://easybeauty.somee.com/v1/api/Login/create-password?email=' + this.email + '&password=' + newPassword + '&repeatedPassword=' + repeatedPassword);
           if (res.data.success) {
             this.state = this.stateTypes.PASSWORD;
           } else if (res.data.error) {
