@@ -78,7 +78,7 @@ export default {
       }
       try {
         if (this.employeeToEdit.name) {
-          await this.$axios.put(`https://easybeauty.somee.com/v1/api/Employee?id=${this.id}&cookie=${this.cookie} `, {
+          await this.$axios.put(`${process.env.BASE_URL}/Employee?id=${this.id}&cookie=${this.cookie} `, {
             name: this.name,
             phoneNr: this.phoneNr,
             email: this.email,
@@ -89,7 +89,7 @@ export default {
           }, 1000);
           this.close();
         } else {
-          await this.$axios.post(`https://easybeauty.somee.com/v1/api/Employee?id=${this.id}&cookie=${this.cookie}`, {
+          await this.$axios.post(`${process.env.BASE_URL}/Employee?id=${this.id}&cookie=${this.cookie}`, {
             name: this.name,
             phoneNr: this.phoneNr,
             email: this.email,

@@ -295,7 +295,7 @@ export default {
     async pay () {
       try {
         if (this.total === 0) { return; };
-        const res = await this.$axios.post('https://easybeauty.somee.com/v1/api/Payment', {
+        const res = await this.$axios.post(`${process.env.BASE_URL}/Payment`, {
           amount: this.total
         });
         if (res.data.error) {
@@ -314,7 +314,7 @@ export default {
     async loadProducts () {
       try {
         this.openLoader();
-        const products = await this.$axios.get(`https://easybeauty.somee.com/v1/api/Product?cookie=${this.cookie}`);
+        const products = await this.$axios.get(`${process.env.BASE_URL}/Product?cookie=${this.cookie}`);
           this.productList = products.data;
         if (products.data.error) {
           deleteCookie('easybeauty_user');
@@ -332,7 +332,7 @@ export default {
     async loadEmployees () {
       try {
         this.openLoader();
-        const employees = await this.$axios.get('https://easybeauty.somee.com/v1/api/Employee');
+        const employees = await this.$axios.get(`${process.env.BASE_URL}/Employee`);
         this.employeeList = employees.data;
         this.isEmployeeListFetched = true;
         this.closeLoader();
@@ -344,7 +344,7 @@ export default {
     async loadServices () {
       try {
         this.openLoader();
-        const services = await this.$axios.get('https://easybeauty.somee.com/v1/api/Service');
+        const services = await this.$axios.get(`${process.env.BASE_URL}/Service`);
         this.serviceList = services.data;
         this.filteredList = this.serviceList;
         this.closeLoader();
@@ -356,12 +356,12 @@ export default {
     async deleteItem (item, index) {
       try {
         if (this.activeTab === 'services') {
-          await this.$axios.delete(`https://easybeauty.somee.com/v1/api/Service?id=${item.id}&cookie=${this.cookie}`);
+          await this.$axios.delete(`${process.env.BASE_URL}/Service?id=${item.id}&cookie=${this.cookie}`);
           this.serviceList.splice(index, 1);
           this.filteredList = this.serviceList;
         }
         if (this.activeTab === 'products') {
-          await this.$axios.delete(`https://easybeauty.somee.com/v1/api/Product?id=${item.id}&cookie=${this.cookie}`);
+          await this.$axios.delete(`${process.env.BASE_URL}/Product?id=${item.id}&cookie=${this.cookie}`);
           this.productList.splice(index, 1);
           this.filteredList = this.productList;
         }

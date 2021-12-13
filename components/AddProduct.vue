@@ -98,7 +98,7 @@ export default {
       if (!this.itemToEdit.name) {
         const imgbbUploader = require('imgbb-uploader');
         const options = {
-          apiKey: '44be07cc6bc3fb0585b6e9f1b2cce6b6',
+          apiKey: process.env.IMAGE_UPLOAD_KEY,
           base64string: this.image.replace('data:', '').replace(/^.+,/, '')
         };
         imgbbUploader(options)
@@ -107,7 +107,7 @@ export default {
             try {
               this.$emit('openLoader');
               if (this.activeTab === 'products') {
-                this.$axios.post(`https://easybeauty.somee.com/v1/api/Product?cookie=${this.cookie}`, {
+                this.$axios.post(`${process.env.BASE_URL}/Product?cookie=${this.cookie}`, {
                   name: this.name,
                   description: this.description,
                   price: this.price,
@@ -118,7 +118,7 @@ export default {
                   this.$emit('loadProducts');
                 }, 1000);
               } else {
-                this.$axios.post(`https://easybeauty.somee.com/v1/api/Service?cookie=${this.cookie}`, {
+                this.$axios.post(`${process.env.BASE_URL}/Service?cookie=${this.cookie}`, {
                   name: this.name,
                   description: this.description,
                   price: this.price,
@@ -139,7 +139,7 @@ export default {
         try {
           this.$emit('openLoader');
           if (this.activeTab === 'products') {
-            this.$axios.put(`https://easybeauty.somee.com/v1/api/Product?id=${this.itemToEdit.id}&cookie=${this.cookie}`, {
+            this.$axios.put(`${process.env.BASE_URL}/Product?id=${this.itemToEdit.id}&cookie=${this.cookie}`, {
               name: this.name,
               description: this.description,
               price: this.price,
@@ -150,7 +150,7 @@ export default {
               this.$emit('loadProducts');
             }, 1000);
           } else {
-            this.$axios.put(`https://easybeauty.somee.com/v1/api/Service?id=${this.itemToEdit.id}&cookie=${this.cookie}`, {
+            this.$axios.put(`${process.env.BASE_URL}/Service?id=${this.itemToEdit.id}&cookie=${this.cookie}`, {
               name: this.name,
               description: this.description,
               price: this.price,
