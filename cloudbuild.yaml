@@ -7,6 +7,6 @@ steps:
    args: ['push', 'gcr.io/easybeauty-334916/server']
  # Deploy container image to Cloud Run
  - name: 'gcr.io/cloud-builders/gcloud'
-   args: ['run', 'deploy', 'easybeauty', '--image', 'gcr.io/easybeauty-334916/server', '--region', 'europe-west1-c', '--platform', 'managed', '--allow-unauthenticated']
+   args: ['run', 'deploy', 'easybeauty', '--image', 'gcr.io/easybeauty-334916/server', '--region', 'europe-west1', '--platform', 'managed', '--allow-unauthenticated']
 images:
 - 'gcr.io/easybeauty-334916/server'
