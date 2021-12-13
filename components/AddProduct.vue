@@ -95,6 +95,7 @@ export default {
         window.alert('Complete all the fields before saving');
         return;
       }
+        this.$emit('openLoader');
       if (!this.itemToEdit.name) {
         const imgbbUploader = require('imgbb-uploader');
         const options = {
@@ -105,7 +106,6 @@ export default {
           .then((response) => {
             this.image = response.image.url;
             try {
-              this.$emit('openLoader');
               if (this.activeTab === 'products') {
                 this.$axios.post(`${process.env.BASE_URL}/Product?cookie=${this.cookie}`, {
                   name: this.name,

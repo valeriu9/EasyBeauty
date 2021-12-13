@@ -47,7 +47,7 @@ export default {
 <style lang="scss" scoped>
 .animation-proprieties {
   position: fixed;
-  z-index: 99;
+  z-index: 300;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -56,7 +56,7 @@ export default {
 
 .bg {
   position: fixed;
-  z-index: 98;
+  z-index: 300;
   background-color: #ffffff;
   opacity: 0.95;
   height: 100%;
