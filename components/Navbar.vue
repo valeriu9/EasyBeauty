@@ -7,6 +7,7 @@
               id="logo"
               xmlns="http://www.w3.org/2000/svg"
               width="163.425"
+              fill="white"
               height="63.701"
               viewBox="0 0 163.425 63.701">
               <g id="Group_3" data-name="Group 3" transform="translate(-3856.305 1453.6)">
