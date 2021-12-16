@@ -3,7 +3,6 @@
     <nav class="nav-menu-wrapper">
       <div class="nav-menu-content">
         <div class="logo">
-          <a class="logo-clickable" @click="goToHome" href="#">
             <svg
               id="logo"
               xmlns="http://www.w3.org/2000/svg"
@@ -75,7 +74,6 @@
                   transform="translate(0)"></path>
               </g>
             </svg>
-          </a>
         </div>
         <div class="buttons-wrapper">
           <div class="button">
