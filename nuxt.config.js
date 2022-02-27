@@ -16,7 +16,7 @@ export default {
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: ['~assets/styles/_style-global.scss'],
   env: {
-    BASE_URL: 'https://easybeauty.somee.com/v1/api',
+    BASE_URL: 'https://www.easybeauty.somee.com/v1/api',
     IMAGE_UPLOAD_KEY:'44be07cc6bc3fb0585b6e9f1b2cce6b6'
 
   },
